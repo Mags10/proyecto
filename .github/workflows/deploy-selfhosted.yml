@@ -16,7 +16,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Deploy with Docker Compose
         shell: bash
@@ -32,5 +32,6 @@ jobs:
             exit 1
           fi
 
-          $DC up -d --build --remove-orphans
-          $DC ps
+          # Deploy por ahora solo de frontend
+          $DC up -d --build frontend
+          $DC ps frontend
