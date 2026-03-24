@@ -1,0 +1,12 @@
+<article class="product-card">
+  <div class="name">{{ name() }}</div>
+  <div class="price">{{ price() }}</div>
+
+  <div class="footer-row">
+    <span class="stock">Stock: {{ stock() }}</span>
+    @if (lowStock()) {
+      <z-badge zType="destructive">Bajo</z-badge>
+    }
+    <button z-button zSize="sm">Vender</button>
+  </div>
+</article>

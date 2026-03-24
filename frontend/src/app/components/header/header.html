@@ -1,0 +1,16 @@
+<header class="topbar">
+  <div class="brand-wrap">
+    <span class="brand-icon">KF</span>
+    <span class="brand-text">KitchenFlow</span>
+  </div>
+
+  <nav class="nav-links">
+    <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
+    <a routerLink="/recetas" routerLinkActive="active">Recetas</a>
+    <a routerLink="/produccion" routerLinkActive="active">Produccion</a>
+    <a routerLink="/abastecimiento" routerLinkActive="active">Abastecimiento</a>
+    <a routerLink="/ventas" routerLinkActive="active">Ventas</a>
+  </nav>
+
+  <button z-button zType="outline" zSize="sm" class="role-chip">ADMIN</button>
+</header>

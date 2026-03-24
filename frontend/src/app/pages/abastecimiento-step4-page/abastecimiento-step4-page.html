@@ -1,0 +1,23 @@
+<main class="page-shell">
+  <section class="hero">
+    <h1>Terminal de Abastecimiento</h1>
+    <p>Registra facturas y actualiza costos promedios ponderados (WAC)</p>
+  </section>
+
+  <app-wizard-stepper [step]="4"></app-wizard-stepper>
+
+  <app-mock-form-card title="Confirmar Registro">
+    <section class="totals">
+      <div><span>Proveedor:</span><strong>Lacteos del Valle</strong></div>
+      <div><span>Insumo:</span><strong>Leche entera</strong></div>
+      <div><span>Cantidad:</span><strong>20 litro</strong></div>
+      <div><span>Precio:</span><strong>$240</strong></div>
+      <div><span>Nuevo WAC:</span><z-badge zType="secondary">$11.58</z-badge></div>
+    </section>
+
+    <div class="actions">
+      <a routerLink="/abastecimiento/3" z-button zType="outline">Anterior</a>
+      <a routerLink="/abastecimiento/1" z-button>Registrar Factura</a>
+    </div>
+  </app-mock-form-card>
+</main>

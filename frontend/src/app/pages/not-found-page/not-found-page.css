@@ -1,0 +1,25 @@
+.not-found {
+  min-height: calc(100vh - 140px);
+  display: grid;
+  place-content: center;
+  gap: 0.6rem;
+  text-align: center;
+  background: #f3efe7;
+}
+
+.not-found h1 {
+  margin: 0;
+  font-size: 4rem;
+  color: #2b1d12;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.not-found p {
+  margin: 0;
+  color: #6c5e52;
+}
+
+.not-found a {
+  text-decoration: none;
+  justify-self: center;
+}

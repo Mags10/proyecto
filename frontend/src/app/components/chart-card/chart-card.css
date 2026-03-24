@@ -1,0 +1,31 @@
+.chart-card {
+  min-height: 260px;
+}
+
+.fake-plot {
+  margin-top: 0.6rem;
+  height: 190px;
+  border: 1px dashed #d8d2c8;
+  border-radius: 10px;
+  position: relative;
+  background:
+    linear-gradient(to right, transparent 0 20%, #ece7df 20% 21%, transparent 21% 40%, #ece7df 40% 41%, transparent 41% 60%, #ece7df 60% 61%, transparent 61% 80%, #ece7df 80% 81%, transparent 81% 100%),
+    linear-gradient(to bottom, transparent 0 25%, #ece7df 25% 26%, transparent 26% 50%, #ece7df 50% 51%, transparent 51% 75%, #ece7df 75% 76%, transparent 76% 100%);
+}
+
+.line,
+.line-two {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  height: 2px;
+  background: #74462b;
+  top: 54%;
+  transform: skewY(-8deg);
+}
+
+.line-two {
+  background: #6d865f;
+  top: 66%;
+  transform: skewY(-13deg);
+}

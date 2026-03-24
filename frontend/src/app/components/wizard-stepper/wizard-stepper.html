@@ -1,0 +1,8 @@
+<div class="stepper">
+  @for (value of [1, 2, 3, 4]; track value) {
+    <div class="step" [class.done]="isDone(value)">{{ value }}</div>
+    @if (value < 4) {
+      <span class="line" [class.done]="isDone(value + 1)"></span>
+    }
+  }
+</div>

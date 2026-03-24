@@ -1,0 +1,68 @@
+<main class="page-shell">
+  <section class="hero">
+    <h1>Produccion y Mermas</h1>
+    <p>Registra lotes de produccion y gestiona mermas de inventario</p>
+  </section>
+
+  <section class="layout">
+    <z-card zTitle="Produccion de Lotes">
+      <input z-input placeholder="Buscar receta..." />
+
+      <div class="recipe-list">
+        <article class="recipe-item active">
+          <div>
+            <strong>Croissant</strong>
+            <small>Pasteleria</small>
+          </div>
+          <z-badge zType="secondary">Stock: 8</z-badge>
+        </article>
+
+        <article class="recipe-item">
+          <div>
+            <strong>Cafe Latte Grande</strong>
+            <small>Bebidas</small>
+          </div>
+          <z-badge zType="secondary">Stock: 45</z-badge>
+        </article>
+
+        <article class="recipe-item">
+          <div>
+            <strong>Pan Integral</strong>
+            <small>Panaderia</small>
+          </div>
+          <z-badge zType="secondary">Stock: 12</z-badge>
+        </article>
+      </div>
+
+      <label>Cantidad a producir</label>
+      <input z-input value="10" />
+
+      <div class="stock-box">
+        <span>Stock disponible</span>
+        <strong>8 unidades</strong>
+        <span>Costo estimado</span>
+        <strong>$85.00</strong>
+      </div>
+
+      <button z-button zFull>Producir Lote</button>
+    </z-card>
+
+    <z-card zTitle="Registro de Mermas">
+      <div class="waste-list">
+        <article class="waste-item">
+          <div><strong>Leche entera</strong><small>2 litros</small></div>
+          <div><z-badge zType="destructive">Caducidad</z-badge><small>2026-02-19 14:30</small></div>
+        </article>
+        <article class="waste-item">
+          <div><strong>Pan Integral</strong><small>8 unidades</small></div>
+          <div><z-badge zType="secondary">Quemado</z-badge><small>2026-02-19 12:15</small></div>
+        </article>
+        <article class="waste-item">
+          <div><strong>Croissant</strong><small>5 unidades</small></div>
+          <div><z-badge zType="secondary">Fin del dia</z-badge><small>2026-02-18 18:45</small></div>
+        </article>
+      </div>
+      <div class="actions"><button z-button zType="outline">Registrar Merma</button></div>
+    </z-card>
+  </section>
+</main>

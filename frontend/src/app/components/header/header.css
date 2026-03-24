@@ -1,0 +1,81 @@
+.topbar {
+  height: 70px;
+  border-bottom: 1px solid #e4ded3;
+  background: #f7f4ee;
+  display: grid;
+  grid-template-columns: 220px 1fr 120px;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.brand-icon {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #7c4a2d;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.brand-text {
+  font-size: 1.85rem;
+  font-family: Georgia, 'Times New Roman', serif;
+  color: #20170f;
+  font-weight: 700;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #5b4e45;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 0.38rem 0.72rem;
+  font-size: 0.95rem;
+}
+
+.nav-links a.active {
+  background: #7c4a2d;
+  color: #fffaf4;
+}
+
+.role-chip {
+  justify-self: end;
+}
+
+@media (max-width: 980px) {
+  .topbar {
+    height: auto;
+    grid-template-columns: 1fr;
+    padding: 0.8rem;
+  }
+
+  .brand-wrap {
+    justify-content: center;
+  }
+
+  .role-chip {
+    justify-self: center;
+  }
+}

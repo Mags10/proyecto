@@ -1,0 +1,22 @@
+<main class="page-shell">
+  <section class="hero">
+    <h1>Terminal de Abastecimiento</h1>
+    <p>Registra facturas y actualiza costos promedios ponderados (WAC)</p>
+  </section>
+
+  <app-wizard-stepper [step]="1"></app-wizard-stepper>
+
+  <app-mock-form-card title="Informacion de Factura">
+    <div class="form-grid">
+      <label>Proveedor</label>
+      <input z-input value="Lacteos del Valle" />
+
+      <label>Fecha de factura</label>
+      <input z-input value="19/02/2026" />
+    </div>
+
+    <div class="actions">
+      <a routerLink="/abastecimiento/2" z-button>Continuar</a>
+    </div>
+  </app-mock-form-card>
+</main>

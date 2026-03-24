@@ -1,0 +1,183 @@
+:root {
+  --bg: #f3efe7;
+  --surface: #ffffff;
+  --ink: #25180f;
+  --muted: #6f6154;
+  --border: #e4ded3;
+  --primary: #7c4a2d;
+  --primary-ink: #fffaf4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Source Sans Pro', 'Segoe UI', Tahoma, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.z-btn {
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 120ms ease, opacity 120ms ease, background-color 120ms ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.z-btn:hover {
+  transform: translateY(-1px);
+}
+
+.z-btn-default {
+  background: var(--primary);
+  color: var(--primary-ink);
+}
+
+.z-btn-outline {
+  background: #fff;
+  border-color: var(--border);
+  color: #503a2b;
+}
+
+.z-btn-secondary {
+  background: #ece7de;
+  color: #483428;
+}
+
+.z-btn-destructive {
+  background: #a04848;
+  color: #fff;
+}
+
+.z-btn-ghost {
+  background: transparent;
+  color: #544539;
+}
+
+.z-btn-link {
+  background: transparent;
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.z-btn-sm {
+  min-height: 34px;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.88rem;
+}
+
+.z-btn-default,
+.z-btn-outline,
+.z-btn-secondary,
+.z-btn-destructive,
+.z-btn-ghost,
+.z-btn-link {
+  min-height: 38px;
+  padding: 0.46rem 0.95rem;
+}
+
+.z-btn-lg {
+  min-height: 42px;
+  padding: 0.56rem 1.1rem;
+}
+
+.z-btn-full {
+  width: 100%;
+}
+
+.z-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(38, 26, 16, 0.06);
+}
+
+.z-card-header {
+  padding: 1rem 1rem 0.35rem;
+  font-size: 1.95rem;
+  color: #23180f;
+}
+
+.z-card-body {
+  padding: 1rem;
+}
+
+.z-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.18rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+
+.z-badge-default {
+  background: #efe7de;
+  color: #6d513d;
+}
+
+.z-badge-secondary {
+  background: #eef0ea;
+  color: #607c61;
+}
+
+.z-badge-destructive {
+  background: #f5e1e3;
+  color: #a64141;
+}
+
+.z-input {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.5rem 0.72rem;
+  font-size: 0.95rem;
+  color: #2b2017;
+  background: #fff;
+}
+
+.z-input:focus {
+  outline: 2px solid rgba(124, 74, 45, 0.18);
+  border-color: #be9c86;
+}
+
+table[z-table] {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table[z-table] th,
+table[z-table] td {
+  border-bottom: 1px solid #ece5db;
+  text-align: left;
+  padding: 0.65rem 0.45rem;
+}
+
+table[z-table] th {
+  color: #6e6054;
+  font-size: 0.82rem;
+  letter-spacing: 0.03em;
+}
+
+table[z-table] td {
+  color: #2d2015;
+}

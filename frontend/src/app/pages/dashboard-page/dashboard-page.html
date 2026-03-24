@@ -1,0 +1,19 @@
+<main class="page-shell">
+  <section class="hero">
+    <h1>Dashboard de Rentabilidad</h1>
+    <p>Vista general del desempeno financiero</p>
+  </section>
+
+  <section class="kpi-grid">
+    <app-kpi-card title="Rentabilidad Neta" value="$24,580" subtitle="Junio 2026" trend="+12.5%"></app-kpi-card>
+    <app-kpi-card title="Punto de Equilibrio" value="$42,300" subtitle="Actual: $68,000" trend="Superado"></app-kpi-card>
+    <app-kpi-card title="Margen Promedio" value="42%" subtitle="Todas las recetas" trend="+3.2%"></app-kpi-card>
+  </section>
+
+  <section class="chart-grid">
+    <app-chart-card title="Evolucion de Rentabilidad"></app-chart-card>
+    <app-chart-card title="Ventas vs Produccion vs Mermas"></app-chart-card>
+  </section>
+
+  <app-alerts-table></app-alerts-table>
+</main>

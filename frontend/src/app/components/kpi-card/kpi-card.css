@@ -1,0 +1,29 @@
+.kpi {
+  border-radius: 12px;
+}
+
+.title {
+  color: #6f6256;
+  font-size: 0.95rem;
+}
+
+.value {
+  margin-top: 0.4rem;
+  font-size: 2.1rem;
+  color: #2a1d12;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+}
+
+.subtitle {
+  color: #7f6e61;
+  font-size: 0.88rem;
+  margin-top: 0.2rem;
+}
+
+.trend {
+  color: #4f8c5d;
+  font-size: 0.84rem;
+  margin-top: 0.35rem;
+  font-weight: 600;
+}

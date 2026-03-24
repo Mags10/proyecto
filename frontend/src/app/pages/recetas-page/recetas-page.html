@@ -1,0 +1,53 @@
+<main class="page-shell">
+  <section class="hero">
+    <h1>Editor de Recetas y Costeo</h1>
+    <p>Gestiona recetas, insumos y calcula margenes en tiempo real</p>
+  </section>
+
+  <section class="layout">
+    <z-card class="left-card" zTitle="Informacion de Receta">
+      <div class="form-grid">
+        <label>Nombre de la receta</label>
+        <input z-input value="Cafe Latte Grande" />
+
+        <label>Categoria</label>
+        <input z-input value="Bebidas" />
+
+        <label>Precio de venta</label>
+        <input z-input value="85" />
+      </div>
+    </z-card>
+
+    <z-card class="right-card" zTitle="Insumos y Costos">
+      <div class="table-head">
+        <span>INGREDIENTE</span>
+        <span>UNIDAD</span>
+        <span>CANTIDAD</span>
+        <span>COSTO PROM.</span>
+        <span>SUBTOTAL</span>
+      </div>
+
+      @for (row of [1, 2, 3, 4]; track row) {
+        <div class="ing-row">
+          <input z-input [value]="row === 1 ? 'Cafe espresso' : row === 2 ? 'Leche entera' : row === 3 ? 'Vaso 16oz' : 'Tapa plastica'" />
+          <input z-input [value]="row < 3 ? 'ml' : 'Unidad'" />
+          <input z-input [value]="row === 1 ? '60' : row === 2 ? '240' : '1'" />
+          <input z-input [value]="row === 1 ? '0.45' : row === 2 ? '0.32' : row === 3 ? '2.5' : '0.8'" />
+          <div class="subtotal">{{ row === 1 ? '$27.00' : row === 2 ? '$76.80' : row === 3 ? '$2.50' : '$0.80' }}</div>
+        </div>
+      }
+
+      <div class="actions-row">
+        <button z-button zType="outline">Agregar insumo</button>
+        <button z-button>Guardar Receta</button>
+      </div>
+    </z-card>
+  </section>
+
+  <section class="summary">
+    <h3>Resumen WAC</h3>
+    <div><span>Costo total de produccion</span><strong>$107.10</strong></div>
+    <div><span>Precio de venta</span><strong>$85</strong></div>
+    <div><span>Margen de contribucion</span><z-badge zType="destructive">-26.0%</z-badge></div>
+  </section>
+</main>

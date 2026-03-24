@@ -1,0 +1,13 @@
+.alerts-shell {
+  background: #fff;
+  border: 1px solid #e4ded3;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.alerts-shell h3 {
+  margin: 0 0 0.7rem;
+  font-size: 1.55rem;
+  color: #241a10;
+  font-family: Georgia, 'Times New Roman', serif;
+}

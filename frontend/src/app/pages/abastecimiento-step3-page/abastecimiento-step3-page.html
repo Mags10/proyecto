@@ -1,0 +1,36 @@
+<main class="page-shell">
+  <section class="hero">
+    <h1>Terminal de Abastecimiento</h1>
+    <p>Registra facturas y actualiza costos promedios ponderados (WAC)</p>
+  </section>
+
+  <app-wizard-stepper [step]="3"></app-wizard-stepper>
+
+  <app-mock-form-card title="Resumen de Costo Promedio">
+    <div class="summary-grid">
+      <article class="wac-box">
+        <small>WAC Anterior</small>
+        <strong>$11.50</strong>
+        <span>por litro</span>
+      </article>
+
+      <article class="wac-box highlight">
+        <small>Nuevo WAC</small>
+        <strong>$11.58</strong>
+        <span>+0.72%</span>
+      </article>
+    </div>
+
+    <section class="totals">
+      <div><span>Inventario existente</span><strong>100 litro</strong></div>
+      <div><span>Nueva cantidad</span><strong>20 litro</strong></div>
+      <div><span>Inventario total</span><strong>120 litro</strong></div>
+      <div><span>Costo de compra</span><strong>$240</strong></div>
+    </section>
+
+    <div class="actions">
+      <a routerLink="/abastecimiento/2" z-button zType="outline">Anterior</a>
+      <a routerLink="/abastecimiento/4" z-button>Continuar</a>
+    </div>
+  </app-mock-form-card>
+</main>

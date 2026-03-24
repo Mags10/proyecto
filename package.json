@@ -1,0 +1,12 @@
+{
+  "name": "monorepo-app",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "start": "docker-compose up --build"
+  }
+}

@@ -1,0 +1,42 @@
+.page-shell {
+  padding: 1.2rem;
+  background: #f3efe7;
+  min-height: calc(100vh - 120px);
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 3.4rem;
+  font-family: Georgia, 'Times New Roman', serif;
+  color: #24170e;
+}
+
+.hero p {
+  margin: 0.35rem 0 1rem;
+  color: #726559;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 980px) {
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .kpi-grid,
+  .chart-grid {
+    grid-template-columns: 1fr;
+  }
+}
