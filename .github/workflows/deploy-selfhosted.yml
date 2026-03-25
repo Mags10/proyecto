@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          clean: false
 
       - name: Deploy with Docker Compose
         shell: bash
