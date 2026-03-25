@@ -20,10 +20,10 @@ La idea central es conectar inventario, producción y ventas para tener trazabil
 
 ## UI y componentes
 
-La interfaz frontend utiliza la biblioteca de componentes **ZardUI**:
+La interfaz frontend usa un sistema de componentes **inspirado en ZardUI**, implementado localmente dentro del proyecto (no como dependencia npm externa):
 
-- Sitio oficial: https://zardui.com/
-- Se emplea como base de componentes reutilizables para construir pantallas del sistema.
+- Referencia visual y de API: https://zardui.com/
+- Componentes base reutilizables (`z-button`, `z-card`, `z-badge`, `z-input`, `z-table`) definidos en `frontend/src/app/shared/components/`.
 
 ## Estructura del repositorio
 
