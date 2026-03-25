@@ -3,7 +3,6 @@ name: Deploy on self-hosted runner
 on:
   push:
     branches:
-      - main
       - master
   workflow_dispatch:
 
@@ -19,6 +18,15 @@ jobs:
         uses: actions/checkout@v6
         with:
           clean: false
+          fetch-depth: 0
+
+      - name: Fix workspace ownership
+        shell: bash
+        run: |
+          set -euo pipefail
+          if command -v sudo >/dev/null 2>&1; then
+            sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE" || true
+          fi
 
       - name: Deploy with Docker Compose
         shell: bash
@@ -34,6 +42,21 @@ jobs:
             exit 1
           fi
 
-          # Deploy por ahora solo de frontend
+          # Deploy only frontend service
           $DC up -d --build frontend
           $DC ps frontend
+
+      - name: Health check frontend
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 30); do
+            if curl -fsS "http://127.0.0.1:4200/awe/" >/dev/null; then
+              echo "Frontend is healthy"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Frontend health check failed"
+          docker logs --tail=200 proyecto-frontend-1 || true
+          exit 1
