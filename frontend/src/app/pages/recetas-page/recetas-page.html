@@ -1,16 +1,16 @@
 <main class="page-shell">
   <section class="hero">
     <h1>Editor de Recetas y Costeo</h1>
-    <p>Gestiona recetas, insumos y calcula margenes en tiempo real</p>
+    <p>Gestiona recetas, insumos y calcula márgenes en tiempo real</p>
   </section>
 
   <section class="layout">
-    <z-card class="left-card" zTitle="Informacion de Receta">
+    <z-card class="left-card" zTitle="Información de Receta">
       <div class="form-grid">
         <label>Nombre de la receta</label>
-        <input z-input value="Cafe Latte Grande" />
+        <input z-input value="Café Latte Grande" />
 
-        <label>Categoria</label>
+        <label>Categoría</label>
         <input z-input value="Bebidas" />
 
         <label>Precio de venta</label>
@@ -29,7 +29,7 @@
 
       @for (row of [1, 2, 3, 4]; track row) {
         <div class="ing-row">
-          <input z-input [value]="row === 1 ? 'Cafe espresso' : row === 2 ? 'Leche entera' : row === 3 ? 'Vaso 16oz' : 'Tapa plastica'" />
+          <input z-input [value]="row === 1 ? 'Café espresso' : row === 2 ? 'Leche entera' : row === 3 ? 'Vaso 16oz' : 'Tapa plástica'" />
           <input z-input [value]="row < 3 ? 'ml' : 'Unidad'" />
           <input z-input [value]="row === 1 ? '60' : row === 2 ? '240' : '1'" />
           <input z-input [value]="row === 1 ? '0.45' : row === 2 ? '0.32' : row === 3 ? '2.5' : '0.8'" />
@@ -46,8 +46,8 @@
 
   <section class="summary">
     <h3>Resumen WAC</h3>
-    <div><span>Costo total de produccion</span><strong>$107.10</strong></div>
+    <div><span>Costo total de producción</span><strong>$107.10</strong></div>
     <div><span>Precio de venta</span><strong>$85</strong></div>
-    <div><span>Margen de contribucion</span><z-badge zType="destructive">-26.0%</z-badge></div>
+    <div><span>Margen de contribución</span><z-badge zType="destructive">-26.0%</z-badge></div>
   </section>
 </main>
