@@ -5,55 +5,55 @@ const purchaseRecordSchema = new mongoose.Schema(
     provider: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
     invoiceDate: {
       type: Date,
-      required: true
+      required: true,
     },
     ingredient: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Ingredient',
-      required: true
+      required: true,
     },
     quantityReceived: {
       type: Number,
       required: true,
-      min: 0
+      min: 0,
     },
     totalPrice: {
       type: Number,
       required: true,
-      min: 0
+      min: 0,
     },
     unitPrice: {
       type: Number,
       required: true,
-      min: 0
+      min: 0,
     },
     previousStock: {
       type: Number,
       required: true,
-      min: 0
+      min: 0,
     },
     previousAverageCost: {
       type: Number,
       required: true,
-      min: 0
+      min: 0,
     },
     newStock: {
       type: Number,
       required: true,
-      min: 0
+      min: 0,
     },
     newAverageCost: {
       type: Number,
       required: true,
-      min: 0
-    }
+      min: 0,
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 

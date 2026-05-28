@@ -1,4 +1,16 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, output, signal } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  ElementRef,
+  computed,
+  inject,
+  input,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ZardButtonComponent } from '../../shared/components/button';
@@ -8,27 +20,30 @@ import { MxnCurrencyPipe } from '../../shared/pipes/mxn-currency.pipe';
 import { Recipe } from '../../interfaces/recipe';
 import { ProductionService } from '../../services/production.service';
 import { SupplyService } from '../../services/supply-service';
+import { captureActiveElement, focusModalSurface, restoreActiveElement } from '../../shared/utils/modal-a11y';
 
 @Component({
   selector: 'app-produccion-lote-modal',
   imports: [ReactiveFormsModule, ZardButtonComponent, ZardCardComponent, ZardInputDirective, MxnCurrencyPipe],
   templateUrl: './produccion-lote-modal.component.html',
   styleUrl: './produccion-lote-modal.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProduccionLoteModalComponent {
+export class ProduccionLoteModalComponent implements AfterViewInit {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly previouslyFocusedElement = captureActiveElement();
 
   readonly supplyService = inject(SupplyService);
   readonly productionService = inject(ProductionService);
+  readonly dialogSurface = viewChild<ElementRef<HTMLElement>>('dialogSurface');
 
   readonly recipe = input.required<Recipe>();
   readonly closed = output<void>();
 
   readonly orderForm = this.fb.group({
     plannedQuantity: [1, [Validators.required, Validators.min(0.01)]],
-    notes: ['']
+    notes: [''],
   });
 
   readonly quantityValue = signal(1);
@@ -71,7 +86,7 @@ export class ProduccionLoteModalComponent {
         minimumStock: Number(ingredient?.minimumStock || 0),
         unitCost,
         subtotal: Math.round(requiredQuantity * unitCost * 100) / 100,
-        canReserve: availableStock >= requiredQuantity
+        canReserve: availableStock >= requiredQuantity,
       };
     });
   });
@@ -81,7 +96,9 @@ export class ProduccionLoteModalComponent {
     return preview.length > 0 && preview.every((item) => item.canReserve);
   });
 
-  readonly totalReservedCost = computed(() => this.previewIngredients().reduce((acc, item) => acc + item.subtotal, 0));
+  readonly totalReservedCost = computed(() =>
+    this.previewIngredients().reduce((acc, item) => acc + item.subtotal, 0)
+  );
   readonly reservedUnitCost = computed(() => {
     const quantity = this.quantityValue();
     return quantity > 0 ? Math.round((this.totalReservedCost() / quantity) * 100) / 100 : 0;
@@ -92,12 +109,30 @@ export class ProduccionLoteModalComponent {
       return 0;
     }
 
-    return Math.max(0, Math.floor(Math.min(...preview.map((item) => item.requiredQuantity > 0 ? item.availableStock / item.requiredQuantity * this.quantityValue() : 0))));
+    return Math.max(
+      0,
+      Math.floor(
+        Math.min(
+          ...preview.map((item) =>
+            item.requiredQuantity > 0
+              ? (item.availableStock / item.requiredQuantity) * this.quantityValue()
+              : 0
+          )
+        )
+      )
+    );
   });
   readonly blockingItems = computed(() => this.previewIngredients().filter((item) => !item.canReserve));
-  readonly lowStockWarnings = computed(() => this.previewIngredients().filter((item) => item.availableAfterReserve <= item.minimumStock));
+  readonly lowStockWarnings = computed(() =>
+    this.previewIngredients().filter((item) => item.availableAfterReserve <= item.minimumStock)
+  );
+
+  ngAfterViewInit(): void {
+    focusModalSurface(this.dialogSurface());
+  }
 
   close(): void {
+    restoreActiveElement(this.previouslyFocusedElement);
     this.productionService.error.set('');
     this.closed.emit();
   }
@@ -112,7 +147,10 @@ export class ProduccionLoteModalComponent {
 
     for (const item of recipe.ingredients) {
       const ingredient = this.supplyService.ingredients().find((current) => current._id === item.ingredient);
-      const availableStock = Math.max(0, Number(ingredient?.currentStock || 0) - Number(ingredient?.reservedStock || 0));
+      const availableStock = Math.max(
+        0,
+        Number(ingredient?.currentStock || 0) - Number(ingredient?.reservedStock || 0)
+      );
       if (!ingredient || item.quantity <= 0) {
         minProducible = 0;
         break;
@@ -138,14 +176,16 @@ export class ProduccionLoteModalComponent {
       return;
     }
 
-    void this.productionService.createProductionBatch({
-      recipeId: this.recipe()._id,
-      plannedQuantity: Number(this.orderForm.controls.plannedQuantity.value),
-      notes: this.orderForm.controls.notes.value.trim() || undefined
-    }).then((result) => {
-      if (result) {
-        this.closed.emit();
-      }
-    });
+    void this.productionService
+      .createProductionBatch({
+        recipeId: this.recipe()._id,
+        plannedQuantity: Number(this.orderForm.controls.plannedQuantity.value),
+        notes: this.orderForm.controls.notes.value.trim() || undefined,
+      })
+      .then((result) => {
+        if (result) {
+          this.closed.emit();
+        }
+      });
   }
 }

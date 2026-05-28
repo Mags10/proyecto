@@ -8,9 +8,7 @@ import { badgeVariants, type ZardBadgeShapeVariants, type ZardBadgeTypeVariants 
 
 @Component({
   selector: 'z-badge',
-  template: `
-    <ng-content />
-  `,
+  template: ` <ng-content /> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
@@ -26,6 +24,6 @@ export class ZardBadgeComponent {
   readonly class = input<ClassValue>('');
 
   protected readonly classes = computed(() =>
-    mergeClasses(badgeVariants({ zType: this.zType(), zShape: this.zShape() }), this.class()),
+    mergeClasses(badgeVariants({ zType: this.zType(), zShape: this.zShape() }), this.class())
   );
 }

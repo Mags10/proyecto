@@ -27,11 +27,11 @@ import { ProduccionLoteModalComponent } from '../../components/produccion/produc
     DatePipe,
     ProduccionLoteModalComponent,
     ProduccionCompletarModalComponent,
-    ProduccionDetalleModalComponent
+    ProduccionDetalleModalComponent,
   ],
   templateUrl: './produccion-page.html',
   styleUrl: './produccion-page.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProduccionPage implements OnInit {
   readonly recipesService = inject(RecipesService);
@@ -65,13 +65,15 @@ export class ProduccionPage implements OnInit {
     return this.productionService.orders().filter((batch) => {
       const displayStatus = this.getDisplayStatus(batch);
       const matchesStatus = status === 'ALL' || displayStatus === status;
-      const matchesTerm = !term || [
-        batch.recipeName,
-        batch.recipeCategory,
-        displayStatus,
-        batch.notes ?? '',
-        batch.cancellationReason ?? ''
-      ].some((value) => value.toLowerCase().includes(term));
+      const matchesTerm =
+        !term ||
+        [
+          batch.recipeName,
+          batch.recipeCategory,
+          displayStatus,
+          batch.notes ?? '',
+          batch.cancellationReason ?? '',
+        ].some((value) => value.toLowerCase().includes(term));
 
       return matchesStatus && matchesTerm;
     });
@@ -89,11 +91,20 @@ export class ProduccionPage implements OnInit {
     });
   });
 
-  readonly activeOrdersCount = computed(() => this.productionService.orders().filter((batch) => ['PENDING', 'IN_PROGRESS'].includes(batch.status)).length);
-  readonly inProgressCount = computed(() => this.productionService.orders().filter((batch) => batch.status === 'IN_PROGRESS').length);
-  readonly completedCount = computed(() => this.productionService.orders().filter((batch) => batch.status === 'COMPLETED').length);
+  readonly activeOrdersCount = computed(
+    () =>
+      this.productionService.orders().filter((batch) => ['PENDING', 'IN_PROGRESS'].includes(batch.status))
+        .length
+  );
+  readonly inProgressCount = computed(
+    () => this.productionService.orders().filter((batch) => batch.status === 'IN_PROGRESS').length
+  );
+  readonly completedCount = computed(
+    () => this.productionService.orders().filter((batch) => batch.status === 'COMPLETED').length
+  );
   readonly reservedEstimate = computed(() => {
-    return this.productionService.orders()
+    return this.productionService
+      .orders()
       .filter((batch) => ['PENDING', 'IN_PROGRESS'].includes(batch.status))
       .reduce((acc, batch) => acc + Number(batch.plannedTotalCost || 0), 0);
   });
@@ -102,7 +113,7 @@ export class ProduccionPage implements OnInit {
     await Promise.all([
       this.recipesService.fetchRecipes(),
       this.supplyService.fetchIngredients(),
-      this.productionService.fetchProductionBatches({ limit: 25 })
+      this.productionService.fetchProductionBatches({ limit: 25 }),
     ]);
   }
 
@@ -122,7 +133,10 @@ export class ProduccionPage implements OnInit {
     const legacyConsumed = this.legacyField<unknown[]>(batch, 'consumedIngredients');
     const legacyQuantity = this.legacyField<number>(batch, 'quantityProduced');
 
-    if (batch.status === 'PENDING' && ((legacyConsumed?.length || 0) > 0 || Number(legacyQuantity || 0) > 0)) {
+    if (
+      batch.status === 'PENDING' &&
+      ((legacyConsumed?.length || 0) > 0 || Number(legacyQuantity || 0) > 0)
+    ) {
       return 'COMPLETED';
     }
 
@@ -149,9 +163,13 @@ export class ProduccionPage implements OnInit {
   }
 
   getPlannedIngredientCount(batch: ProductionBatch): number {
-    return batch.plannedIngredients?.length
-      || (this.legacyField<unknown[]>(batch, 'consumedIngredients')?.length || 0)
-      || (batch.actualIngredients?.length || 0);
+    return (
+      batch.plannedIngredients?.length ||
+      this.legacyField<unknown[]>(batch, 'consumedIngredients')?.length ||
+      0 ||
+      batch.actualIngredients?.length ||
+      0
+    );
   }
 
   getPlannedTotalCost(batch: ProductionBatch): number {

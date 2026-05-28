@@ -4,11 +4,13 @@
       <h1>Ventas en piso</h1>
       <p>Registra tickets rápidos sobre stock terminado ya producido y consulta el historial reciente.</p>
     </div>
-    <button z-button type="button" [disabled]="totalSellableProducts() === 0" (click)="openTicket()">Registrar venta</button>
+    <button z-button type="button" [disabled]="totalSellableProducts() === 0" (click)="openTicket()">
+      Registrar venta
+    </button>
   </section>
 
   @if (salesError()) {
-    <p class="error-banner">{{ salesError() }}</p>
+  <p class="error-banner">{{ salesError() }}</p>
   }
 
   <section class="kpi-grid">
@@ -33,7 +35,12 @@
   <section class="panel-grid">
     <z-card class="panel-card" zTitle="Productos vendibles">
       <div class="panel-toolbar">
-        <input z-input [value]="query()" placeholder="Buscar por producto o categoría" (input)="updateQuery(($any($event.target)).value)" />
+        <input
+          z-input
+          [value]="query()"
+          placeholder="Buscar por producto o categoría"
+          (input)="updateQuery(($any($event.target)).value)"
+        />
       </div>
 
       <div class="table-wrap">
@@ -51,29 +58,29 @@
             </tr>
           </thead>
           <tbody z-table-body>
-          @for (recipe of filteredProducts(); track recipe._id) {
-              <tr z-table-row>
-                <td z-table-cell>
-                  <strong>{{ recipe.name }}</strong>
-                </td>
-                <td z-table-cell>{{ recipe.category }}</td>
-                <td z-table-cell>{{ recipe.salePrice | mxnCurrency }}</td>
-                <td z-table-cell>{{ recipe.totalCost | mxnCurrency }}</td>
-                <td z-table-cell>{{ recipe.margin }}%</td>
-                <td z-table-cell>{{ recipe.currentStock }} uds</td>
-                <td z-table-cell>
-                  <z-badge [zType]="getStockBadge(recipe)">{{ getStockState(recipe) }}</z-badge>
-                </td>
-                <td z-table-cell>
-                  <button z-button zSize="sm" (click)="openTicket(recipe)">
-                    Vender
-                  </button>
-                </td>
-              </tr>
+            @for (recipe of filteredProducts(); track recipe._id) {
+            <tr z-table-row>
+              <td z-table-cell>
+                <strong>{{ recipe.name }}</strong>
+              </td>
+              <td z-table-cell>{{ recipe.category }}</td>
+              <td z-table-cell>{{ recipe.salePrice | mxnCurrency }}</td>
+              <td z-table-cell>{{ recipe.totalCost | mxnCurrency }}</td>
+              <td z-table-cell>{{ recipe.margin }}%</td>
+              <td z-table-cell>{{ recipe.currentStock }} uds</td>
+              <td z-table-cell>
+                <z-badge [zType]="getStockBadge(recipe)">{{ getStockState(recipe) }}</z-badge>
+              </td>
+              <td z-table-cell>
+                <button z-button zSize="sm" (click)="openTicket(recipe)">Vender</button>
+              </td>
+            </tr>
             } @empty {
-              <tr z-table-row>
-                <td z-table-cell colspan="8" class="empty-cell">No hay productos con stock disponible para vender.</td>
-              </tr>
+            <tr z-table-row>
+              <td z-table-cell colspan="8" class="empty-cell">
+                No hay productos con stock disponible para vender.
+              </td>
+            </tr>
             }
           </tbody>
         </table>
@@ -95,20 +102,20 @@
           </thead>
           <tbody z-table-body>
             @for (sale of sales(); track sale._id) {
-              <tr z-table-row>
-                <td z-table-cell>{{ sale.soldAt | date:'short' }}</td>
-                <td z-table-cell>{{ sale.items.length }}</td>
-                <td z-table-cell>{{ sale.totalItems }}</td>
-                <td z-table-cell>{{ sale.totalRevenue | mxnCurrency }}</td>
-                <td z-table-cell>{{ sale.totalMargin | mxnCurrency }}</td>
-                <td z-table-cell>
-                  <button z-button zType="outline" zSize="sm" (click)="openSaleDetail(sale)">Detalle</button>
-                </td>
-              </tr>
+            <tr z-table-row>
+              <td z-table-cell>{{ sale.soldAt | date:'short' }}</td>
+              <td z-table-cell>{{ sale.items.length }}</td>
+              <td z-table-cell>{{ sale.totalItems }}</td>
+              <td z-table-cell>{{ sale.totalRevenue | mxnCurrency }}</td>
+              <td z-table-cell>{{ sale.totalMargin | mxnCurrency }}</td>
+              <td z-table-cell>
+                <button z-button zType="outline" zSize="sm" (click)="openSaleDetail(sale)">Detalle</button>
+              </td>
+            </tr>
             } @empty {
-              <tr z-table-row>
-                <td z-table-cell colspan="6" class="empty-cell">Aún no hay ventas registradas.</td>
-              </tr>
+            <tr z-table-row>
+              <td z-table-cell colspan="6" class="empty-cell">Aún no hay ventas registradas.</td>
+            </tr>
             }
           </tbody>
         </table>
@@ -117,14 +124,12 @@
   </section>
 
   @if (ticketModalOpen()) {
-    <app-venta-ticket-modal
-      [recipes]="products()"
-      [initialRecipeId]="selectedRecipeId()"
-      (closed)="ticketModalOpen.set(false)"
-    />
-  }
-
-  @if (detailModalOpen() && selectedSale(); as sale) {
-    <app-venta-detalle-modal [sale]="sale" (closed)="detailModalOpen.set(false)" />
+  <app-venta-ticket-modal
+    [recipes]="products()"
+    [initialRecipeId]="selectedRecipeId()"
+    (closed)="ticketModalOpen.set(false)"
+  />
+  } @if (detailModalOpen() && selectedSale(); as sale) {
+  <app-venta-detalle-modal [sale]="sale" (closed)="detailModalOpen.set(false)" />
   }
 </main>

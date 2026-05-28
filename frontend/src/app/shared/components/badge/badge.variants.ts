@@ -21,7 +21,7 @@ export const badgeVariants = cva(
       zType: 'default',
       zShape: 'default',
     },
-  },
+  }
 );
 
 export type ZardBadgeTypeVariants = NonNullable<VariantProps<typeof badgeVariants>['zType']>;

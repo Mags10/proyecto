@@ -43,7 +43,7 @@ class Server {
     this.app.get('/', (req, res) => {
       res.json({
         message: 'Hello World!',
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     });
   }

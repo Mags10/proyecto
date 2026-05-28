@@ -72,7 +72,7 @@ export class ZardButtonComponent implements OnDestroy {
         const el = this.elementRef.nativeElement;
         const hasIcon = el.querySelector('[data-icon], .z-button-loader, svg') !== null;
         const children = Array.from<Node>(el.childNodes);
-        const hasText = children.some(node => {
+        const hasText = children.some((node) => {
           if (node.nodeType === 3) {
             return node.textContent?.trim() !== '';
           }
@@ -116,8 +116,8 @@ export class ZardButtonComponent implements OnDestroy {
         zLoading: this.zLoading(),
         zDisabled: this.zDisabled(),
       }),
-      this.class(),
-    ),
+      this.class()
+    )
   );
 
   protected readonly isNotInsideOfButtonOrLink = computed(() => {

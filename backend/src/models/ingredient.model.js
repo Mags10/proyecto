@@ -5,45 +5,45 @@ const ingredientSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
     unit: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
     currentStock: {
       type: Number,
       required: true,
       default: 0,
-      min: 0
+      min: 0,
     },
     reservedStock: {
       type: Number,
       required: true,
       default: 0,
-      min: 0
+      min: 0,
     },
     averageCost: {
       type: Number,
       required: true,
       default: 0,
-      min: 0
+      min: 0,
     },
     minimumStock: {
       type: Number,
       required: true,
       default: 0,
-      min: 0
+      min: 0,
     },
     active: {
       type: Boolean,
       required: true,
-      default: true
-    }
+      default: true,
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 

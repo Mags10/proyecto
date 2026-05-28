@@ -42,21 +42,48 @@ jobs:
             exit 1
           fi
 
-          # Deploy only frontend service
-          $DC up -d --build frontend
-          $DC ps frontend
+          # Deploy backend and frontend so the browser can reach the API through the frontend proxy.
+          $DC up -d --build backend frontend
+          $DC ps backend frontend
 
       - name: Health check frontend
         shell: bash
         run: |
           set -euo pipefail
+
+          if docker compose version >/dev/null 2>&1; then
+            DC="docker compose"
+          elif command -v docker-compose >/dev/null 2>&1; then
+            DC="docker-compose"
+          else
+            echo "Docker Compose is not installed on runner"
+            exit 1
+          fi
+
+          frontend_ready=false
+          api_ready=false
           for i in $(seq 1 30); do
             if curl -fsS "http://127.0.0.1:4200/awe/" >/dev/null; then
-              echo "Frontend is healthy"
+              frontend_ready=true
+            fi
+            if curl -fsS "http://127.0.0.1:4200/api/status" >/dev/null; then
+              api_ready=true
+            fi
+
+            if [[ "$frontend_ready" == true && "$api_ready" == true ]]; then
+              echo "Frontend and API are healthy"
               exit 0
             fi
+
             sleep 2
           done
-          echo "Frontend health check failed"
-          docker logs --tail=200 proyecto-frontend-1 || true
+
+          echo "Deployment health check failed"
+          if [[ "$frontend_ready" != true ]]; then
+            echo "Frontend health check failed"
+          fi
+          if [[ "$api_ready" != true ]]; then
+            echo "API health check failed"
+          fi
+          $DC logs --tail=200 backend frontend || true
           exit 1

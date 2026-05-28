@@ -101,11 +101,11 @@ export class ZardCardComponent {
   protected readonly classes = computed(() => mergeClasses(cardVariants(), this.class()));
   protected readonly bodyClasses = computed(() => mergeClasses(cardBodyVariants()));
   protected readonly footerClasses = computed(() =>
-    mergeClasses(cardFooterVariants(), this.zFooterBorder() ? 'border-t' : ''),
+    mergeClasses(cardFooterVariants(), this.zFooterBorder() ? 'border-t' : '')
   );
 
   protected readonly headerClasses = computed(() =>
-    mergeClasses(cardHeaderVariants(), this.zHeaderBorder() ? 'border-b' : ''),
+    mergeClasses(cardHeaderVariants(), this.zHeaderBorder() ? 'border-b' : '')
   );
 
   protected onClick(): void {

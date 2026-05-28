@@ -21,11 +21,11 @@ const authFetch = ((input: RequestInfo | URL, init?: RequestInit) => {
 
   return fetch(input, {
     ...init,
-    headers
+    headers,
   });
 }) as typeof fetch;
 
 export const apiClient = createClient<paths>({
-  baseUrl: 'http://localhost:3010',
-  fetch: authFetch
+  baseUrl: '/api',
+  fetch: authFetch,
 });

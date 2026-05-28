@@ -6,7 +6,9 @@
 
   <nav class="nav-links">
     @for (item of authService.navigation(); track item.path) {
-      <a [routerLink]="item.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">{{ item.label }}</a>
+    <a [routerLink]="item.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+      >{{ item.label }}</a
+    >
     }
   </nav>
 

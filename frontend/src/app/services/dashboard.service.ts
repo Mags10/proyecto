@@ -3,7 +3,7 @@ import { apiClient } from '../api/client';
 import { DashboardAnalytics } from '../interfaces/dashboard';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DashboardService {
   public analytics = signal<DashboardAnalytics | null>(null);
@@ -16,8 +16,8 @@ export class DashboardService {
 
     const { data, error } = await apiClient.GET('/api/analytics/dashboard', {
       params: {
-        query: { days }
-      }
+        query: { days },
+      },
     });
 
     if (error) {

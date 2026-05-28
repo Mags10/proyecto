@@ -1,5 +1,14 @@
-<section class="modal-backdrop" role="presentation" (click)="close()">
-  <z-card class="modal-card production-modal" [zTitle]="'Nueva orden: ' + recipe().name" (click)="$event.stopPropagation()">
+<section class="modal-backdrop" role="presentation" (click)="close()" (keydown.escape)="close()">
+  <z-card
+    #dialogSurface
+    class="modal-card production-modal"
+    [zTitle]="'Nueva orden: ' + recipe().name"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-label]="'Nueva orden ' + recipe().name"
+    tabindex="-1"
+    (click)="$event.stopPropagation()"
+  >
     @if (productionService.error()) {
       <p class="error-message">{{ productionService.error() }}</p>
     }
@@ -16,7 +25,14 @@
             <span class="yield-label">Rendimiento base</span>
             <strong class="yield-value">{{ recipe().yieldText }}</strong>
           </div>
-          <button z-button zType="outline" zSize="sm" type="button" [disabled]="maxProducible() <= 0" (click)="useMaxProducible()">
+          <button
+            z-button
+            zType="outline"
+            zSize="sm"
+            type="button"
+            [disabled]="maxProducible() <= 0"
+            (click)="useMaxProducible()"
+          >
             Usar máximo: {{ maxProducible() }} uds
           </button>
         </div>
@@ -24,7 +40,12 @@
 
       <label class="form-label">
         Notas de producción
-        <textarea class="form-textarea" rows="3" formControlName="notes" placeholder="Preparación para vitrina matutina, pedido especial, etc."></textarea>
+        <textarea
+          class="form-textarea"
+          rows="3"
+          formControlName="notes"
+          placeholder="Preparación para vitrina matutina, pedido especial, etc."
+        ></textarea>
       </label>
 
       @if (blockingItems().length > 0) {
@@ -32,7 +53,10 @@
           <strong>La orden no se puede apartar todavía.</strong>
           <ul class="alert-list">
             @for (item of blockingItems(); track item._id) {
-              <li>{{ item.name }}: disponible {{ item.availableStock }} {{ item.unit }}, requerido {{ item.requiredQuantity }} {{ item.unit }}</li>
+              <li>
+                {{ item.name }}: disponible {{ item.availableStock }} {{ item.unit }}, requerido
+                {{ item.requiredQuantity }} {{ item.unit }}
+              </li>
             }
           </ul>
         </section>
@@ -41,7 +65,10 @@
           <strong>Reserva con impacto en stock mínimo.</strong>
           <ul class="alert-list">
             @for (item of lowStockWarnings(); track item._id) {
-              <li>{{ item.name }} quedará con disponible {{ item.availableAfterReserve }} {{ item.unit }} y mínimo {{ item.minimumStock }} {{ item.unit }}</li>
+              <li>
+                {{ item.name }} quedará con disponible {{ item.availableAfterReserve }} {{ item.unit }} y
+                mínimo {{ item.minimumStock }} {{ item.unit }}
+              </li>
             }
           </ul>
         </section>
@@ -64,11 +91,21 @@
             <tbody>
               @for (item of previewIngredients(); track item._id) {
                 <tr [class.row-danger]="!item.canReserve">
-                  <td><strong>{{ item.name }}</strong></td>
-                  <td class="font-georgia">{{ item.currentStock }} <span class="unit">{{ item.unit }}</span></td>
-                  <td class="font-georgia">{{ item.reservedStock }} <span class="unit">{{ item.unit }}</span></td>
-                  <td class="font-georgia">{{ item.availableStock }} <span class="unit">{{ item.unit }}</span></td>
-                  <td class="font-georgia">{{ item.requiredQuantity }} <span class="unit">{{ item.unit }}</span></td>
+                  <td>
+                    <strong>{{ item.name }}</strong>
+                  </td>
+                  <td class="font-georgia">
+                    {{ item.currentStock }} <span class="unit">{{ item.unit }}</span>
+                  </td>
+                  <td class="font-georgia">
+                    {{ item.reservedStock }} <span class="unit">{{ item.unit }}</span>
+                  </td>
+                  <td class="font-georgia">
+                    {{ item.availableStock }} <span class="unit">{{ item.unit }}</span>
+                  </td>
+                  <td class="font-georgia">
+                    {{ item.requiredQuantity }} <span class="unit">{{ item.unit }}</span>
+                  </td>
                   <td class="font-georgia" [class.negative-stock]="item.availableAfterReserve < 0">
                     {{ item.availableAfterReserve }} <span class="unit">{{ item.unit }}</span>
                   </td>
@@ -100,7 +137,12 @@
 
       <footer class="modal-actions">
         <button z-button zType="outline" type="button" (click)="close()">Cerrar</button>
-        <button z-button type="submit" [disabled]="orderForm.invalid || !canCreate()" [zLoading]="productionService.submitting()">
+        <button
+          z-button
+          type="submit"
+          [disabled]="orderForm.invalid || !canCreate()"
+          [zLoading]="productionService.submitting()"
+        >
           Crear orden
         </button>
       </footer>

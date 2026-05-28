@@ -258,7 +258,7 @@
 .editable-metric {
   background: #ffffff;
   border-color: var(--border);
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 .editable-metric:focus-within {
@@ -298,7 +298,7 @@
   margin: 0;
 }
 
-.sale-price-input[type=number] {
+.sale-price-input[type='number'] {
   -moz-appearance: textfield;
 }
 
@@ -400,13 +400,29 @@
 }
 
 /* Columnas de tabla */
-.col-insumo { width: 34%; }
-.col-unidad { width: 10%; text-align: center; }
-.col-cantidad { width: 14%; }
-.col-costo { width: 17%; }
-.col-subtotal { width: 12%; }
-.col-estado { width: 10%; }
-.col-quitar { width: 3%; text-align: right; }
+.col-insumo {
+  width: 34%;
+}
+.col-unidad {
+  width: 10%;
+  text-align: center;
+}
+.col-cantidad {
+  width: 14%;
+}
+.col-costo {
+  width: 17%;
+}
+.col-subtotal {
+  width: 12%;
+}
+.col-estado {
+  width: 10%;
+}
+.col-quitar {
+  width: 3%;
+  text-align: right;
+}
 
 /* Selección de insumos en tabla */
 .table-select {
@@ -589,46 +605,46 @@
     align-items: stretch;
     gap: 0.75rem;
   }
-  
+
   .title-with-badge {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.4rem;
   }
-  
+
   .header-actions {
     position: absolute;
     top: 1rem;
     right: 1rem;
   }
-  
+
   .metrics-grid {
     grid-template-columns: 1fr;
     gap: 0.5rem;
   }
-  
+
   .table-actions {
     flex-direction: column;
     align-items: stretch;
     gap: 0.5rem;
   }
-  
+
   .btn-add-ingredient {
     width: 100%;
   }
-  
+
   .detail-footer {
     flex-direction: column-reverse;
     align-items: stretch;
     gap: 0.75rem;
   }
-  
+
   .footer-right {
     flex-direction: column;
     align-items: stretch;
     gap: 0.5rem;
   }
-  
+
   .footer-right button,
   .btn-delete-recipe {
     width: 100% !important;

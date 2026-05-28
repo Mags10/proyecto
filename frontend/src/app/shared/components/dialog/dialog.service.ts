@@ -38,12 +38,17 @@ export class ZardDialogService {
         undefined as unknown as OverlayRef,
         config,
         undefined as unknown as ZardDialogComponent<T, U>,
-        this.platformId,
+        this.platformId
       );
     }
 
     const dialogContainer = this.attachDialogContainer<T, U>(overlayRef, config);
-    const dialogRef = this.attachDialogContent<T, U>(componentOrTemplateRef, dialogContainer, overlayRef, config);
+    const dialogRef = this.attachDialogContent<T, U>(
+      componentOrTemplateRef,
+      dialogContainer,
+      overlayRef,
+      config
+    );
 
     dialogContainer.dialogRef = dialogRef;
 
@@ -75,7 +80,7 @@ export class ZardDialogService {
     const containerPortal = new ComponentPortal<ZardDialogComponent<T, U>>(
       ZardDialogComponent,
       config.zViewContainerRef,
-      injector,
+      injector
     );
 
     const containerRef = overlayRef.attach<ZardDialogComponent<T, U>>(containerPortal);
@@ -87,7 +92,7 @@ export class ZardDialogService {
     componentOrTemplateRef: ContentType<T>,
     dialogContainer: ZardDialogComponent<T, U>,
     overlayRef: OverlayRef,
-    config: ZardDialogOptions<T, U>,
+    config: ZardDialogOptions<T, U>
   ) {
     const dialogRef = new ZardDialogRef<T>(overlayRef, config, dialogContainer, this.platformId);
 
@@ -98,13 +103,13 @@ export class ZardDialogService {
           null as unknown as ViewContainerRef,
           {
             dialogRef,
-          } as T,
-        ),
+          } as T
+        )
       );
     } else if (typeof componentOrTemplateRef !== 'string') {
       const injector = this.createInjector<T, U>(dialogRef, config);
       const contentRef = dialogContainer.attachComponentPortal<T>(
-        new ComponentPortal(componentOrTemplateRef, config.zViewContainerRef, injector),
+        new ComponentPortal(componentOrTemplateRef, config.zViewContainerRef, injector)
       );
       dialogRef.componentInstance = contentRef.instance;
     }

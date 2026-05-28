@@ -4,7 +4,12 @@ import { ZardBadgeComponent } from '../../shared/components/badge';
 import { ZardButtonComponent } from '../../shared/components/button';
 import { ZardCardComponent } from '../../shared/components/card';
 import { ZardTableImports } from '../../shared/components/table';
-import { DashboardAlert, DashboardRecentProduction, DashboardRecentSale, DashboardTopSellingRecipe } from '../../interfaces/dashboard';
+import {
+  DashboardAlert,
+  DashboardRecentProduction,
+  DashboardRecentSale,
+  DashboardTopSellingRecipe,
+} from '../../interfaces/dashboard';
 import { DashboardService } from '../../services/dashboard.service';
 import { MxnCurrencyPipe } from '../../shared/pipes/mxn-currency.pipe';
 
@@ -16,11 +21,11 @@ import { MxnCurrencyPipe } from '../../shared/pipes/mxn-currency.pipe';
     ZardBadgeComponent,
     ...ZardTableImports,
     MxnCurrencyPipe,
-    DatePipe
+    DatePipe,
   ],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardPage implements OnInit {
   readonly dashboardService = inject(DashboardService);
@@ -51,7 +56,7 @@ export class DashboardPage implements OnInit {
     return timeline
       .map((point, index) => {
         const x = timeline.length === 1 ? 0 : (index / (timeline.length - 1)) * 100;
-        const y = 100 - ((point.revenue / maxRevenue) * 100);
+        const y = 100 - (point.revenue / maxRevenue) * 100;
         return `${x},${y}`;
       })
       .join(' ');
@@ -72,7 +77,7 @@ export class DashboardPage implements OnInit {
 
     return products.map((item) => ({
       ...item,
-      width: `${Math.max(12, Math.round((item.revenue / maxRevenue) * 100))}%`
+      width: `${Math.max(12, Math.round((item.revenue / maxRevenue) * 100))}%`,
     }));
   });
 

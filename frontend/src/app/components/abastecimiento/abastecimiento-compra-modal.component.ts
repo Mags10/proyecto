@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, OnInit, Output, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  ElementRef,
+  OnInit,
+  inject,
+  output,
+  viewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ZardButtonComponent } from '../../shared/components/button';
@@ -6,27 +16,30 @@ import { ZardCardComponent } from '../../shared/components/card';
 import { ZardInputDirective } from '../../shared/components/input';
 import { MxnCurrencyPipe } from '../../shared/pipes/mxn-currency.pipe';
 import { SupplyService } from '../../services/supply-service';
+import { captureActiveElement, focusModalSurface, restoreActiveElement } from '../../shared/utils/modal-a11y';
 
 @Component({
   selector: 'app-abastecimiento-compra-modal',
   imports: [ReactiveFormsModule, ZardButtonComponent, ZardCardComponent, ZardInputDirective, MxnCurrencyPipe],
   templateUrl: './abastecimiento-compra-modal.component.html',
   styleUrl: './abastecimiento-compra-modal.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AbastecimientoCompraModalComponent implements OnInit {
-  private fb = inject(NonNullableFormBuilder);
-  private destroyRef = inject(DestroyRef);
-  public supplyService = inject(SupplyService);
+export class AbastecimientoCompraModalComponent implements OnInit, AfterViewInit {
+  private readonly fb = inject(NonNullableFormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly previouslyFocusedElement = captureActiveElement();
+  readonly supplyService = inject(SupplyService);
+  readonly dialogSurface = viewChild<ElementRef<HTMLElement>>('dialogSurface');
 
-  @Output() closed = new EventEmitter<void>();
+  readonly closed = output<void>();
 
-  public purchaseForm = this.fb.group({
+  readonly purchaseForm = this.fb.group({
     provider: ['', Validators.required],
     invoiceDate: [new Date().toISOString().slice(0, 10), Validators.required],
     ingredientId: ['', Validators.required],
     quantityReceived: [0, [Validators.required, Validators.min(0.01)]],
-    totalPrice: [0, [Validators.required, Validators.min(0.01)]]
+    totalPrice: [0, [Validators.required, Validators.min(0.01)]],
   });
 
   ngOnInit(): void {
@@ -36,23 +49,26 @@ export class AbastecimientoCompraModalComponent implements OnInit {
       invoiceDate: draft.invoiceDate,
       ingredientId: draft.ingredientId,
       quantityReceived: draft.quantityReceived,
-      totalPrice: draft.totalPrice
+      totalPrice: draft.totalPrice,
     });
 
-    this.purchaseForm.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((value) => {
-        this.supplyService.updateDraft({
-          provider: value.provider || '',
-          invoiceDate: value.invoiceDate || '',
-          ingredientId: value.ingredientId || '',
-          quantityReceived: Number(value.quantityReceived) || 0,
-          totalPrice: Number(value.totalPrice) || 0
-        });
+    this.purchaseForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value) => {
+      this.supplyService.updateDraft({
+        provider: value.provider || '',
+        invoiceDate: value.invoiceDate || '',
+        ingredientId: value.ingredientId || '',
+        quantityReceived: Number(value.quantityReceived) || 0,
+        totalPrice: Number(value.totalPrice) || 0,
       });
+    });
+  }
+
+  ngAfterViewInit(): void {
+    focusModalSurface(this.dialogSurface());
   }
 
   close(): void {
+    restoreActiveElement(this.previouslyFocusedElement);
     this.closed.emit();
   }
 

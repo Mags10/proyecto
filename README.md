@@ -51,7 +51,7 @@ El proyecto está planteado con contenedores Docker para facilitar el despliegue
 
 - Se usa `docker-compose.yml` para levantar servicios.
 - El frontend se expone en el puerto `4200` dentro del servidor.
-- Nginx publica la app bajo la ruta `/awe/`.
+- El frontend consume la API a través de `/api`, que se proxyea hacia el backend dentro de Docker.
 
 Esto simplifica la puesta en marcha en VPS y reduce diferencias entre desarrollo y servidor.
 
@@ -61,8 +61,8 @@ Se implementó un flujo básico de CI/CD con GitHub Actions en un **runner self-
 
 - Archivo: `.github/workflows/deploy-selfhosted.yml`
 - Disparador: `push` a la rama `master` (y ejecución manual con `workflow_dispatch`).
-- Acción principal: reconstruir y levantar el servicio frontend con Docker Compose.
-- Incluye una verificación de salud (`health check`) contra `http://127.0.0.1:4200/awe/`.
+- Acción principal: reconstruir y levantar `backend` + `frontend` con Docker Compose.
+- Incluye verificación de salud del frontend (`/awe/`) y de la API (`/api/status`).
 
 ## Diagramas Mermaid
 

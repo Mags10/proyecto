@@ -18,7 +18,7 @@ const minimumStockCaps = {
   mililitro: 18,
   caja: 8,
   paquete: 8,
-  pieza: 12
+  pieza: 12,
 };
 
 const openingStockPattern = [0.9, 1.2, 0.65, 1.5, 0.35, 0.0];
@@ -29,7 +29,7 @@ const baseAverageCostByUnit = {
   mililitro: 165,
   caja: 28.5,
   paquete: 18.2,
-  pieza: 13.4
+  pieza: 13.4,
 };
 
 const averageCostOverrides = {
@@ -95,7 +95,7 @@ const averageCostOverrides = {
   'Levadura seca': 28,
   'Canela en rama': 8,
   'Anís estrella': 12,
-  'Hojas de menta': 5
+  'Hojas de menta': 5,
 };
 
 const openingStockOverrides = {
@@ -161,7 +161,7 @@ const openingStockOverrides = {
   'Levadura seca': 2,
   'Canela en rama': 2,
   'Anís estrella': 1,
-  'Hojas de menta': 3
+  'Hojas de menta': 3,
 };
 
 function resolveMinimumStock(unit, baseMinimum) {
@@ -189,7 +189,7 @@ function resolveAverageCost(name, unit, index) {
   }
 
   const base = baseAverageCostByUnit[unit] ?? 10;
-  let computed = base * (1 + ((index % 4) * 0.05));
+  let computed = base * (1 + (index % 4) * 0.05);
   if (unit === 'mililitro' && computed > 10) {
     computed = computed / 1000;
   }
@@ -211,8 +211,8 @@ const ingredientCatalog = [
       ['Leche de avena', 12],
       ['Bebida de soya', 12],
       ['Agua filtrada', 30],
-      ['Agua mineral', 24]
-    ]
+      ['Agua mineral', 24],
+    ],
   },
   {
     unit: 'kilogramo',
@@ -228,8 +228,8 @@ const ingredientCatalog = [
       ['Azúcar mascabado', 12],
       ['Harina de trigo', 20],
       ['Harina de repostería', 18],
-      ['Cocoa en polvo', 8]
-    ]
+      ['Cocoa en polvo', 8],
+    ],
   },
   {
     unit: 'mililitro',
@@ -245,8 +245,8 @@ const ingredientCatalog = [
       ['Extracto de vainilla', 800],
       ['Extracto de almendra', 800],
       ['Concentrado chai', 1000],
-      ['Concentrado matcha', 1000]
-    ]
+      ['Concentrado matcha', 1000],
+    ],
   },
   {
     unit: 'caja',
@@ -262,8 +262,8 @@ const ingredientCatalog = [
       ['Mango', 6],
       ['Piña', 4],
       ['Mora azul', 4],
-      ['Zarzamora', 4]
-    ]
+      ['Zarzamora', 4],
+    ],
   },
   {
     unit: 'paquete',
@@ -279,8 +279,8 @@ const ingredientCatalog = [
       ['Té negro en bolsitas', 10],
       ['Té verde en bolsitas', 10],
       ['Café soluble', 6],
-      ['Levadura seca', 6]
-    ]
+      ['Levadura seca', 6],
+    ],
   },
   {
     unit: 'pieza',
@@ -296,9 +296,9 @@ const ingredientCatalog = [
       ['Vainilla en vaina', 3],
       ['Canela en rama', 4],
       ['Anís estrella', 3],
-      ['Hojas de menta', 8]
-    ]
-  }
+      ['Hojas de menta', 8],
+    ],
+  },
 ];
 
 const ingredientsSeed = ingredientCatalog.flatMap((group) =>
@@ -310,7 +310,7 @@ const ingredientsSeed = ingredientCatalog.flatMap((group) =>
       unit: group.unit,
       minimumStock: resolvedMinimumStock,
       currentStock: resolveOpeningStock(name, group.unit, resolvedMinimumStock, index),
-      averageCost: resolveAverageCost(name, group.unit, index)
+      averageCost: resolveAverageCost(name, group.unit, index),
     };
   })
 );
@@ -321,162 +321,162 @@ const purchaseSeed = [
     invoiceDate: '2026-05-03',
     ingredientName: 'Leche entera',
     quantityReceived: 50,
-    totalPrice: 520
+    totalPrice: 520,
   },
   {
     provider: 'Distribuidora Central',
     invoiceDate: '2026-05-17',
     ingredientName: 'Leche entera',
     quantityReceived: 30,
-    totalPrice: 360
+    totalPrice: 360,
   },
   {
     provider: 'Lácteos del Valle',
     invoiceDate: '2026-05-08',
     ingredientName: 'Crema para batir',
     quantityReceived: 24,
-    totalPrice: 480
+    totalPrice: 480,
   },
   {
     provider: 'Distribuidora Central',
     invoiceDate: '2026-05-20',
     ingredientName: 'Crema para batir',
     quantityReceived: 18,
-    totalPrice: 405
+    totalPrice: 405,
   },
   {
     provider: 'Tostadores del Altiplano',
     invoiceDate: '2026-05-05',
     ingredientName: 'Café arábica',
     quantityReceived: 20,
-    totalPrice: 1900
+    totalPrice: 1900,
   },
   {
     provider: 'Tostadores del Altiplano',
     invoiceDate: '2026-05-19',
     ingredientName: 'Café arábica',
     quantityReceived: 10,
-    totalPrice: 1050
+    totalPrice: 1050,
   },
   {
     provider: 'Tostadores del Altiplano',
     invoiceDate: '2026-05-06',
     ingredientName: 'Espresso blend',
     quantityReceived: 18,
-    totalPrice: 1710
+    totalPrice: 1710,
   },
   {
     provider: 'Mayorista La Dulcería',
     invoiceDate: '2026-05-10',
     ingredientName: 'Azúcar estándar',
     quantityReceived: 40,
-    totalPrice: 760
+    totalPrice: 760,
   },
   {
     provider: 'Mayorista La Dulcería',
     invoiceDate: '2026-05-21',
     ingredientName: 'Azúcar mascabado',
     quantityReceived: 36,
-    totalPrice: 828
+    totalPrice: 828,
   },
   {
     provider: 'Abarrotes San Miguel',
     invoiceDate: '2026-05-14',
     ingredientName: 'Harina de trigo',
     quantityReceived: 25,
-    totalPrice: 675
+    totalPrice: 675,
   },
   {
     provider: 'Abarrotes San Miguel',
     invoiceDate: '2026-05-27',
     ingredientName: 'Harina de repostería',
     quantityReceived: 20,
-    totalPrice: 620
+    totalPrice: 620,
   },
   {
     provider: 'Chocolate y Cacao SA',
     invoiceDate: '2026-05-11',
     ingredientName: 'Cocoa en polvo',
     quantityReceived: 12,
-    totalPrice: 720
+    totalPrice: 720,
   },
   {
     provider: 'Siropes del Centro',
     invoiceDate: '2026-05-12',
     ingredientName: 'Jarabe de vainilla',
     quantityReceived: 12,
-    totalPrice: 2400
+    totalPrice: 2400,
   },
   {
     provider: 'Siropes del Centro',
     invoiceDate: '2026-05-24',
     ingredientName: 'Jarabe de caramelo',
     quantityReceived: 10,
-    totalPrice: 2100
+    totalPrice: 2100,
   },
   {
     provider: 'Frutas del Bajío',
     invoiceDate: '2026-05-08',
     ingredientName: 'Fresas',
     quantityReceived: 6,
-    totalPrice: 330
+    totalPrice: 330,
   },
   {
     provider: 'Frutas del Bajío',
     invoiceDate: '2026-05-18',
     ingredientName: 'Plátano',
     quantityReceived: 8,
-    totalPrice: 96
+    totalPrice: 96,
   },
   {
     provider: 'Frutas del Bajío',
     invoiceDate: '2026-05-20',
     ingredientName: 'Mango',
     quantityReceived: 6,
-    totalPrice: 180
+    totalPrice: 180,
   },
   {
     provider: 'Frutas del Bajío',
     invoiceDate: '2026-05-21',
     ingredientName: 'Limones',
     quantityReceived: 16,
-    totalPrice: 160
+    totalPrice: 160,
   },
   {
     provider: 'Frutas del Bajío',
     invoiceDate: '2026-05-23',
     ingredientName: 'Naranjas',
     quantityReceived: 16,
-    totalPrice: 192
+    totalPrice: 192,
   },
   {
     provider: 'Frutas del Bajío',
     invoiceDate: '2026-05-25',
     ingredientName: 'Vainilla en vaina',
     quantityReceived: 6,
-    totalPrice: 390
+    totalPrice: 390,
   },
   {
     provider: 'Frutas del Bajío',
     invoiceDate: '2026-05-26',
     ingredientName: 'Canela en rama',
     quantityReceived: 8,
-    totalPrice: 176
+    totalPrice: 176,
   },
   {
     provider: 'Frutas del Bajío',
     invoiceDate: '2026-05-27',
     ingredientName: 'Anís estrella',
     quantityReceived: 4,
-    totalPrice: 120
+    totalPrice: 120,
   },
   {
     provider: 'Frutas del Bajío',
     invoiceDate: '2026-05-28',
     ingredientName: 'Hojas de menta',
     quantityReceived: 20,
-    totalPrice: 180
-  }
+    totalPrice: 180,
+  },
 ];
 
 const recipeSeed = [
@@ -489,8 +489,8 @@ const recipeSeed = [
     ingredients: [
       { ingredientName: 'Café arábica', quantity: 0.018, unitCost: 95 },
       { ingredientName: 'Leche entera', quantity: 0.24, unitCost: 10.4 },
-      { ingredientName: 'Jarabe de vainilla', quantity: 15, unitCost: 0.2 }
-    ]
+      { ingredientName: 'Jarabe de vainilla', quantity: 15, unitCost: 0.2 },
+    ],
   },
   {
     name: 'Cappuccino Clásico',
@@ -501,8 +501,8 @@ const recipeSeed = [
     ingredients: [
       { ingredientName: 'Espresso blend', quantity: 0.02, unitCost: 92 },
       { ingredientName: 'Leche entera', quantity: 0.18, unitCost: 11.5 },
-      { ingredientName: 'Cocoa en polvo', quantity: 0.006, unitCost: 78 }
-    ]
+      { ingredientName: 'Cocoa en polvo', quantity: 0.006, unitCost: 78 },
+    ],
   },
   {
     name: 'Latte Vainilla',
@@ -513,8 +513,8 @@ const recipeSeed = [
     ingredients: [
       { ingredientName: 'Espresso blend', quantity: 0.018, unitCost: 92 },
       { ingredientName: 'Leche deslactosada', quantity: 0.24, unitCost: 12.2 },
-      { ingredientName: 'Jarabe de vainilla', quantity: 15, unitCost: 0.2 }
-    ]
+      { ingredientName: 'Jarabe de vainilla', quantity: 15, unitCost: 0.2 },
+    ],
   },
   {
     name: 'Matcha Latte',
@@ -525,8 +525,8 @@ const recipeSeed = [
     ingredients: [
       { ingredientName: 'Matcha', quantity: 0.015, unitCost: 210 },
       { ingredientName: 'Leche de almendra', quantity: 0.24, unitCost: 19.5 },
-      { ingredientName: 'Azúcar mascabado', quantity: 0.012, unitCost: 24 }
-    ]
+      { ingredientName: 'Azúcar mascabado', quantity: 0.012, unitCost: 24 },
+    ],
   },
   {
     name: 'Chai Latte Vainilla',
@@ -537,8 +537,8 @@ const recipeSeed = [
     ingredients: [
       { ingredientName: 'Concentrado chai', quantity: 0.02, unitCost: 150 },
       { ingredientName: 'Leche de avena', quantity: 0.24, unitCost: 18.9 },
-      { ingredientName: 'Jarabe de vainilla', quantity: 10, unitCost: 0.2 }
-    ]
+      { ingredientName: 'Jarabe de vainilla', quantity: 10, unitCost: 0.2 },
+    ],
   },
   {
     name: 'Croissant Clásico',
@@ -549,8 +549,8 @@ const recipeSeed = [
     ingredients: [
       { ingredientName: 'Harina de repostería', quantity: 0.12, unitCost: 32 },
       { ingredientName: 'Mantequilla', quantity: 0.03, unitCost: 80 },
-      { ingredientName: 'Huevos', quantity: 1, unitCost: 3 }
-    ]
+      { ingredientName: 'Huevos', quantity: 1, unitCost: 3 },
+    ],
   },
   {
     name: 'Muffin Chocolate',
@@ -562,8 +562,8 @@ const recipeSeed = [
       { ingredientName: 'Harina de repostería', quantity: 0.09, unitCost: 34 },
       { ingredientName: 'Cocoa en polvo', quantity: 0.018, unitCost: 78 },
       { ingredientName: 'Chispas de chocolate', quantity: 0.03, unitCost: 29 },
-      { ingredientName: 'Huevos', quantity: 1, unitCost: 4 }
-    ]
+      { ingredientName: 'Huevos', quantity: 1, unitCost: 4 },
+    ],
   },
   {
     name: 'Pan Integral',
@@ -574,8 +574,8 @@ const recipeSeed = [
     ingredients: [
       { ingredientName: 'Harina de trigo', quantity: 0.18, unitCost: 30 },
       { ingredientName: 'Levadura seca', quantity: 0.004, unitCost: 40 },
-      { ingredientName: 'Sal refinada', quantity: 0.002, unitCost: 15 }
-    ]
+      { ingredientName: 'Sal refinada', quantity: 0.002, unitCost: 15 },
+    ],
   },
   {
     name: 'Tostada Integral con Mantequilla',
@@ -587,8 +587,8 @@ const recipeSeed = [
       { ingredientName: 'Harina de trigo', quantity: 0.08, unitCost: 31 },
       { ingredientName: 'Mantequilla', quantity: 0.015, unitCost: 18 },
       { ingredientName: 'Canela molida', quantity: 0.002, unitCost: 14 },
-      { ingredientName: 'Azúcar estándar', quantity: 0.01, unitCost: 22 }
-    ]
+      { ingredientName: 'Azúcar estándar', quantity: 0.01, unitCost: 22 },
+    ],
   },
   {
     name: 'Smoothie Tropical',
@@ -601,8 +601,8 @@ const recipeSeed = [
       { ingredientName: 'Mango', quantity: 2, unitCost: 12 },
       { ingredientName: 'Plátano', quantity: 1, unitCost: 7 },
       { ingredientName: 'Agua mineral', quantity: 0.12, unitCost: 3.1 },
-      { ingredientName: 'Jarabe de fresa', quantity: 8, unitCost: 0.17 }
-    ]
+      { ingredientName: 'Jarabe de fresa', quantity: 8, unitCost: 0.17 },
+    ],
   },
   {
     name: 'Té Helado Cítrico',
@@ -614,8 +614,8 @@ const recipeSeed = [
       { ingredientName: 'Té verde', quantity: 0.003, unitCost: 42 },
       { ingredientName: 'Limón', quantity: 2, unitCost: 4 },
       { ingredientName: 'Azúcar mascabado', quantity: 0.015, unitCost: 24 },
-      { ingredientName: 'Agua filtrada', quantity: 0.3, unitCost: 1.2 }
-    ]
+      { ingredientName: 'Agua filtrada', quantity: 0.3, unitCost: 1.2 },
+    ],
   },
   {
     name: 'Muffin Arándano',
@@ -627,9 +627,9 @@ const recipeSeed = [
       { ingredientName: 'Harina de repostería', quantity: 0.1, unitCost: 32 },
       { ingredientName: 'Mora azul', quantity: 0.025, unitCost: 120 },
       { ingredientName: 'Azúcar estándar', quantity: 0.03, unitCost: 20 },
-      { ingredientName: 'Huevos', quantity: 1, unitCost: 3 }
-    ]
-  }
+      { ingredientName: 'Huevos', quantity: 1, unitCost: 3 },
+    ],
+  },
 ];
 
 function getIngredientPurchaseHistory(name) {
@@ -642,7 +642,7 @@ async function applyPurchase(ingredient, purchaseInput) {
   const unitPrice = roundMoney(purchaseInput.totalPrice / purchaseInput.quantityReceived);
   const newStock = previousStock + purchaseInput.quantityReceived;
   const newAverageCost = roundMoney(
-    ((previousStock * previousAverageCost) + (purchaseInput.quantityReceived * unitPrice)) / newStock
+    (previousStock * previousAverageCost + purchaseInput.quantityReceived * unitPrice) / newStock
   );
 
   const purchaseRecord = new PurchaseRecord({
@@ -655,7 +655,7 @@ async function applyPurchase(ingredient, purchaseInput) {
     previousStock,
     previousAverageCost,
     newStock,
-    newAverageCost
+    newAverageCost,
   });
 
   ingredient.currentStock = newStock;
@@ -687,7 +687,7 @@ async function seedRecipes(ingredientMap) {
         unit: ingredient.unit,
         quantity: item.quantity,
         unitCost,
-        subtotal
+        subtotal,
       });
 
       totalCost += subtotal;
@@ -708,7 +708,7 @@ async function seedRecipes(ingredientMap) {
       totalCost: roundMoney(totalCost),
       margin,
       status,
-      active: true
+      active: true,
     });
   }
 
@@ -733,7 +733,7 @@ async function main() {
   const createdIngredients = await Ingredient.insertMany(
     ingredientsSeed.map((ingredient) => ({
       ...ingredient,
-      active: true
+      active: true,
     }))
   );
 

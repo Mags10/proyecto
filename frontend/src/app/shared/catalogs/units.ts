@@ -12,7 +12,7 @@ export const UNIT_OPTIONS: UnitOption[] = [
   { value: 'litro', label: 'Litro', shortLabel: 'L', kind: 'volume' },
   { value: 'pieza', label: 'Pieza', shortLabel: 'pz', kind: 'count' },
   { value: 'paquete', label: 'Paquete', shortLabel: 'paq', kind: 'count' },
-  { value: 'caja', label: 'Caja', shortLabel: 'caja', kind: 'count' }
+  { value: 'caja', label: 'Caja', shortLabel: 'caja', kind: 'count' },
 ];
 
 export const getUnitLabel = (value: string): string =>

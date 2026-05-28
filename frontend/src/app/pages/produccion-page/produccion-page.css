@@ -90,7 +90,7 @@
   box-shadow: 0 1px 2px rgba(38, 26, 16, 0.03) !important;
 }
 
-.stat-card ::ng-deep [data-slot="card-content"] {
+.stat-card ::ng-deep [data-slot='card-content'] {
   padding: 0 1rem !important;
   height: 100% !important;
   display: flex !important;
@@ -251,16 +251,36 @@
   font-weight: 500;
 }
 
-.col-order { width: 24%; }
-.col-status { width: 12%; }
-.col-plan { width: 13%; }
-.col-cost { width: 15%; }
-.col-result { width: 18%; }
-.col-time { width: 10%; }
-.col-actions { width: 8%; }
-.col-name { width: 30%; }
-.col-category { width: 16%; }
-.col-stock { width: 14%; }
+.col-order {
+  width: 24%;
+}
+.col-status {
+  width: 12%;
+}
+.col-plan {
+  width: 13%;
+}
+.col-cost {
+  width: 15%;
+}
+.col-result {
+  width: 18%;
+}
+.col-time {
+  width: 10%;
+}
+.col-actions {
+  width: 8%;
+}
+.col-name {
+  width: 30%;
+}
+.col-category {
+  width: 16%;
+}
+.col-stock {
+  width: 14%;
+}
 
 @media (max-width: 980px) {
   .hero {

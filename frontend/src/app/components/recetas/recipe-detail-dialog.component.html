@@ -1,203 +1,253 @@
-<section class="modal-backdrop" role="presentation" (click)="close()">
-<div class="modal-card" (click)="$event.stopPropagation()">
-  <!-- Cabecera del modal -->
-  <header class="detail-header">
-    <div class="heading-copy">
-      <span class="eyebrow">{{ recipe() ? 'Detalle de Receta' : 'Nueva Receta' }}</span>
-      <div class="title-with-badge">
-        <h2>{{ form.controls.name.value || 'Sin nombre' }}</h2>
-        <div class="badge-group">
-          @if (form.controls.category.value) {
-            <z-badge zType="secondary" class="category-badge">{{ form.controls.category.value }}</z-badge>
-          }
-          <z-badge [class.badge-rentable]="summary().status === 'Rentable'"
-                   [class.badge-ajustar]="summary().status === 'Ajustar costo'"
-                   [class.badge-critica]="summary().status === 'Crítica'">
-            {{ calculatedStatus() }}
-          </z-badge>
-        </div>
-      </div>
-      <p class="meta">
-        Rendimiento: <strong>{{ form.controls.yieldText.value || 'Sin especificar' }}</strong>
-      </p>
-    </div>
-
-    <div class="header-actions">
-      <button class="close-icon-btn" type="button" (click)="close()" title="Cerrar modal">
-        &times;
-      </button>
-    </div>
-  </header>
-
-  <div class="detail-shell">
-    <!-- Panel principal en cuadrícula de 2 columnas -->
-  <section class="detail-grid">
-    <!-- Formulario de Información General -->
-    <z-card zTitle="Información general" class="panel panel-general">
-      <form class="info-form" [formGroup]="form">
-        <label class="field field-wide">
-          <span class="field-label">Nombre de la Receta</span>
-          <input z-input formControlName="name" placeholder="Ej. Café Latte Grande" />
-        </label>
-
-        <label class="field">
-          <span class="field-label">Categoría</span>
-          <input z-input formControlName="category" placeholder="Ej. Bebidas calientes" />
-        </label>
-
-        <label class="field">
-          <span class="field-label">Rendimiento</span>
-          <input z-input formControlName="yieldText" placeholder="Ej. 1 porción, 12 piezas" />
-        </label>
-
-        <label class="field field-wide">
-          <span class="field-label">Notas e Instrucciones</span>
-          <textarea z-input formControlName="notes" placeholder="Notas sobre la preparación, costeo o presentación..."></textarea>
-        </label>
-      </form>
-    </z-card>
-
-    <!-- Tarjeta Analítica de Costeo y Rentabilidad -->
-    <z-card zTitle="Análisis de Rentabilidad" class="panel panel-summary">
-      <div class="margin-display" 
-           [class.status-rentable]="summary().status === 'Rentable'" 
-           [class.status-ajustar]="summary().status === 'Ajustar costo'" 
-           [class.status-critica]="summary().status === 'Crítica'">
-        <div class="margin-label">Margen de ganancia</div>
-        <div class="margin-value">{{ summary().margin.toFixed(1) }}%</div>
-      </div>
-
-      <div class="metrics-grid">
-        <div class="metric-card editable-metric">
-          <span class="metric-label">Precio de Venta (MXN)</span>
-          <div class="metric-input-wrapper">
-            <span class="currency-symbol">MXN</span>
-            <input type="number" [formControl]="form.controls.salePrice" class="sale-price-input" min="0.01" step="0.5" />
+<section class="modal-backdrop" role="presentation" (click)="close()" (keydown.escape)="close()">
+  <div
+    #dialogSurface
+    class="modal-card"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-label]="recipe() ? 'Editar receta' : 'Nueva receta'"
+    tabindex="-1"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Cabecera del modal -->
+    <header class="detail-header">
+      <div class="heading-copy">
+        <span class="eyebrow">{{ recipe() ? 'Detalle de Receta' : 'Nueva Receta' }}</span>
+        <div class="title-with-badge">
+          <h2>{{ form.controls.name.value || 'Sin nombre' }}</h2>
+          <div class="badge-group">
+            @if (form.controls.category.value) {
+              <z-badge zType="secondary" class="category-badge">{{ form.controls.category.value }}</z-badge>
+            }
+            <z-badge
+              [class.badge-rentable]="summary().status === 'Rentable'"
+              [class.badge-ajustar]="summary().status === 'Ajustar costo'"
+              [class.badge-critica]="summary().status === 'Crítica'"
+            >
+              {{ calculatedStatus() }}
+            </z-badge>
           </div>
         </div>
-        <div class="metric-card">
-          <span class="metric-label">Costo Insumos (MXN)</span>
-          <strong class="metric-val">{{ summary().totalCost | mxnCurrency }}</strong>
-        </div>
-        <div class="metric-card highlighted" 
-             [class.status-rentable]="summary().status === 'Rentable'" 
-             [class.status-ajustar]="summary().status === 'Ajustar costo'" 
-             [class.status-critica]="summary().status === 'Crítica'">
-          <span class="metric-label">Utilidad (MXN)</span>
-          <strong class="metric-val">{{ summary().profit | mxnCurrency }}</strong>
-        </div>
+        <p class="meta">
+          Rendimiento: <strong>{{ form.controls.yieldText.value || 'Sin especificar' }}</strong>
+        </p>
       </div>
 
-      <p class="status-explanation"
-         [class.expl-rentable]="summary().status === 'Rentable'" 
-         [class.expl-ajustar]="summary().status === 'Ajustar costo'" 
-         [class.expl-critica]="summary().status === 'Crítica'">
-        @if (summary().status === 'Rentable') {
-          ¡Excelente! Esta receta es <strong>Rentable</strong> con un margen superior al 30%.
-        } @else if (summary().status === 'Ajustar costo') {
-          Atención: Margen moderado (15% - 29.9%). Se recomienda **ajustar costos** o subir el precio.
-        } @else {
-          Alerta: Margen <strong>Crítico</strong> inferior al 15%. Requiere revisión inmediata.
-        }
-      </p>
-    </z-card>
-  </section>
+      <div class="header-actions">
+        <button class="close-icon-btn" type="button" (click)="close()" title="Cerrar modal">&times;</button>
+      </div>
+    </header>
 
-  <!-- Tabla de Insumos y Costos -->
-  <z-card zTitle="Insumos de la Receta" class="panel panel-table">
-    <div class="table-actions">
-      <p class="table-subtitle">Especifica los insumos, cantidades y costos para calcular con precisión.</p>
-      <button z-button zType="outline" zSize="sm" type="button" (click)="addIngredientRow()" class="btn-add-ingredient">
-        + Agregar Insumo
-      </button>
-    </div>
-    
-    <div class="table-wrap">
-      <table z-table>
-        <thead z-table-header>
-          <tr z-table-row>
-            <th z-table-head class="col-insumo">Insumo</th>
-            <th z-table-head class="col-unidad">Unidad</th>
-            <th z-table-head class="col-cantidad">Cantidad</th>
-            <th z-table-head class="col-costo">Costo Unitario (MXN)</th>
-            <th z-table-head class="col-subtotal">Subtotal (MXN)</th>
-            <th z-table-head class="col-estado">Estado</th>
-            <th z-table-head class="col-quitar"></th>
-          </tr>
-        </thead>
-        <tbody z-table-body>
-          @for (row of form.controls.ingredients.controls; track $index) {
-            <tr z-table-row [class.row-invalid]="getRowStatus($index).kind === 'destructive'">
-              <!-- Selección de Insumo -->
-              <td z-table-cell>
-                <select class="table-select" [formControl]="row.controls.ingredientId">
-                  <option value="">Selecciona un insumo...</option>
-                  @for (ingredient of supplyService.ingredients(); track ingredient._id) {
-                    <option [value]="ingredient._id">{{ ingredient.name }}</option>
-                  }
-                </select>
-              </td>
-              
-              <!-- Unidad de Medida (Automática) -->
-              <td z-table-cell class="cell-unit">
-                <span class="unit-badge">{{ getIngredientUnit(row.controls.ingredientId.value) }}</span>
-              </td>
-              
-              <!-- Cantidad -->
-              <td z-table-cell>
-                <input class="row-input compact-input" z-input type="number" [formControl]="row.controls.quantity" placeholder="0.0" />
-              </td>
-              
-              <!-- Costo Unitario -->
-              <td z-table-cell class="cell-unit-cost">
-                <span class="cost-value">{{ getIngredientRowUnitCost($index) | mxnCurrency }}</span>
-              </td>
-              
-              <!-- Subtotal Computado -->
-              <td z-table-cell class="cell-subtotal">
-                <strong>{{ getRowSubtotal($index) | mxnCurrency }}</strong>
-              </td>
-              
-              <!-- Badge de Estado de la fila -->
-              <td z-table-cell>
-                <span class="status-indicator" 
+    <div class="detail-shell">
+      <!-- Panel principal en cuadrícula de 2 columnas -->
+      <section class="detail-grid">
+        <!-- Formulario de Información General -->
+        <z-card zTitle="Información general" class="panel panel-general">
+          <form class="info-form" [formGroup]="form">
+            <label class="field field-wide">
+              <span class="field-label">Nombre de la Receta</span>
+              <input z-input formControlName="name" placeholder="Ej. Café Latte Grande" />
+            </label>
+
+            <label class="field">
+              <span class="field-label">Categoría</span>
+              <input z-input formControlName="category" placeholder="Ej. Bebidas calientes" />
+            </label>
+
+            <label class="field">
+              <span class="field-label">Rendimiento</span>
+              <input z-input formControlName="yieldText" placeholder="Ej. 1 porción, 12 piezas" />
+            </label>
+
+            <label class="field field-wide">
+              <span class="field-label">Notas e Instrucciones</span>
+              <textarea
+                z-input
+                formControlName="notes"
+                placeholder="Notas sobre la preparación, costeo o presentación..."
+              ></textarea>
+            </label>
+          </form>
+        </z-card>
+
+        <!-- Tarjeta Analítica de Costeo y Rentabilidad -->
+        <z-card zTitle="Análisis de Rentabilidad" class="panel panel-summary">
+          <div
+            class="margin-display"
+            [class.status-rentable]="summary().status === 'Rentable'"
+            [class.status-ajustar]="summary().status === 'Ajustar costo'"
+            [class.status-critica]="summary().status === 'Crítica'"
+          >
+            <div class="margin-label">Margen de ganancia</div>
+            <div class="margin-value">{{ summary().margin.toFixed(1) }}%</div>
+          </div>
+
+          <div class="metrics-grid">
+            <div class="metric-card editable-metric">
+              <span class="metric-label">Precio de Venta (MXN)</span>
+              <div class="metric-input-wrapper">
+                <span class="currency-symbol">MXN</span>
+                <input
+                  type="number"
+                  [formControl]="form.controls.salePrice"
+                  class="sale-price-input"
+                  min="0.01"
+                  step="0.5"
+                />
+              </div>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">Costo Insumos (MXN)</span>
+              <strong class="metric-val">{{ summary().totalCost | mxnCurrency }}</strong>
+            </div>
+            <div
+              class="metric-card highlighted"
+              [class.status-rentable]="summary().status === 'Rentable'"
+              [class.status-ajustar]="summary().status === 'Ajustar costo'"
+              [class.status-critica]="summary().status === 'Crítica'"
+            >
+              <span class="metric-label">Utilidad (MXN)</span>
+              <strong class="metric-val">{{ summary().profit | mxnCurrency }}</strong>
+            </div>
+          </div>
+
+          <p
+            class="status-explanation"
+            [class.expl-rentable]="summary().status === 'Rentable'"
+            [class.expl-ajustar]="summary().status === 'Ajustar costo'"
+            [class.expl-critica]="summary().status === 'Crítica'"
+          >
+            @if (summary().status === 'Rentable') {
+              ¡Excelente! Esta receta es <strong>Rentable</strong> con un margen superior al 30%.
+            } @else if (summary().status === 'Ajustar costo') {
+              Atención: Margen moderado (15% - 29.9%). Se recomienda **ajustar costos** o subir el precio.
+            } @else {
+              Alerta: Margen <strong>Crítico</strong> inferior al 15%. Requiere revisión inmediata.
+            }
+          </p>
+        </z-card>
+      </section>
+
+      <!-- Tabla de Insumos y Costos -->
+      <z-card zTitle="Insumos de la Receta" class="panel panel-table">
+        <div class="table-actions">
+          <p class="table-subtitle">
+            Especifica los insumos, cantidades y costos para calcular con precisión.
+          </p>
+          <button
+            z-button
+            zType="outline"
+            zSize="sm"
+            type="button"
+            (click)="addIngredientRow()"
+            class="btn-add-ingredient"
+          >
+            + Agregar Insumo
+          </button>
+        </div>
+
+        <div class="table-wrap">
+          <table z-table>
+            <thead z-table-header>
+              <tr z-table-row>
+                <th z-table-head class="col-insumo">Insumo</th>
+                <th z-table-head class="col-unidad">Unidad</th>
+                <th z-table-head class="col-cantidad">Cantidad</th>
+                <th z-table-head class="col-costo">Costo Unitario (MXN)</th>
+                <th z-table-head class="col-subtotal">Subtotal (MXN)</th>
+                <th z-table-head class="col-estado">Estado</th>
+                <th z-table-head class="col-quitar"></th>
+              </tr>
+            </thead>
+            <tbody z-table-body>
+              @for (row of form.controls.ingredients.controls; track $index) {
+                <tr z-table-row [class.row-invalid]="getRowStatus($index).kind === 'destructive'">
+                  <!-- Selección de Insumo -->
+                  <td z-table-cell>
+                    <select class="table-select" [formControl]="row.controls.ingredientId">
+                      <option value="">Selecciona un insumo...</option>
+                      @for (ingredient of supplyService.ingredients(); track ingredient._id) {
+                        <option [value]="ingredient._id">{{ ingredient.name }}</option>
+                      }
+                    </select>
+                  </td>
+
+                  <!-- Unidad de Medida (Automática) -->
+                  <td z-table-cell class="cell-unit">
+                    <span class="unit-badge">{{ getIngredientUnit(row.controls.ingredientId.value) }}</span>
+                  </td>
+
+                  <!-- Cantidad -->
+                  <td z-table-cell>
+                    <input
+                      class="row-input compact-input"
+                      z-input
+                      type="number"
+                      [formControl]="row.controls.quantity"
+                      placeholder="0.0"
+                    />
+                  </td>
+
+                  <!-- Costo Unitario -->
+                  <td z-table-cell class="cell-unit-cost">
+                    <span class="cost-value">{{ getIngredientRowUnitCost($index) | mxnCurrency }}</span>
+                  </td>
+
+                  <!-- Subtotal Computado -->
+                  <td z-table-cell class="cell-subtotal">
+                    <strong>{{ getRowSubtotal($index) | mxnCurrency }}</strong>
+                  </td>
+
+                  <!-- Badge de Estado de la fila -->
+                  <td z-table-cell>
+                    <span
+                      class="status-indicator"
                       [class.success]="getRowStatus($index).kind === 'secondary'"
-                      [class.error]="getRowStatus($index).kind !== 'secondary'">
-                  {{ getRowStatus($index).label }}
-                </span>
-              </td>
-              
-              <!-- Acción Quitar fila -->
-              <td z-table-cell>
-                <button class="remove-row-btn" type="button" (click)="removeIngredientRow($index)" title="Quitar insumo">
-                  &times;
-                </button>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
-  </z-card>
-  </div>
+                      [class.error]="getRowStatus($index).kind !== 'secondary'"
+                    >
+                      {{ getRowStatus($index).label }}
+                    </span>
+                  </td>
 
-  <!-- Sticky Footer para Acciones del Modal -->
-  <footer class="detail-footer">
-    <div class="footer-left">
-      @if (recipe()) {
-        <button z-button zType="destructive" type="button" (click)="delete()" class="btn-delete-recipe">
-          Eliminar Receta
+                  <!-- Acción Quitar fila -->
+                  <td z-table-cell>
+                    <button
+                      class="remove-row-btn"
+                      type="button"
+                      (click)="removeIngredientRow($index)"
+                      title="Quitar insumo"
+                    >
+                      &times;
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </z-card>
+    </div>
+
+    <!-- Sticky Footer para Acciones del Modal -->
+    <footer class="detail-footer">
+      <div class="footer-left">
+        @if (recipe()) {
+          <button z-button zType="destructive" type="button" (click)="delete()" class="btn-delete-recipe">
+            Eliminar Receta
+          </button>
+        }
+      </div>
+      <div class="footer-right">
+        <button z-button zType="outline" type="button" (click)="close()">Cancelar</button>
+        <button
+          z-button
+          type="button"
+          [zLoading]="recipesService.loading()"
+          (click)="save()"
+          class="btn-save-recipe"
+        >
+          Guardar Receta
         </button>
-      }
-    </div>
-    <div class="footer-right">
-      <button z-button zType="outline" type="button" (click)="close()">
-        Cancelar
-      </button>
-      <button z-button type="button" [zLoading]="recipesService.loading()" (click)="save()" class="btn-save-recipe">
-        Guardar Receta
-      </button>
-    </div>
-  </footer>
-</div>
+      </div>
+    </footer>
+  </div>
 </section>

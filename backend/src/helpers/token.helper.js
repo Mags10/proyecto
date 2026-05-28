@@ -11,7 +11,7 @@ const getJwtExpirationSeconds = () => Number(process.env.JWT_EXPIRES_IN_SECONDS 
 const signToken = (payload) => {
   const header = {
     alg: 'HS256',
-    typ: 'JWT'
+    typ: 'JWT',
   };
 
   const issuedAt = Math.floor(Date.now() / 1000);
@@ -19,16 +19,13 @@ const signToken = (payload) => {
   const tokenPayload = {
     ...payload,
     iat: issuedAt,
-    exp: expiresAt
+    exp: expiresAt,
   };
 
   const encodedHeader = base64UrlEncodeJson(header);
   const encodedPayload = base64UrlEncodeJson(tokenPayload);
   const body = `${encodedHeader}.${encodedPayload}`;
-  const signature = crypto
-    .createHmac('sha256', getJwtSecret())
-    .update(body)
-    .digest('base64url');
+  const signature = crypto.createHmac('sha256', getJwtSecret()).update(body).digest('base64url');
 
   return `${body}.${signature}`;
 };
@@ -42,10 +39,7 @@ const verifyToken = (token) => {
 
   const [encodedHeader, encodedPayload, receivedSignature] = segments;
   const body = `${encodedHeader}.${encodedPayload}`;
-  const expectedSignature = crypto
-    .createHmac('sha256', getJwtSecret())
-    .update(body)
-    .digest('base64url');
+  const expectedSignature = crypto.createHmac('sha256', getJwtSecret()).update(body).digest('base64url');
 
   const expectedBuffer = Buffer.from(expectedSignature);
   const receivedBuffer = Buffer.from(receivedSignature);
@@ -70,5 +64,5 @@ const verifyToken = (token) => {
 module.exports = {
   signToken,
   verifyToken,
-  getJwtExpirationSeconds
+  getJwtExpirationSeconds,
 };

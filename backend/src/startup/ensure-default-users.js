@@ -6,20 +6,20 @@ const DEFAULT_USERS = [
     name: 'Administrador KitchenFlow',
     email: 'admin@kitchenflow.local',
     password: 'Admin123!',
-    role: 'ADMIN'
+    role: 'ADMIN',
   },
   {
     name: 'Equipo de Cocina',
     email: 'cocina@kitchenflow.local',
     password: 'Cocina123!',
-    role: 'KITCHEN'
+    role: 'KITCHEN',
   },
   {
     name: 'Punto de Venta',
     email: 'piso@kitchenflow.local',
     password: 'Piso123!',
-    role: 'FLOOR'
-  }
+    role: 'FLOOR',
+  },
 ];
 
 let seedPromise = null;
@@ -46,7 +46,7 @@ const ensureDefaultUsers = async () => {
         email: entry.email.toLowerCase(),
         passwordHash,
         role: entry.role,
-        active: true
+        active: true,
       });
     }
   })()

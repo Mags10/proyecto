@@ -1,17 +1,16 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
   ZardTableBodyComponent,
   ZardTableCellComponent,
   ZardTableComponent,
   ZardTableHeadComponent,
   ZardTableHeaderComponent,
-  ZardTableRowComponent
+  ZardTableRowComponent,
 } from '../../../shared/components/table/table.component';
 import { ZardBadgeComponent } from '../../../shared/components/badge';
 
 @Component({
   selector: 'app-alerts-table',
-  standalone: true,
   imports: [
     ZardTableComponent,
     ZardTableHeaderComponent,
@@ -19,9 +18,10 @@ import { ZardBadgeComponent } from '../../../shared/components/badge';
     ZardTableRowComponent,
     ZardTableHeadComponent,
     ZardTableCellComponent,
-    ZardBadgeComponent
+    ZardBadgeComponent,
   ],
   templateUrl: './alerts-table.html',
-  styleUrl: './alerts-table.css'
+  styleUrl: './alerts-table.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AlertsTable {}

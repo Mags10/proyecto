@@ -4,7 +4,7 @@ const {
   postProductionBatch,
   startProductionBatch,
   completeProductionBatch,
-  cancelProductionBatch
+  cancelProductionBatch,
 } = require('../controllers/production-batches.controller');
 const { ROLES, requireAuth, requireRoles } = require('../middlewares/auth.middleware');
 

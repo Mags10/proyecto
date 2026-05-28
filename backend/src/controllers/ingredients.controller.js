@@ -17,7 +17,7 @@ const getIngredients = async (req = request, res = response) => {
     console.log(err);
     return res.status(500).json({
       message: 'Internal Server Error',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 };
@@ -29,7 +29,7 @@ const getIngredientById = async (req = request, res = response) => {
     if (!mongoose.isValidObjectId(id)) {
       return res.status(400).json({
         message: `Invalid id ${id}`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -37,7 +37,7 @@ const getIngredientById = async (req = request, res = response) => {
     if (!result) {
       return res.status(404).json({
         message: `Ingredient with id ${id} not found`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -47,7 +47,7 @@ const getIngredientById = async (req = request, res = response) => {
     console.log(err);
     return res.status(500).json({
       message: 'Internal Server Error',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 };
@@ -58,7 +58,7 @@ const postIngredient = async (req = request, res = response) => {
   if (!name || !unit) {
     return res.status(400).json({
       message: 'Bad Request. Missing required fields: name, unit',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -68,21 +68,21 @@ const postIngredient = async (req = request, res = response) => {
       unit,
       currentStock: Number(currentStock) || 0,
       averageCost: Number(averageCost) || 0,
-      minimumStock: Number(minimumStock) || 0
+      minimumStock: Number(minimumStock) || 0,
     });
 
     const result = await ingredient.save();
     res.status(201).json({
       message: 'Ingredient created successfully',
       ingredient: result,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   } catch (err) {
     console.log('Error creating ingredient:');
     console.log(err);
     return res.status(500).json({
       message: 'Internal Server Error',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 };
@@ -95,7 +95,7 @@ const putIngredient = async (req = request, res = response) => {
     if (!mongoose.isValidObjectId(id)) {
       return res.status(400).json({
         message: `Invalid id ${id}`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -106,7 +106,7 @@ const putIngredient = async (req = request, res = response) => {
         unit,
         currentStock: Number(currentStock) || 0,
         averageCost: Number(averageCost) || 0,
-        minimumStock: Number(minimumStock) || 0
+        minimumStock: Number(minimumStock) || 0,
       },
       { new: true, runValidators: true }
     );
@@ -114,21 +114,21 @@ const putIngredient = async (req = request, res = response) => {
     if (!result) {
       return res.status(404).json({
         message: `Ingredient with id ${id} not found`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
     res.status(200).json({
       message: 'Ingredient updated successfully',
       ingredient: result,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   } catch (err) {
     console.log('Error updating ingredient:');
     console.log(err);
     return res.status(500).json({
       message: 'Internal Server Error',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 };
@@ -140,7 +140,7 @@ const deleteIngredient = async (req = request, res = response) => {
     if (!mongoose.isValidObjectId(id)) {
       return res.status(400).json({
         message: `Invalid id ${id}`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -148,20 +148,20 @@ const deleteIngredient = async (req = request, res = response) => {
     if (!result) {
       return res.status(404).json({
         message: `Ingredient with id ${id} not found`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
     res.status(200).json({
       message: `Ingredient with id ${id} deleted successfully`,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   } catch (err) {
     console.log('Error deleting ingredient:');
     console.log(err);
     return res.status(500).json({
       message: 'Internal Server Error',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 };
@@ -171,5 +171,5 @@ module.exports = {
   getIngredientById,
   postIngredient,
   putIngredient,
-  deleteIngredient
+  deleteIngredient,
 };

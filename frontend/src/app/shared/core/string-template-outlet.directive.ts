@@ -1,26 +1,26 @@
-import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, TemplateRef, ViewContainerRef, effect, inject, input } from '@angular/core';
 
 @Directive({
   selector: '[zStringTemplateOutlet]',
-  standalone: true
 })
 export class ZardStringTemplateOutletDirective {
-  constructor(
-    private readonly templateRef: TemplateRef<unknown>,
-    private readonly viewContainerRef: ViewContainerRef
-  ) {}
+  private readonly templateRef = inject(TemplateRef<unknown>);
+  private readonly viewContainerRef = inject(ViewContainerRef);
+  readonly zStringTemplateOutlet = input<string | TemplateRef<void> | null | undefined>(undefined);
 
-  @Input() set zStringTemplateOutlet(value: string | TemplateRef<void> | null | undefined) {
-    this.viewContainerRef.clear();
+  constructor() {
+    effect(() => {
+      const value = this.zStringTemplateOutlet();
+      this.viewContainerRef.clear();
 
-    if (value instanceof TemplateRef) {
-      this.viewContainerRef.createEmbeddedView(value);
-      return;
-    }
+      if (value instanceof TemplateRef) {
+        this.viewContainerRef.createEmbeddedView(value);
+        return;
+      }
 
-    const template = this.templateRef;
-    this.viewContainerRef.createEmbeddedView(template, {
-      $implicit: value ?? ''
+      this.viewContainerRef.createEmbeddedView(this.templateRef, {
+        $implicit: value ?? '',
+      });
     });
   }
 }

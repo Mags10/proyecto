@@ -3,7 +3,7 @@ import { apiClient } from '../api/client';
 import { Recipe, RecipePayload } from '../interfaces/recipe';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RecipesService {
   public recipes = signal<Recipe[]>([]);
@@ -19,9 +19,9 @@ export class RecipesService {
       params: {
         query: {
           q: query || undefined,
-          limit: 100
-        }
-      }
+          limit: 100,
+        },
+      },
     });
 
     if (error) {
@@ -50,10 +50,10 @@ export class RecipesService {
     const response = recipeId
       ? await apiClient.PUT('/api/recipes/{id}', {
           params: { path: { id: recipeId } },
-          body: payload
+          body: payload,
         })
       : await apiClient.POST('/api/recipes', {
-          body: payload
+          body: payload,
         });
 
     if (response.error) {
@@ -77,7 +77,7 @@ export class RecipesService {
     this.loading.set(true);
 
     const { error } = await apiClient.DELETE('/api/recipes/{id}', {
-      params: { path: { id: recipeId } }
+      params: { path: { id: recipeId } },
     });
 
     if (error) {
@@ -99,7 +99,8 @@ export class RecipesService {
       return { averageMargin: 0, criticalCount: 0, count: 0 };
     }
 
-    const averageMargin = Math.round((recipes.reduce((acc, recipe) => acc + recipe.margin, 0) / recipes.length) * 10) / 10;
+    const averageMargin =
+      Math.round((recipes.reduce((acc, recipe) => acc + recipe.margin, 0) / recipes.length) * 10) / 10;
     const criticalCount = recipes.filter((recipe) => recipe.margin < 20).length;
 
     return { averageMargin, criticalCount, count: recipes.length };

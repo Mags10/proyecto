@@ -1,13 +1,13 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { ZardButtonComponent } from '../../../shared/components/button';
 import { ZardBadgeComponent } from '../../../shared/components/badge';
 
 @Component({
   selector: 'app-product-card',
-  standalone: true,
   imports: [ZardButtonComponent, ZardBadgeComponent],
   templateUrl: './product-card.html',
-  styleUrl: './product-card.css'
+  styleUrl: './product-card.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductCard {
   readonly name = input<string>('Producto');

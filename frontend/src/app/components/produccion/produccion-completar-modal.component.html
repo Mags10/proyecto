@@ -1,5 +1,14 @@
-<section class="modal-backdrop" role="presentation" (click)="close()">
-  <z-card class="modal-card" [zTitle]="'Cerrar orden: ' + batch().recipeName" (click)="$event.stopPropagation()">
+<section class="modal-backdrop" role="presentation" (click)="close()" (keydown.escape)="close()">
+  <z-card
+    #dialogSurface
+    class="modal-card"
+    [zTitle]="'Cerrar orden: ' + batch().recipeName"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-label]="'Cerrar orden ' + batch().recipeName"
+    tabindex="-1"
+    (click)="$event.stopPropagation()"
+  >
     @if (productionService.error()) {
       <p class="error-message">{{ productionService.error() }}</p>
     }
@@ -20,7 +29,12 @@
 
       <label class="form-label">
         Resultado / observaciones
-        <textarea class="form-textarea" rows="3" formControlName="notes" placeholder="Una pieza salió quemada, lote parcial, se ajustó temperatura, etc."></textarea>
+        <textarea
+          class="form-textarea"
+          rows="3"
+          formControlName="notes"
+          placeholder="Una pieza salió quemada, lote parcial, se ajustó temperatura, etc."
+        ></textarea>
       </label>
 
       @if (blockingReasons().length > 0) {
@@ -52,13 +66,28 @@
             <tbody formArrayName="actualIngredients">
               @for (item of ingredientRows(); track item.ingredient; let index = $index) {
                 <tr [class.row-danger]="!item.valid">
-                  <td><strong>{{ item.name }}</strong></td>
-                  <td class="font-georgia">{{ item.plannedQuantity }} <span class="unit">{{ item.unit }}</span></td>
-                  <td class="font-georgia" [formGroupName]="index">
-                    <input z-input type="number" min="0" step="any" formControlName="actualQuantity" class="qty-input" />
+                  <td>
+                    <strong>{{ item.name }}</strong>
                   </td>
-                  <td class="font-georgia">{{ item.varianceQuantity }} <span class="unit">{{ item.unit }}</span></td>
-                  <td class="font-georgia">{{ item.currentStock }} <span class="unit">{{ item.unit }}</span></td>
+                  <td class="font-georgia">
+                    {{ item.plannedQuantity }} <span class="unit">{{ item.unit }}</span>
+                  </td>
+                  <td class="font-georgia" [formGroupName]="index">
+                    <input
+                      z-input
+                      type="number"
+                      min="0"
+                      step="any"
+                      formControlName="actualQuantity"
+                      class="qty-input"
+                    />
+                  </td>
+                  <td class="font-georgia">
+                    {{ item.varianceQuantity }} <span class="unit">{{ item.unit }}</span>
+                  </td>
+                  <td class="font-georgia">
+                    {{ item.currentStock }} <span class="unit">{{ item.unit }}</span>
+                  </td>
                   <td class="font-georgia" [class.negative-stock]="item.stockAfter < 0">
                     {{ item.stockAfter }} <span class="unit">{{ item.unit }}</span>
                   </td>
@@ -67,7 +96,8 @@
                 @if (!item.valid) {
                   <tr class="detail-alert-row">
                     <td colspan="7" class="detail-alert-cell">
-                      {{ item.name }} no puede cerrarse con este consumo: el stock final quedaría en {{ item.stockAfter }} {{ item.unit }}.
+                      {{ item.name }} no puede cerrarse con este consumo: el stock final quedaría en
+                      {{ item.stockAfter }} {{ item.unit }}.
                     </td>
                   </tr>
                 }
@@ -100,7 +130,9 @@
         </div>
         <div class="summary-card">
           <span class="summary-label">Stock terminado proyectado</span>
-          <strong class="summary-value">{{ projectedRecipeStock() }} <span class="unit-sub">uds</span></strong>
+          <strong class="summary-value"
+            >{{ projectedRecipeStock() }} <span class="unit-sub">uds</span></strong
+          >
         </div>
       </section>
 

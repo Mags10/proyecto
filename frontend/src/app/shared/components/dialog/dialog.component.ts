@@ -7,6 +7,7 @@ import {
   type TemplatePortal,
 } from '@angular/cdk/portal';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   type ComponentRef,
@@ -23,6 +24,7 @@ import {
 } from '@angular/core';
 
 import { mergeClasses, noopFn } from 'src/app/shared/utils/merge-classes';
+import { focusModalSurface } from 'src/app/shared/utils/modal-a11y';
 
 import type { ZardDialogRef } from './dialog-ref';
 import { dialogVariants } from './dialog.variants';
@@ -72,7 +74,9 @@ export class ZardDialogOptions<T, U> {
     @if (config.zTitle || config.zDescription) {
       <header class="flex flex-col space-y-1.5 text-center sm:text-left">
         @if (config.zTitle) {
-          <h4 data-testid="z-title" class="text-lg leading-none font-semibold tracking-tight">{{ config.zTitle }}</h4>
+          <h4 data-testid="z-title" class="text-lg leading-none font-semibold tracking-tight">
+            {{ config.zTitle }}
+          </h4>
 
           @if (config.zDescription) {
             <p data-testid="z-description" class="text-muted-foreground text-sm">{{ config.zDescription }}</p>
@@ -92,7 +96,13 @@ export class ZardDialogOptions<T, U> {
     @if (!config.zHideFooter) {
       <footer class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-0 sm:space-x-2">
         @if (config.zCancelText !== null) {
-          <button type="button" data-testid="z-cancel-button" z-button zType="outline" (click)="onCloseClick()">
+          <button
+            type="button"
+            data-testid="z-cancel-button"
+            z-button
+            zType="outline"
+            (click)="onCloseClick()"
+          >
             {{ config.zCancelText ?? 'Cancel' }}
           </button>
         }
@@ -162,12 +172,15 @@ export class ZardDialogOptions<T, U> {
   host: {
     '[class]': 'classes()',
     '[style.width]': 'config.zWidth ? config.zWidth : null',
+    role: 'dialog',
+    'aria-modal': 'true',
+    tabindex: '-1',
     'animate.enter': 'dialog-enter',
     'animate.leave': 'dialog-leave',
   },
   exportAs: 'zDialog',
 })
-export class ZardDialogComponent<T, U> extends BasePortalOutlet {
+export class ZardDialogComponent<T, U> extends BasePortalOutlet implements AfterViewInit {
   private readonly host = inject(ElementRef<HTMLElement>);
   protected readonly config = inject(ZardDialogOptions<T, U>);
 
@@ -183,6 +196,10 @@ export class ZardDialogComponent<T, U> extends BasePortalOutlet {
 
   constructor() {
     super();
+  }
+
+  ngAfterViewInit(): void {
+    focusModalSurface(this.host);
   }
 
   getNativeElement(): HTMLElement {

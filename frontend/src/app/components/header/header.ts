@@ -9,7 +9,7 @@ import { AuthService } from '../../services/auth.service';
   imports: [RouterLink, RouterLinkActive, ZardButtonComponent, ZardBadgeComponent],
   templateUrl: './header.html',
   styleUrl: './header.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Header {
   readonly authService = inject(AuthService);

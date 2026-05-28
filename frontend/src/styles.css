@@ -45,7 +45,10 @@ a[z-button],
   border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 120ms ease, opacity 120ms ease, background-color 120ms ease;
+  transition:
+    transform 120ms ease,
+    opacity 120ms ease,
+    background-color 120ms ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;

@@ -3,47 +3,47 @@ const openapiDocument = {
   info: {
     title: 'KitchenFlow API',
     version: '1.0.0',
-    description: 'API para control de insumos, abastecimiento, recetas, producción y ventas.'
+    description: 'API para control de insumos, abastecimiento, recetas, producción y ventas.',
   },
   servers: [
     {
       url: 'http://localhost:3010',
-      description: 'Servidor local'
-    }
+      description: 'Servidor local',
+    },
   ],
   tags: [
     {
       name: 'Status',
-      description: 'Estado del backend'
+      description: 'Estado del backend',
     },
     {
       name: 'Auth',
-      description: 'Autenticación y sesión'
+      description: 'Autenticación y sesión',
     },
     {
       name: 'Ingredients',
-      description: 'Inventario de insumos'
+      description: 'Inventario de insumos',
     },
     {
       name: 'PurchaseRecords',
-      description: 'Registro de compras y recalculo WAC'
+      description: 'Registro de compras y recalculo WAC',
     },
     {
       name: 'Recipes',
-      description: 'Recetas, costeo y margen'
+      description: 'Recetas, costeo y margen',
     },
     {
       name: 'ProductionBatches',
-      description: 'Produccion de lotes y consumo de insumos'
+      description: 'Produccion de lotes y consumo de insumos',
     },
     {
       name: 'Sales',
-      description: 'Ventas de producto terminado y descuento de stock'
+      description: 'Ventas de producto terminado y descuento de stock',
     },
     {
       name: 'Analytics',
-      description: 'Indicadores operativos y financieros del dashboard'
-    }
+      description: 'Indicadores operativos y financieros del dashboard',
+    },
   ],
   paths: {
     '/api/status': {
@@ -56,13 +56,13 @@ const openapiDocument = {
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/components/schemas/StatusResponse'
-                }
-              }
-            }
-          }
-        }
-      }
+                  $ref: '#/components/schemas/StatusResponse',
+                },
+              },
+            },
+          },
+        },
+      },
     },
     '/api/auth/login': {
       post: {
@@ -72,24 +72,24 @@ const openapiDocument = {
           required: true,
           content: {
             'application/json': {
-              schema: { $ref: '#/components/schemas/LoginInput' }
-            }
-          }
+              schema: { $ref: '#/components/schemas/LoginInput' },
+            },
+          },
         },
         responses: {
           200: {
             description: 'Sesión iniciada',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/LoginResponse' }
-              }
-            }
+                schema: { $ref: '#/components/schemas/LoginResponse' },
+              },
+            },
           },
           400: { $ref: '#/components/responses/BadRequest' },
           401: { $ref: '#/components/responses/Unauthorized' },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
-      }
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
+      },
     },
     '/api/auth/me': {
       get: {
@@ -101,14 +101,14 @@ const openapiDocument = {
             description: 'Sesión vigente',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/MeResponse' }
-              }
-            }
+                schema: { $ref: '#/components/schemas/MeResponse' },
+              },
+            },
           },
           401: { $ref: '#/components/responses/Unauthorized' },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
-      }
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
+      },
     },
     '/api/ingredients': {
       get: {
@@ -121,15 +121,15 @@ const openapiDocument = {
             in: 'query',
             required: false,
             schema: { type: 'string' },
-            description: 'Filtro por nombre'
+            description: 'Filtro por nombre',
           },
           {
             name: 'limit',
             in: 'query',
             required: false,
             schema: { type: 'integer', minimum: 1 },
-            description: 'Cantidad maxima de resultados'
-          }
+            description: 'Cantidad maxima de resultados',
+          },
         ],
         responses: {
           200: {
@@ -138,13 +138,13 @@ const openapiDocument = {
               'application/json': {
                 schema: {
                   type: 'array',
-                  items: { $ref: '#/components/schemas/Ingredient' }
-                }
-              }
-            }
+                  items: { $ref: '#/components/schemas/Ingredient' },
+                },
+              },
+            },
           },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
       },
       post: {
         tags: ['Ingredients'],
@@ -154,23 +154,23 @@ const openapiDocument = {
           required: true,
           content: {
             'application/json': {
-              schema: { $ref: '#/components/schemas/CreateIngredientInput' }
-            }
-          }
+              schema: { $ref: '#/components/schemas/CreateIngredientInput' },
+            },
+          },
         },
         responses: {
           201: {
             description: 'Insumo creado',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/IngredientMutationResponse' }
-              }
-            }
+                schema: { $ref: '#/components/schemas/IngredientMutationResponse' },
+              },
+            },
           },
           400: { $ref: '#/components/responses/BadRequest' },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
-      }
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
+      },
     },
     '/api/ingredients/{id}': {
       get: {
@@ -183,14 +183,14 @@ const openapiDocument = {
             description: 'Insumo encontrado',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/Ingredient' }
-              }
-            }
+                schema: { $ref: '#/components/schemas/Ingredient' },
+              },
+            },
           },
           400: { $ref: '#/components/responses/BadRequest' },
           404: { $ref: '#/components/responses/NotFound' },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
       },
       put: {
         tags: ['Ingredients'],
@@ -201,23 +201,23 @@ const openapiDocument = {
           required: true,
           content: {
             'application/json': {
-              schema: { $ref: '#/components/schemas/CreateIngredientInput' }
-            }
-          }
+              schema: { $ref: '#/components/schemas/CreateIngredientInput' },
+            },
+          },
         },
         responses: {
           200: {
             description: 'Insumo actualizado',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/IngredientMutationResponse' }
-              }
-            }
+                schema: { $ref: '#/components/schemas/IngredientMutationResponse' },
+              },
+            },
           },
           400: { $ref: '#/components/responses/BadRequest' },
           404: { $ref: '#/components/responses/NotFound' },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
       },
       delete: {
         tags: ['Ingredients'],
@@ -229,15 +229,15 @@ const openapiDocument = {
             description: 'Insumo desactivado',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/MessageResponse' }
-              }
-            }
+                schema: { $ref: '#/components/schemas/MessageResponse' },
+              },
+            },
           },
           400: { $ref: '#/components/responses/BadRequest' },
           404: { $ref: '#/components/responses/NotFound' },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
-      }
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
+      },
     },
     '/api/purchase-records': {
       get: {
@@ -251,17 +251,17 @@ const openapiDocument = {
             required: false,
             schema: {
               type: 'string',
-              pattern: '^[a-fA-F0-9]{24}$'
+              pattern: '^[a-fA-F0-9]{24}$',
             },
-            description: 'Filtra compras por insumo'
+            description: 'Filtra compras por insumo',
           },
           {
             name: 'limit',
             in: 'query',
             required: false,
             schema: { type: 'integer', minimum: 1 },
-            description: 'Cantidad maxima de resultados'
-          }
+            description: 'Cantidad maxima de resultados',
+          },
         ],
         responses: {
           200: {
@@ -270,13 +270,13 @@ const openapiDocument = {
               'application/json': {
                 schema: {
                   type: 'array',
-                  items: { $ref: '#/components/schemas/PurchaseRecord' }
-                }
-              }
-            }
+                  items: { $ref: '#/components/schemas/PurchaseRecord' },
+                },
+              },
+            },
           },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
       },
       post: {
         tags: ['PurchaseRecords'],
@@ -286,26 +286,25 @@ const openapiDocument = {
           required: true,
           content: {
             'application/json': {
-              schema: { $ref: '#/components/schemas/CreatePurchaseRecordInput' }
-            }
-          }
+              schema: { $ref: '#/components/schemas/CreatePurchaseRecordInput' },
+            },
+          },
         },
         responses: {
           201: {
             description: 'Compra registrada',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/PurchaseRecordMutationResponse' }
-              }
-            }
+                schema: { $ref: '#/components/schemas/PurchaseRecordMutationResponse' },
+              },
+            },
           },
           400: { $ref: '#/components/responses/BadRequest' },
           404: { $ref: '#/components/responses/NotFound' },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
-      }
-    }
-    ,
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
+      },
+    },
     '/api/recipes': {
       get: {
         tags: ['Recipes'],
@@ -317,15 +316,15 @@ const openapiDocument = {
             in: 'query',
             required: false,
             schema: { type: 'string' },
-            description: 'Filtro por nombre, categoría o estado'
+            description: 'Filtro por nombre, categoría o estado',
           },
           {
             name: 'limit',
             in: 'query',
             required: false,
             schema: { type: 'integer', minimum: 1 },
-            description: 'Cantidad maxima de resultados'
-          }
+            description: 'Cantidad maxima de resultados',
+          },
         ],
         responses: {
           200: {
@@ -334,13 +333,13 @@ const openapiDocument = {
               'application/json': {
                 schema: {
                   type: 'array',
-                  items: { $ref: '#/components/schemas/Recipe' }
-                }
-              }
-            }
+                  items: { $ref: '#/components/schemas/Recipe' },
+                },
+              },
+            },
           },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
       },
       post: {
         tags: ['Recipes'],
@@ -350,24 +349,24 @@ const openapiDocument = {
           required: true,
           content: {
             'application/json': {
-              schema: { $ref: '#/components/schemas/CreateRecipeInput' }
-            }
-          }
+              schema: { $ref: '#/components/schemas/CreateRecipeInput' },
+            },
+          },
         },
         responses: {
           201: {
             description: 'Receta creada',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/RecipeMutationResponse' }
-              }
-            }
+                schema: { $ref: '#/components/schemas/RecipeMutationResponse' },
+              },
+            },
           },
           400: { $ref: '#/components/responses/BadRequest' },
           404: { $ref: '#/components/responses/NotFound' },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
-      }
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
+      },
     },
     '/api/recipes/{id}': {
       get: {
@@ -380,14 +379,14 @@ const openapiDocument = {
             description: 'Receta encontrada',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/Recipe' }
-              }
-            }
+                schema: { $ref: '#/components/schemas/Recipe' },
+              },
+            },
           },
           400: { $ref: '#/components/responses/BadRequest' },
           404: { $ref: '#/components/responses/NotFound' },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
       },
       put: {
         tags: ['Recipes'],
@@ -398,23 +397,23 @@ const openapiDocument = {
           required: true,
           content: {
             'application/json': {
-              schema: { $ref: '#/components/schemas/CreateRecipeInput' }
-            }
-          }
+              schema: { $ref: '#/components/schemas/CreateRecipeInput' },
+            },
+          },
         },
         responses: {
           200: {
             description: 'Receta actualizada',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/RecipeMutationResponse' }
-              }
-            }
+                schema: { $ref: '#/components/schemas/RecipeMutationResponse' },
+              },
+            },
           },
           400: { $ref: '#/components/responses/BadRequest' },
           404: { $ref: '#/components/responses/NotFound' },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
       },
       delete: {
         tags: ['Recipes'],
@@ -426,15 +425,15 @@ const openapiDocument = {
             description: 'Receta desactivada',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/MessageResponse' }
-              }
-            }
+                schema: { $ref: '#/components/schemas/MessageResponse' },
+              },
+            },
           },
           400: { $ref: '#/components/responses/BadRequest' },
           404: { $ref: '#/components/responses/NotFound' },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
-      }
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
+      },
     },
     '/api/production-batches': {
       get: {
@@ -448,9 +447,9 @@ const openapiDocument = {
             required: false,
             schema: {
               type: 'string',
-              pattern: '^[a-fA-F0-9]{24}$'
+              pattern: '^[a-fA-F0-9]{24}$',
             },
-            description: 'Filtra lotes por receta'
+            description: 'Filtra lotes por receta',
           },
           {
             name: 'status',
@@ -458,17 +457,17 @@ const openapiDocument = {
             required: false,
             schema: {
               type: 'string',
-              enum: ['PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED']
+              enum: ['PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'],
             },
-            description: 'Filtra ordenes por estado'
+            description: 'Filtra ordenes por estado',
           },
           {
             name: 'limit',
             in: 'query',
             required: false,
             schema: { type: 'integer', minimum: 1 },
-            description: 'Cantidad maxima de resultados'
-          }
+            description: 'Cantidad maxima de resultados',
+          },
         ],
         responses: {
           200: {
@@ -477,13 +476,13 @@ const openapiDocument = {
               'application/json': {
                 schema: {
                   type: 'array',
-                  items: { $ref: '#/components/schemas/ProductionBatch' }
-                }
-              }
-            }
+                  items: { $ref: '#/components/schemas/ProductionBatch' },
+                },
+              },
+            },
           },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
       },
       post: {
         tags: ['ProductionBatches'],
@@ -493,25 +492,25 @@ const openapiDocument = {
           required: true,
           content: {
             'application/json': {
-              schema: { $ref: '#/components/schemas/CreateProductionBatchInput' }
-            }
-          }
+              schema: { $ref: '#/components/schemas/CreateProductionBatchInput' },
+            },
+          },
         },
         responses: {
           201: {
             description: 'Lote de produccion creado',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/ProductionBatchMutationResponse' }
-              }
-            }
+                schema: { $ref: '#/components/schemas/ProductionBatchMutationResponse' },
+              },
+            },
           },
           400: { $ref: '#/components/responses/BadRequest' },
           404: { $ref: '#/components/responses/NotFound' },
           409: { $ref: '#/components/responses/BadRequest' },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
-      }
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
+      },
     },
     '/api/production-batches/{id}/start': {
       post: {
@@ -524,16 +523,16 @@ const openapiDocument = {
             description: 'Orden iniciada',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/ProductionBatchMutationResponse' }
-              }
-            }
+                schema: { $ref: '#/components/schemas/ProductionBatchMutationResponse' },
+              },
+            },
           },
           400: { $ref: '#/components/responses/BadRequest' },
           404: { $ref: '#/components/responses/NotFound' },
           409: { $ref: '#/components/responses/BadRequest' },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
-      }
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
+      },
     },
     '/api/production-batches/{id}/complete': {
       post: {
@@ -545,25 +544,25 @@ const openapiDocument = {
           required: true,
           content: {
             'application/json': {
-              schema: { $ref: '#/components/schemas/CompleteProductionBatchInput' }
-            }
-          }
+              schema: { $ref: '#/components/schemas/CompleteProductionBatchInput' },
+            },
+          },
         },
         responses: {
           200: {
             description: 'Orden completada',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/ProductionBatchMutationResponse' }
-              }
-            }
+                schema: { $ref: '#/components/schemas/ProductionBatchMutationResponse' },
+              },
+            },
           },
           400: { $ref: '#/components/responses/BadRequest' },
           404: { $ref: '#/components/responses/NotFound' },
           409: { $ref: '#/components/responses/BadRequest' },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
-      }
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
+      },
     },
     '/api/production-batches/{id}/cancel': {
       post: {
@@ -575,25 +574,25 @@ const openapiDocument = {
           required: false,
           content: {
             'application/json': {
-              schema: { $ref: '#/components/schemas/CancelProductionBatchInput' }
-            }
-          }
+              schema: { $ref: '#/components/schemas/CancelProductionBatchInput' },
+            },
+          },
         },
         responses: {
           200: {
             description: 'Orden cancelada',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/ProductionBatchMutationResponse' }
-              }
-            }
+                schema: { $ref: '#/components/schemas/ProductionBatchMutationResponse' },
+              },
+            },
           },
           400: { $ref: '#/components/responses/BadRequest' },
           404: { $ref: '#/components/responses/NotFound' },
           409: { $ref: '#/components/responses/BadRequest' },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
-      }
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
+      },
     },
     '/api/sales': {
       get: {
@@ -607,17 +606,17 @@ const openapiDocument = {
             required: false,
             schema: {
               type: 'string',
-              pattern: '^[a-fA-F0-9]{24}$'
+              pattern: '^[a-fA-F0-9]{24}$',
             },
-            description: 'Filtra ventas por receta'
+            description: 'Filtra ventas por receta',
           },
           {
             name: 'limit',
             in: 'query',
             required: false,
             schema: { type: 'integer', minimum: 1 },
-            description: 'Cantidad maxima de resultados'
-          }
+            description: 'Cantidad maxima de resultados',
+          },
         ],
         responses: {
           200: {
@@ -626,13 +625,13 @@ const openapiDocument = {
               'application/json': {
                 schema: {
                   type: 'array',
-                  items: { $ref: '#/components/schemas/Sale' }
-                }
-              }
-            }
+                  items: { $ref: '#/components/schemas/Sale' },
+                },
+              },
+            },
           },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
       },
       post: {
         tags: ['Sales'],
@@ -642,25 +641,25 @@ const openapiDocument = {
           required: true,
           content: {
             'application/json': {
-              schema: { $ref: '#/components/schemas/CreateSaleInput' }
-            }
-          }
+              schema: { $ref: '#/components/schemas/CreateSaleInput' },
+            },
+          },
         },
         responses: {
           201: {
             description: 'Venta registrada',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/SaleMutationResponse' }
-              }
-            }
+                schema: { $ref: '#/components/schemas/SaleMutationResponse' },
+              },
+            },
           },
           400: { $ref: '#/components/responses/BadRequest' },
           404: { $ref: '#/components/responses/NotFound' },
           409: { $ref: '#/components/responses/BadRequest' },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
-      }
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
+      },
     },
     '/api/analytics/dashboard': {
       get: {
@@ -673,30 +672,30 @@ const openapiDocument = {
             in: 'query',
             required: false,
             schema: { type: 'integer', minimum: 1, maximum: 365 },
-            description: 'Ventana en días para calcular métricas recientes'
-          }
+            description: 'Ventana en días para calcular métricas recientes',
+          },
         ],
         responses: {
           200: {
             description: 'Resumen del dashboard',
             content: {
               'application/json': {
-                schema: { $ref: '#/components/schemas/DashboardAnalytics' }
-              }
-            }
+                schema: { $ref: '#/components/schemas/DashboardAnalytics' },
+              },
+            },
           },
-          500: { $ref: '#/components/responses/InternalServerError' }
-        }
-      }
-    }
+          500: { $ref: '#/components/responses/InternalServerError' },
+        },
+      },
+    },
   },
   components: {
     securitySchemes: {
       bearerAuth: {
         type: 'http',
         scheme: 'bearer',
-        bearerFormat: 'JWT'
-      }
+        bearerFormat: 'JWT',
+      },
     },
     parameters: {
       ObjectId: {
@@ -705,44 +704,44 @@ const openapiDocument = {
         required: true,
         schema: {
           type: 'string',
-          pattern: '^[a-fA-F0-9]{24}$'
+          pattern: '^[a-fA-F0-9]{24}$',
         },
-        description: 'ObjectId de MongoDB'
-      }
+        description: 'ObjectId de MongoDB',
+      },
     },
     responses: {
       BadRequest: {
         description: 'Solicitud invalida',
         content: {
           'application/json': {
-            schema: { $ref: '#/components/schemas/MessageResponse' }
-          }
-        }
+            schema: { $ref: '#/components/schemas/MessageResponse' },
+          },
+        },
       },
       NotFound: {
         description: 'Recurso no encontrado',
         content: {
           'application/json': {
-            schema: { $ref: '#/components/schemas/MessageResponse' }
-          }
-        }
+            schema: { $ref: '#/components/schemas/MessageResponse' },
+          },
+        },
       },
       Unauthorized: {
         description: 'No autenticado o token inválido',
         content: {
           'application/json': {
-            schema: { $ref: '#/components/schemas/MessageResponse' }
-          }
-        }
+            schema: { $ref: '#/components/schemas/MessageResponse' },
+          },
+        },
       },
       InternalServerError: {
         description: 'Error interno del servidor',
         content: {
           'application/json': {
-            schema: { $ref: '#/components/schemas/MessageResponse' }
-          }
-        }
-      }
+            schema: { $ref: '#/components/schemas/MessageResponse' },
+          },
+        },
+      },
     },
     schemas: {
       StatusResponse: {
@@ -751,16 +750,16 @@ const openapiDocument = {
         properties: {
           status: { type: 'string', example: 'ok' },
           message: { type: 'string', example: 'Backend is running and connected to MongoDB' },
-          timestamp: { type: 'string', format: 'date-time' }
-        }
+          timestamp: { type: 'string', format: 'date-time' },
+        },
       },
       MessageResponse: {
         type: 'object',
         required: ['message', 'timestamp'],
         properties: {
           message: { type: 'string' },
-          timestamp: { type: 'string', format: 'date-time' }
-        }
+          timestamp: { type: 'string', format: 'date-time' },
+        },
       },
       AuthUser: {
         type: 'object',
@@ -769,16 +768,16 @@ const openapiDocument = {
           _id: { type: 'string', example: '665900000000000000000001' },
           name: { type: 'string', example: 'Administrador KitchenFlow' },
           email: { type: 'string', format: 'email', example: 'admin@kitchenflow.local' },
-          role: { type: 'string', enum: ['ADMIN', 'KITCHEN', 'FLOOR'] }
-        }
+          role: { type: 'string', enum: ['ADMIN', 'KITCHEN', 'FLOOR'] },
+        },
       },
       LoginInput: {
         type: 'object',
         required: ['email', 'password'],
         properties: {
           email: { type: 'string', format: 'email', example: 'admin@kitchenflow.local' },
-          password: { type: 'string', example: 'Admin123!' }
-        }
+          password: { type: 'string', example: 'Admin123!' },
+        },
       },
       LoginResponse: {
         type: 'object',
@@ -788,20 +787,29 @@ const openapiDocument = {
           tokenType: { type: 'string', example: 'Bearer' },
           expiresIn: { type: 'number', example: 43200 },
           user: { $ref: '#/components/schemas/AuthUser' },
-          timestamp: { type: 'string', format: 'date-time' }
-        }
+          timestamp: { type: 'string', format: 'date-time' },
+        },
       },
       MeResponse: {
         type: 'object',
         required: ['user', 'timestamp'],
         properties: {
           user: { $ref: '#/components/schemas/AuthUser' },
-          timestamp: { type: 'string', format: 'date-time' }
-        }
+          timestamp: { type: 'string', format: 'date-time' },
+        },
       },
       Ingredient: {
         type: 'object',
-        required: ['_id', 'name', 'unit', 'currentStock', 'reservedStock', 'averageCost', 'minimumStock', 'active'],
+        required: [
+          '_id',
+          'name',
+          'unit',
+          'currentStock',
+          'reservedStock',
+          'averageCost',
+          'minimumStock',
+          'active',
+        ],
         properties: {
           _id: { type: 'string', example: '665100000000000000000001' },
           name: { type: 'string', example: 'Leche entera' },
@@ -812,8 +820,8 @@ const openapiDocument = {
           minimumStock: { type: 'number', example: 20 },
           active: { type: 'boolean', example: true },
           createdAt: { type: 'string', format: 'date-time' },
-          updatedAt: { type: 'string', format: 'date-time' }
-        }
+          updatedAt: { type: 'string', format: 'date-time' },
+        },
       },
       CreateIngredientInput: {
         type: 'object',
@@ -823,8 +831,8 @@ const openapiDocument = {
           unit: { type: 'string', example: 'litro' },
           currentStock: { type: 'number', minimum: 0, default: 0 },
           averageCost: { type: 'number', minimum: 0, default: 0 },
-          minimumStock: { type: 'number', minimum: 0, default: 0 }
-        }
+          minimumStock: { type: 'number', minimum: 0, default: 0 },
+        },
       },
       IngredientMutationResponse: {
         type: 'object',
@@ -832,8 +840,8 @@ const openapiDocument = {
         properties: {
           message: { type: 'string' },
           ingredient: { $ref: '#/components/schemas/Ingredient' },
-          timestamp: { type: 'string', format: 'date-time' }
-        }
+          timestamp: { type: 'string', format: 'date-time' },
+        },
       },
       PurchaseRecord: {
         type: 'object',
@@ -848,7 +856,7 @@ const openapiDocument = {
           'previousStock',
           'previousAverageCost',
           'newStock',
-          'newAverageCost'
+          'newAverageCost',
         ],
         properties: {
           _id: { type: 'string', example: '665200000000000000000001' },
@@ -863,8 +871,8 @@ const openapiDocument = {
           newStock: { type: 'number', example: 120 },
           newAverageCost: { type: 'number', example: 11.58 },
           createdAt: { type: 'string', format: 'date-time' },
-          updatedAt: { type: 'string', format: 'date-time' }
-        }
+          updatedAt: { type: 'string', format: 'date-time' },
+        },
       },
       CreatePurchaseRecordInput: {
         type: 'object',
@@ -874,8 +882,8 @@ const openapiDocument = {
           invoiceDate: { type: 'string', format: 'date', example: '2026-05-25' },
           ingredientId: { type: 'string', example: '665100000000000000000001' },
           quantityReceived: { type: 'number', minimum: 0, example: 20 },
-          totalPrice: { type: 'number', minimum: 0, example: 240 }
-        }
+          totalPrice: { type: 'number', minimum: 0, example: 240 },
+        },
       },
       PurchaseRecordMutationResponse: {
         type: 'object',
@@ -884,8 +892,8 @@ const openapiDocument = {
           message: { type: 'string' },
           purchaseRecord: { $ref: '#/components/schemas/PurchaseRecord' },
           ingredient: { $ref: '#/components/schemas/Ingredient' },
-          timestamp: { type: 'string', format: 'date-time' }
-        }
+          timestamp: { type: 'string', format: 'date-time' },
+        },
       },
       RecipeIngredient: {
         type: 'object',
@@ -896,8 +904,8 @@ const openapiDocument = {
           unit: { type: 'string', example: 'litro' },
           quantity: { type: 'number', example: 240 },
           unitCost: { type: 'number', example: 11.58 },
-          subtotal: { type: 'number', example: 27.79 }
-        }
+          subtotal: { type: 'number', example: 27.79 },
+        },
       },
       Recipe: {
         type: 'object',
@@ -913,7 +921,7 @@ const openapiDocument = {
           'totalCost',
           'margin',
           'status',
-          'active'
+          'active',
         ],
         properties: {
           _id: { type: 'string', example: '665300000000000000000001' },
@@ -924,7 +932,7 @@ const openapiDocument = {
           yieldText: { type: 'string', example: '1 porción' },
           ingredients: {
             type: 'array',
-            items: { $ref: '#/components/schemas/RecipeIngredient' }
+            items: { $ref: '#/components/schemas/RecipeIngredient' },
           },
           currentStock: { type: 'number', example: 12 },
           totalCost: { type: 'number', example: 43.25 },
@@ -932,8 +940,8 @@ const openapiDocument = {
           status: { type: 'string', enum: ['Rentable', 'Ajustar costo', 'Crítica'], example: 'Rentable' },
           active: { type: 'boolean', example: true },
           createdAt: { type: 'string', format: 'date-time' },
-          updatedAt: { type: 'string', format: 'date-time' }
-        }
+          updatedAt: { type: 'string', format: 'date-time' },
+        },
       },
       CreateRecipeInput: {
         type: 'object',
@@ -953,11 +961,11 @@ const openapiDocument = {
               properties: {
                 ingredientId: { type: 'string', example: '665100000000000000000001' },
                 quantity: { type: 'number', minimum: 0, example: 240 },
-                unitCost: { type: 'number', minimum: 0, example: 11.58 }
-              }
-            }
-          }
-        }
+                unitCost: { type: 'number', minimum: 0, example: 11.58 },
+              },
+            },
+          },
+        },
       },
       RecipeMutationResponse: {
         type: 'object',
@@ -965,12 +973,22 @@ const openapiDocument = {
         properties: {
           message: { type: 'string' },
           recipe: { $ref: '#/components/schemas/Recipe' },
-          timestamp: { type: 'string', format: 'date-time' }
-        }
+          timestamp: { type: 'string', format: 'date-time' },
+        },
       },
       ProductionBatchPlannedIngredient: {
         type: 'object',
-        required: ['ingredient', 'name', 'unit', 'plannedQuantity', 'reservedQuantity', 'unitCost', 'plannedSubtotal', 'stockBefore', 'availableBefore'],
+        required: [
+          'ingredient',
+          'name',
+          'unit',
+          'plannedQuantity',
+          'reservedQuantity',
+          'unitCost',
+          'plannedSubtotal',
+          'stockBefore',
+          'availableBefore',
+        ],
         properties: {
           ingredient: { type: 'string', example: '665100000000000000000001' },
           name: { type: 'string', example: 'Leche entera' },
@@ -980,12 +998,24 @@ const openapiDocument = {
           unitCost: { type: 'number', example: 11.58 },
           plannedSubtotal: { type: 'number', example: 27.79 },
           stockBefore: { type: 'number', example: 20 },
-          availableBefore: { type: 'number', example: 20 }
-        }
+          availableBefore: { type: 'number', example: 20 },
+        },
       },
       ProductionBatchActualIngredient: {
         type: 'object',
-        required: ['ingredient', 'name', 'unit', 'plannedQuantity', 'actualQuantity', 'varianceQuantity', 'unitCost', 'actualSubtotal', 'wasteCost', 'stockBefore', 'stockAfter'],
+        required: [
+          'ingredient',
+          'name',
+          'unit',
+          'plannedQuantity',
+          'actualQuantity',
+          'varianceQuantity',
+          'unitCost',
+          'actualSubtotal',
+          'wasteCost',
+          'stockBefore',
+          'stockAfter',
+        ],
         properties: {
           ingredient: { type: 'string', example: '665100000000000000000001' },
           name: { type: 'string', example: 'Leche entera' },
@@ -997,8 +1027,8 @@ const openapiDocument = {
           actualSubtotal: { type: 'number', example: 30.11 },
           wasteCost: { type: 'number', example: 2.32 },
           stockBefore: { type: 'number', example: 20 },
-          stockAfter: { type: 'number', example: 17.6 }
-        }
+          stockAfter: { type: 'number', example: 17.6 },
+        },
       },
       ProductionWasteSummary: {
         type: 'object',
@@ -1007,8 +1037,8 @@ const openapiDocument = {
           expectedYield: { type: 'number', example: 10 },
           actualYield: { type: 'number', example: 9 },
           yieldVariance: { type: 'number', example: -1 },
-          totalWasteCost: { type: 'number', example: 12.45 }
-        }
+          totalWasteCost: { type: 'number', example: 12.45 },
+        },
       },
       ProductionBatch: {
         type: 'object',
@@ -1022,14 +1052,18 @@ const openapiDocument = {
           'unitCost',
           'plannedTotalCost',
           'previousRecipeStock',
-          'plannedIngredients'
+          'plannedIngredients',
         ],
         properties: {
           _id: { type: 'string', example: '665400000000000000000001' },
           recipe: { type: 'string', example: '665300000000000000000001' },
           recipeName: { type: 'string', example: 'Café Latte Grande' },
           recipeCategory: { type: 'string', example: 'Bebidas' },
-          status: { type: 'string', enum: ['PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'], example: 'IN_PROGRESS' },
+          status: {
+            type: 'string',
+            enum: ['PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'],
+            example: 'IN_PROGRESS',
+          },
           plannedQuantity: { type: 'number', example: 10 },
           actualQuantity: { type: 'number', nullable: true, example: 9 },
           unitCost: { type: 'number', example: 43.25 },
@@ -1039,15 +1073,15 @@ const openapiDocument = {
           newRecipeStock: { type: 'number', nullable: true, example: 17 },
           plannedIngredients: {
             type: 'array',
-            items: { $ref: '#/components/schemas/ProductionBatchPlannedIngredient' }
+            items: { $ref: '#/components/schemas/ProductionBatchPlannedIngredient' },
           },
           actualIngredients: {
             type: 'array',
-            items: { $ref: '#/components/schemas/ProductionBatchActualIngredient' }
+            items: { $ref: '#/components/schemas/ProductionBatchActualIngredient' },
           },
           wasteSummary: {
             nullable: true,
-            allOf: [{ $ref: '#/components/schemas/ProductionWasteSummary' }]
+            allOf: [{ $ref: '#/components/schemas/ProductionWasteSummary' }],
           },
           notes: { type: 'string', example: 'Horneado con lote parcial' },
           cancellationReason: { type: 'string', example: 'Falla de equipo' },
@@ -1056,8 +1090,8 @@ const openapiDocument = {
           cancelledAt: { type: 'string', format: 'date-time', nullable: true },
           durationMinutes: { type: 'number', nullable: true, example: 48 },
           createdAt: { type: 'string', format: 'date-time' },
-          updatedAt: { type: 'string', format: 'date-time' }
-        }
+          updatedAt: { type: 'string', format: 'date-time' },
+        },
       },
       CreateProductionBatchInput: {
         type: 'object',
@@ -1065,8 +1099,8 @@ const openapiDocument = {
         properties: {
           recipeId: { type: 'string', example: '665300000000000000000001' },
           plannedQuantity: { type: 'number', minimum: 0, example: 10 },
-          notes: { type: 'string', example: 'Preparacion para vitrina matutina' }
-        }
+          notes: { type: 'string', example: 'Preparacion para vitrina matutina' },
+        },
       },
       CompleteProductionBatchInput: {
         type: 'object',
@@ -1082,17 +1116,17 @@ const openapiDocument = {
               required: ['ingredientId', 'actualQuantity'],
               properties: {
                 ingredientId: { type: 'string', example: '665100000000000000000001' },
-                actualQuantity: { type: 'number', minimum: 0, example: 2.6 }
-              }
-            }
-          }
-        }
+                actualQuantity: { type: 'number', minimum: 0, example: 2.6 },
+              },
+            },
+          },
+        },
       },
       CancelProductionBatchInput: {
         type: 'object',
         properties: {
-          reason: { type: 'string', example: 'Se cancelo por falta de personal' }
-        }
+          reason: { type: 'string', example: 'Se cancelo por falta de personal' },
+        },
       },
       ProductionBatchMutationResponse: {
         type: 'object',
@@ -1101,12 +1135,24 @@ const openapiDocument = {
           message: { type: 'string' },
           productionBatch: { $ref: '#/components/schemas/ProductionBatch' },
           recipe: { $ref: '#/components/schemas/Recipe' },
-          timestamp: { type: 'string', format: 'date-time' }
-        }
+          timestamp: { type: 'string', format: 'date-time' },
+        },
       },
       SaleItem: {
         type: 'object',
-        required: ['recipe', 'recipeName', 'recipeCategory', 'quantity', 'unitPrice', 'unitCost', 'lineRevenue', 'lineCost', 'lineMargin', 'stockBefore', 'stockAfter'],
+        required: [
+          'recipe',
+          'recipeName',
+          'recipeCategory',
+          'quantity',
+          'unitPrice',
+          'unitCost',
+          'lineRevenue',
+          'lineCost',
+          'lineMargin',
+          'stockBefore',
+          'stockAfter',
+        ],
         properties: {
           recipe: { type: 'string', example: '665300000000000000000001' },
           recipeName: { type: 'string', example: 'Café Latte Grande' },
@@ -1118,18 +1164,27 @@ const openapiDocument = {
           lineCost: { type: 'number', example: 86.5 },
           lineMargin: { type: 'number', example: 83.5 },
           stockBefore: { type: 'number', example: 12 },
-          stockAfter: { type: 'number', example: 10 }
-        }
+          stockAfter: { type: 'number', example: 10 },
+        },
       },
       Sale: {
         type: 'object',
-        required: ['_id', 'soldAt', 'items', 'totalItems', 'totalRevenue', 'totalCost', 'totalMargin', 'notes'],
+        required: [
+          '_id',
+          'soldAt',
+          'items',
+          'totalItems',
+          'totalRevenue',
+          'totalCost',
+          'totalMargin',
+          'notes',
+        ],
         properties: {
           _id: { type: 'string', example: '665500000000000000000001' },
           soldAt: { type: 'string', format: 'date-time' },
           items: {
             type: 'array',
-            items: { $ref: '#/components/schemas/SaleItem' }
+            items: { $ref: '#/components/schemas/SaleItem' },
           },
           totalItems: { type: 'number', example: 3 },
           totalRevenue: { type: 'number', example: 255 },
@@ -1137,8 +1192,8 @@ const openapiDocument = {
           totalMargin: { type: 'number', example: 125.25 },
           notes: { type: 'string', example: 'Venta en turno matutino' },
           createdAt: { type: 'string', format: 'date-time' },
-          updatedAt: { type: 'string', format: 'date-time' }
-        }
+          updatedAt: { type: 'string', format: 'date-time' },
+        },
       },
       CreateSaleInput: {
         type: 'object',
@@ -1154,11 +1209,11 @@ const openapiDocument = {
               required: ['recipeId', 'quantity'],
               properties: {
                 recipeId: { type: 'string', example: '665300000000000000000001' },
-                quantity: { type: 'number', minimum: 0, example: 2 }
-              }
-            }
-          }
-        }
+                quantity: { type: 'number', minimum: 0, example: 2 },
+              },
+            },
+          },
+        },
       },
       SaleMutationResponse: {
         type: 'object',
@@ -1168,10 +1223,10 @@ const openapiDocument = {
           sale: { $ref: '#/components/schemas/Sale' },
           recipes: {
             type: 'array',
-            items: { $ref: '#/components/schemas/Recipe' }
+            items: { $ref: '#/components/schemas/Recipe' },
           },
-          timestamp: { type: 'string', format: 'date-time' }
-        }
+          timestamp: { type: 'string', format: 'date-time' },
+        },
       },
       DashboardAlert: {
         type: 'object',
@@ -1180,8 +1235,8 @@ const openapiDocument = {
           type: { type: 'string', example: 'Margen bajo' },
           priority: { type: 'string', enum: ['Alta', 'Media'], example: 'Alta' },
           title: { type: 'string', example: 'Café Latte Grande' },
-          detail: { type: 'string', example: 'Margen 12% con costo 43.25 y precio 49.00' }
-        }
+          detail: { type: 'string', example: 'Margen 12% con costo 43.25 y precio 49.00' },
+        },
       },
       DashboardLowStockIngredient: {
         type: 'object',
@@ -1192,8 +1247,8 @@ const openapiDocument = {
           currentStock: { type: 'number' },
           minimumStock: { type: 'number' },
           reservedStock: { type: 'number' },
-          unit: { type: 'string' }
-        }
+          unit: { type: 'string' },
+        },
       },
       DashboardProductSummary: {
         type: 'object',
@@ -1205,8 +1260,8 @@ const openapiDocument = {
           currentStock: { type: 'number' },
           salePrice: { type: 'number' },
           totalCost: { type: 'number' },
-          margin: { type: 'number' }
-        }
+          margin: { type: 'number' },
+        },
       },
       DashboardTopSellingRecipe: {
         type: 'object',
@@ -1218,8 +1273,8 @@ const openapiDocument = {
           unitsSold: { type: 'number' },
           revenue: { type: 'number' },
           cost: { type: 'number' },
-          margin: { type: 'number' }
-        }
+          margin: { type: 'number' },
+        },
       },
       DashboardRecentSale: {
         type: 'object',
@@ -1230,12 +1285,20 @@ const openapiDocument = {
           totalItems: { type: 'number' },
           totalRevenue: { type: 'number' },
           totalMargin: { type: 'number' },
-          itemCount: { type: 'number' }
-        }
+          itemCount: { type: 'number' },
+        },
       },
       DashboardRecentProduction: {
         type: 'object',
-        required: ['_id', 'recipeName', 'status', 'plannedQuantity', 'actualQuantity', 'wasteCost', 'createdAt'],
+        required: [
+          '_id',
+          'recipeName',
+          'status',
+          'plannedQuantity',
+          'actualQuantity',
+          'wasteCost',
+          'createdAt',
+        ],
         properties: {
           _id: { type: 'string' },
           recipeName: { type: 'string' },
@@ -1244,8 +1307,8 @@ const openapiDocument = {
           actualQuantity: { type: 'number' },
           wasteCost: { type: 'number' },
           createdAt: { type: 'string', format: 'date-time' },
-          completedAt: { type: 'string', format: 'date-time', nullable: true }
-        }
+          completedAt: { type: 'string', format: 'date-time', nullable: true },
+        },
       },
       DashboardSalesTimelinePoint: {
         type: 'object',
@@ -1254,24 +1317,24 @@ const openapiDocument = {
           date: { type: 'string', example: '2026-05-28' },
           revenue: { type: 'number' },
           margin: { type: 'number' },
-          units: { type: 'number' }
-        }
+          units: { type: 'number' },
+        },
       },
       DashboardProductionStatusSummaryItem: {
         type: 'object',
         required: ['status', 'count'],
         properties: {
           status: { type: 'string', enum: ['PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'] },
-          count: { type: 'number' }
-        }
+          count: { type: 'number' },
+        },
       },
       DashboardAlertSummary: {
         type: 'object',
         required: ['high', 'medium'],
         properties: {
           high: { type: 'number' },
-          medium: { type: 'number' }
-        }
+          medium: { type: 'number' },
+        },
       },
       DashboardSummary: {
         type: 'object',
@@ -1288,7 +1351,7 @@ const openapiDocument = {
           'completedProductionUnits',
           'sellableProducts',
           'lowStockIngredients',
-          'lowStockProducts'
+          'lowStockProducts',
         ],
         properties: {
           totalSalesRevenue: { type: 'number' },
@@ -1303,8 +1366,8 @@ const openapiDocument = {
           completedProductionUnits: { type: 'number' },
           sellableProducts: { type: 'number' },
           lowStockIngredients: { type: 'number' },
-          lowStockProducts: { type: 'number' }
-        }
+          lowStockProducts: { type: 'number' },
+        },
       },
       DashboardAnalytics: {
         type: 'object',
@@ -1318,55 +1381,55 @@ const openapiDocument = {
           'recentSales',
           'recentProduction',
           'alerts',
-          'timestamp'
+          'timestamp',
         ],
         properties: {
           periodDays: { type: 'number' },
           summary: { $ref: '#/components/schemas/DashboardSummary' },
           lowStockIngredients: {
             type: 'array',
-            items: { $ref: '#/components/schemas/DashboardLowStockIngredient' }
+            items: { $ref: '#/components/schemas/DashboardLowStockIngredient' },
           },
           lowStockProducts: {
             type: 'array',
-            items: { $ref: '#/components/schemas/DashboardProductSummary' }
+            items: { $ref: '#/components/schemas/DashboardProductSummary' },
           },
           lowMarginRecipes: {
             type: 'array',
-            items: { $ref: '#/components/schemas/DashboardProductSummary' }
+            items: { $ref: '#/components/schemas/DashboardProductSummary' },
           },
           topSellingRecipes: {
             type: 'array',
-            items: { $ref: '#/components/schemas/DashboardTopSellingRecipe' }
+            items: { $ref: '#/components/schemas/DashboardTopSellingRecipe' },
           },
           recentSales: {
             type: 'array',
-            items: { $ref: '#/components/schemas/DashboardRecentSale' }
+            items: { $ref: '#/components/schemas/DashboardRecentSale' },
           },
           recentProduction: {
             type: 'array',
-            items: { $ref: '#/components/schemas/DashboardRecentProduction' }
+            items: { $ref: '#/components/schemas/DashboardRecentProduction' },
           },
           salesTimeline: {
             type: 'array',
-            items: { $ref: '#/components/schemas/DashboardSalesTimelinePoint' }
+            items: { $ref: '#/components/schemas/DashboardSalesTimelinePoint' },
           },
           productionStatusSummary: {
             type: 'array',
-            items: { $ref: '#/components/schemas/DashboardProductionStatusSummaryItem' }
+            items: { $ref: '#/components/schemas/DashboardProductionStatusSummaryItem' },
           },
           alertSummary: {
-            $ref: '#/components/schemas/DashboardAlertSummary'
+            $ref: '#/components/schemas/DashboardAlertSummary',
           },
           alerts: {
             type: 'array',
-            items: { $ref: '#/components/schemas/DashboardAlert' }
+            items: { $ref: '#/components/schemas/DashboardAlert' },
           },
-          timestamp: { type: 'string', format: 'date-time' }
-        }
-      }
-    }
-  }
+          timestamp: { type: 'string', format: 'date-time' },
+        },
+      },
+    },
+  },
 };
 
 module.exports = openapiDocument;

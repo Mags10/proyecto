@@ -5,32 +5,32 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
     email: {
       type: String,
       required: true,
       unique: true,
       lowercase: true,
-      trim: true
+      trim: true,
     },
     passwordHash: {
       type: String,
-      required: true
+      required: true,
     },
     role: {
       type: String,
       required: true,
-      enum: ['ADMIN', 'KITCHEN', 'FLOOR']
+      enum: ['ADMIN', 'KITCHEN', 'FLOOR'],
     },
     active: {
       type: Boolean,
       required: true,
-      default: true
-    }
+      default: true,
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 

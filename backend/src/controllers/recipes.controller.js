@@ -56,7 +56,7 @@ const normalizeRecipeIngredients = async (recipeIngredients = []) => {
       unit: ingredient.unit,
       quantity,
       unitCost,
-      subtotal
+      subtotal,
     });
 
     totalCost += subtotal;
@@ -72,7 +72,7 @@ const buildRecipeMetrics = (salePrice, totalCost) => {
 
   return {
     margin,
-    status: deriveStatus(margin)
+    status: deriveStatus(margin),
   };
 };
 
@@ -83,11 +83,7 @@ const getRecipes = async (req = request, res = response) => {
     const filter = { active: true };
 
     if (q) {
-      filter.$or = [
-        { name: RegExp(q, 'i') },
-        { category: RegExp(q, 'i') },
-        { status: RegExp(q, 'i') }
-      ];
+      filter.$or = [{ name: RegExp(q, 'i') }, { category: RegExp(q, 'i') }, { status: RegExp(q, 'i') }];
     }
 
     const result = await Recipe.find(filter)
@@ -100,7 +96,7 @@ const getRecipes = async (req = request, res = response) => {
     console.log(err);
     return res.status(500).json({
       message: 'Internal Server Error',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 };
@@ -112,7 +108,7 @@ const getRecipeById = async (req = request, res = response) => {
     if (!mongoose.isValidObjectId(id)) {
       return res.status(400).json({
         message: `Invalid id ${id}`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -121,7 +117,7 @@ const getRecipeById = async (req = request, res = response) => {
     if (!result) {
       return res.status(404).json({
         message: `Recipe with id ${id} not found`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -131,7 +127,7 @@ const getRecipeById = async (req = request, res = response) => {
     console.log(err);
     return res.status(500).json({
       message: 'Internal Server Error',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 };
@@ -142,7 +138,7 @@ const postRecipe = async (req = request, res = response) => {
   if (!name || !category || !salePrice) {
     return res.status(400).json({
       message: 'Bad Request. Missing required fields: name, category, salePrice',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -159,7 +155,7 @@ const postRecipe = async (req = request, res = response) => {
       ingredients: normalized.ingredients,
       totalCost: normalized.totalCost,
       margin: metrics.margin,
-      status: metrics.status
+      status: metrics.status,
     });
 
     const result = await recipe.save();
@@ -167,7 +163,7 @@ const postRecipe = async (req = request, res = response) => {
     res.status(201).json({
       message: 'Recipe created successfully',
       recipe: result,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   } catch (err) {
     console.log('Error creating recipe:');
@@ -176,27 +172,27 @@ const postRecipe = async (req = request, res = response) => {
     if (err.message?.includes('Recipe must include')) {
       return res.status(400).json({
         message: err.message,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
     if (err.message?.includes('Invalid ingredientId') || err.message?.includes('quantity')) {
       return res.status(400).json({
         message: err.message,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
     if (err.message?.includes('Ingredient with id')) {
       return res.status(404).json({
         message: err.message,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
     return res.status(500).json({
       message: 'Internal Server Error',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 };
@@ -208,7 +204,7 @@ const putRecipe = async (req = request, res = response) => {
   if (!name || !category || !salePrice) {
     return res.status(400).json({
       message: 'Bad Request. Missing required fields: name, category, salePrice',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -216,7 +212,7 @@ const putRecipe = async (req = request, res = response) => {
     if (!mongoose.isValidObjectId(id)) {
       return res.status(400).json({
         message: `Invalid id ${id}`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -224,7 +220,7 @@ const putRecipe = async (req = request, res = response) => {
     if (!existing) {
       return res.status(404).json({
         message: `Recipe with id ${id} not found`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -246,7 +242,7 @@ const putRecipe = async (req = request, res = response) => {
     res.status(200).json({
       message: 'Recipe updated successfully',
       recipe: result,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   } catch (err) {
     console.log('Error updating recipe:');
@@ -255,27 +251,27 @@ const putRecipe = async (req = request, res = response) => {
     if (err.message?.includes('Recipe must include')) {
       return res.status(400).json({
         message: err.message,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
     if (err.message?.includes('Invalid ingredientId') || err.message?.includes('quantity')) {
       return res.status(400).json({
         message: err.message,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
     if (err.message?.includes('Ingredient with id')) {
       return res.status(404).json({
         message: err.message,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
     return res.status(500).json({
       message: 'Internal Server Error',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 };
@@ -287,7 +283,7 @@ const deleteRecipe = async (req = request, res = response) => {
     if (!mongoose.isValidObjectId(id)) {
       return res.status(400).json({
         message: `Invalid id ${id}`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -296,20 +292,20 @@ const deleteRecipe = async (req = request, res = response) => {
     if (!result) {
       return res.status(404).json({
         message: `Recipe with id ${id} not found`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
     res.status(200).json({
       message: `Recipe with id ${id} deleted successfully`,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   } catch (err) {
     console.log('Error deleting recipe:');
     console.log(err);
     return res.status(500).json({
       message: 'Internal Server Error',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 };
@@ -319,5 +315,5 @@ module.exports = {
   getRecipeById,
   postRecipe,
   putRecipe,
-  deleteRecipe
+  deleteRecipe,
 };

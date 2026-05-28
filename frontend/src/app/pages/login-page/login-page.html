@@ -12,19 +12,18 @@
         <input z-input type="email" formControlName="email" autocomplete="username" />
       </label>
       @if ((submitAttempted() || loginForm.controls.email.touched) && loginForm.controls.email.invalid) {
-        <p class="field-error">Captura un correo válido.</p>
+      <p class="field-error">Captura un correo válido.</p>
       }
 
       <label class="field">
         <span>Contraseña</span>
         <input z-input type="password" formControlName="password" autocomplete="current-password" />
       </label>
-      @if ((submitAttempted() || loginForm.controls.password.touched) && loginForm.controls.password.invalid) {
-        <p class="field-error">La contraseña es obligatoria.</p>
-      }
-
-      @if (authService.error()) {
-        <div class="login-error">{{ authService.error() }}</div>
+      @if ((submitAttempted() || loginForm.controls.password.touched) && loginForm.controls.password.invalid)
+      {
+      <p class="field-error">La contraseña es obligatoria.</p>
+      } @if (authService.error()) {
+      <div class="login-error">{{ authService.error() }}</div>
       }
 
       <button z-button type="submit" class="submit-button" [zLoading]="authService.loading()">Entrar</button>
@@ -38,15 +37,15 @@
 
       <div class="demo-grid">
         @for (account of demoAccounts(); track account.email) {
-          <button
-            z-button
-            zType="outline"
-            type="button"
-            class="demo-button"
-            (click)="useDemoAccount(account.email, account.password)"
-          >
-            {{ account.label }}
-          </button>
+        <button
+          z-button
+          zType="outline"
+          type="button"
+          class="demo-button"
+          (click)="useDemoAccount(account.email, account.password)"
+        >
+          {{ account.label }}
+        </button>
         }
       </div>
     </div>

@@ -8,7 +8,7 @@ type ApiErrorLike = {
 };
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SalesService {
   private readonly recipesService = inject(RecipesService);
@@ -37,15 +37,15 @@ export class SalesService {
 
     const normalizedFilters = {
       recipeId: filters.recipeId,
-      limit: filters.limit ?? this.lastFilters.limit ?? 20
+      limit: filters.limit ?? this.lastFilters.limit ?? 20,
     };
 
     this.lastFilters = normalizedFilters;
 
     const { data, error } = await apiClient.GET('/api/sales', {
       params: {
-        query: normalizedFilters
-      }
+        query: normalizedFilters,
+      },
     });
 
     if (error) {
@@ -64,7 +64,7 @@ export class SalesService {
     this.error.set('');
 
     const { data, error } = await apiClient.POST('/api/sales', {
-      body: payload
+      body: payload,
     });
 
     if (error) {

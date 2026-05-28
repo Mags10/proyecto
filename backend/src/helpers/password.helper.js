@@ -48,5 +48,5 @@ const verifyPassword = async (password, passwordHash) => {
 
 module.exports = {
   hashPassword,
-  verifyPassword
+  verifyPassword,
 };

@@ -1,9 +1,18 @@
-<section class="modal-backdrop" role="presentation" (click)="closed.emit()">
-  <z-card class="modal-card detail-modal" zTitle="Detalle de venta" (click)="$event.stopPropagation()">
+<section class="modal-backdrop" role="presentation" (click)="close()" (keydown.escape)="close()">
+  <z-card
+    #dialogSurface
+    class="modal-card detail-modal"
+    zTitle="Detalle de venta"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Detalle de venta"
+    tabindex="-1"
+    (click)="$event.stopPropagation()"
+  >
     <div class="detail-grid">
       <div class="detail-card">
         <span class="detail-label">Fecha</span>
-        <strong>{{ sale().soldAt | date:'medium' }}</strong>
+        <strong>{{ sale().soldAt | date: 'medium' }}</strong>
       </div>
       <div class="detail-card">
         <span class="detail-label">Unidades</span>
@@ -34,7 +43,10 @@
         <tbody>
           @for (item of sale().items; track item.recipe + '-' + item.recipeName) {
             <tr>
-              <td><strong>{{ item.recipeName }}</strong><div class="muted">{{ item.recipeCategory }}</div></td>
+              <td>
+                <strong>{{ item.recipeName }}</strong>
+                <div class="muted">{{ item.recipeCategory }}</div>
+              </td>
               <td>{{ item.quantity }} uds</td>
               <td>{{ item.unitPrice | mxnCurrency }}</td>
               <td>{{ item.lineRevenue | mxnCurrency }}</td>
@@ -51,7 +63,7 @@
     }
 
     <footer class="modal-actions">
-      <button z-button zType="outline" type="button" (click)="closed.emit()">Cerrar</button>
+      <button z-button zType="outline" type="button" (click)="close()">Cerrar</button>
     </footer>
   </z-card>
 </section>

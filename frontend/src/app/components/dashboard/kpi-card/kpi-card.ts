@@ -1,12 +1,12 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { ZardCardComponent } from '../../../shared/components/card';
 
 @Component({
   selector: 'app-kpi-card',
-  standalone: true,
   imports: [ZardCardComponent],
   templateUrl: './kpi-card.html',
-  styleUrl: './kpi-card.css'
+  styleUrl: './kpi-card.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KpiCard {
   readonly title = input<string>('');

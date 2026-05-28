@@ -6,6 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "api:types": "node ../scripts/generate-api-types.js",
+    "lint": "eslint src --ext .ts,.html",
+    "lint:fix": "eslint src --ext .ts,.html --fix",
+    "format": "prettier src --write",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

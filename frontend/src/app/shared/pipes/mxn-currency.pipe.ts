@@ -2,7 +2,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'mxnCurrency',
-  standalone: true
 })
 export class MxnCurrencyPipe implements PipeTransform {
   private readonly formatter = new Intl.NumberFormat('es-MX', {
@@ -10,7 +9,7 @@ export class MxnCurrencyPipe implements PipeTransform {
     currency: 'MXN',
     currencyDisplay: 'code',
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    maximumFractionDigits: 2,
   });
 
   transform(value: number | string | null | undefined): string {

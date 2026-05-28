@@ -14,35 +14,47 @@ const getDashboard = async (req = request, res = response) => {
   fromDate.setDate(fromDate.getDate() - safeDays);
 
   try {
-    const [
-      activeIngredients,
-      activeRecipes,
-      recentPurchases,
-      recentSales,
-      productionBatches
-    ] = await Promise.all([
-      Ingredient.find({ active: true }).sort({ name: 1 }),
-      Recipe.find({ active: true }).sort({ updatedAt: -1 }),
-      PurchaseRecord.find({ createdAt: { $gte: fromDate } }).sort({ createdAt: -1 }),
-      Sale.find({ soldAt: { $gte: fromDate } }).sort({ soldAt: -1 }),
-      ProductionBatch.find({ createdAt: { $gte: fromDate } }).sort({ createdAt: -1 })
-    ]);
+    const [activeIngredients, activeRecipes, recentPurchases, recentSales, productionBatches] =
+      await Promise.all([
+        Ingredient.find({ active: true }).sort({ name: 1 }),
+        Recipe.find({ active: true }).sort({ updatedAt: -1 }),
+        PurchaseRecord.find({ createdAt: { $gte: fromDate } }).sort({ createdAt: -1 }),
+        Sale.find({ soldAt: { $gte: fromDate } }).sort({ soldAt: -1 }),
+        ProductionBatch.find({ createdAt: { $gte: fromDate } }).sort({ createdAt: -1 }),
+      ]);
 
-    const totalSalesRevenue = roundMoney(recentSales.reduce((acc, sale) => acc + Number(sale.totalRevenue || 0), 0));
-    const totalSalesCost = roundMoney(recentSales.reduce((acc, sale) => acc + Number(sale.totalCost || 0), 0));
+    const totalSalesRevenue = roundMoney(
+      recentSales.reduce((acc, sale) => acc + Number(sale.totalRevenue || 0), 0)
+    );
+    const totalSalesCost = roundMoney(
+      recentSales.reduce((acc, sale) => acc + Number(sale.totalCost || 0), 0)
+    );
     const grossMarginValue = roundMoney(totalSalesRevenue - totalSalesCost);
-    const grossMarginPercent = totalSalesRevenue > 0
-      ? roundMoney((grossMarginValue / totalSalesRevenue) * 100)
-      : 0;
+    const grossMarginPercent =
+      totalSalesRevenue > 0 ? roundMoney((grossMarginValue / totalSalesRevenue) * 100) : 0;
     const totalUnitsSold = recentSales.reduce((acc, sale) => acc + Number(sale.totalItems || 0), 0);
 
-    const totalPurchaseSpend = roundMoney(recentPurchases.reduce((acc, purchase) => acc + Number(purchase.totalPrice || 0), 0));
+    const totalPurchaseSpend = roundMoney(
+      recentPurchases.reduce((acc, purchase) => acc + Number(purchase.totalPrice || 0), 0)
+    );
 
     const completedBatches = productionBatches.filter((batch) => batch.status === 'COMPLETED');
-    const activeProductionOrders = productionBatches.filter((batch) => ['PENDING', 'IN_PROGRESS'].includes(batch.status)).length;
-    const totalProductionPlannedCost = roundMoney(completedBatches.reduce((acc, batch) => acc + Number(batch.actualTotalCost ?? batch.plannedTotalCost ?? 0), 0));
-    const totalWasteCost = roundMoney(completedBatches.reduce((acc, batch) => acc + Number(batch.wasteSummary?.totalWasteCost || 0), 0));
-    const completedProductionUnits = completedBatches.reduce((acc, batch) => acc + Number(batch.actualQuantity || 0), 0);
+    const activeProductionOrders = productionBatches.filter((batch) =>
+      ['PENDING', 'IN_PROGRESS'].includes(batch.status)
+    ).length;
+    const totalProductionPlannedCost = roundMoney(
+      completedBatches.reduce(
+        (acc, batch) => acc + Number(batch.actualTotalCost ?? batch.plannedTotalCost ?? 0),
+        0
+      )
+    );
+    const totalWasteCost = roundMoney(
+      completedBatches.reduce((acc, batch) => acc + Number(batch.wasteSummary?.totalWasteCost || 0), 0)
+    );
+    const completedProductionUnits = completedBatches.reduce(
+      (acc, batch) => acc + Number(batch.actualQuantity || 0),
+      0
+    );
 
     const lowStockIngredients = activeIngredients
       .filter((ingredient) => Number(ingredient.currentStock) <= Number(ingredient.minimumStock))
@@ -52,7 +64,7 @@ const getDashboard = async (req = request, res = response) => {
         currentStock: Number(ingredient.currentStock),
         minimumStock: Number(ingredient.minimumStock),
         reservedStock: Number(ingredient.reservedStock || 0),
-        unit: ingredient.unit
+        unit: ingredient.unit,
       }));
 
     const lowStockProducts = activeRecipes
@@ -64,7 +76,7 @@ const getDashboard = async (req = request, res = response) => {
         currentStock: Number(recipe.currentStock),
         salePrice: Number(recipe.salePrice),
         totalCost: Number(recipe.totalCost),
-        margin: Number(recipe.margin)
+        margin: Number(recipe.margin),
       }));
 
     const lowMarginRecipes = activeRecipes
@@ -78,7 +90,7 @@ const getDashboard = async (req = request, res = response) => {
         salePrice: Number(recipe.salePrice),
         totalCost: Number(recipe.totalCost),
         margin: Number(recipe.margin),
-        currentStock: Number(recipe.currentStock)
+        currentStock: Number(recipe.currentStock),
       }));
 
     const salesByRecipe = new Map();
@@ -93,7 +105,7 @@ const getDashboard = async (req = request, res = response) => {
           unitsSold: 0,
           revenue: 0,
           cost: 0,
-          margin: 0
+          margin: 0,
         };
 
         existing.unitsSold += Number(item.quantity || 0);
@@ -112,7 +124,7 @@ const getDashboard = async (req = request, res = response) => {
         unitsSold: item.unitsSold,
         revenue: roundMoney(item.revenue),
         cost: roundMoney(item.cost),
-        margin: roundMoney(item.margin)
+        margin: roundMoney(item.margin),
       }))
       .sort((a, b) => b.revenue - a.revenue)
       .slice(0, 5);
@@ -123,7 +135,7 @@ const getDashboard = async (req = request, res = response) => {
       totalItems: Number(sale.totalItems || 0),
       totalRevenue: Number(sale.totalRevenue || 0),
       totalMargin: Number(sale.totalMargin || 0),
-      itemCount: sale.items.length
+      itemCount: sale.items.length,
     }));
 
     const recentProductionPreview = productionBatches.slice(0, 5).map((batch) => ({
@@ -134,7 +146,7 @@ const getDashboard = async (req = request, res = response) => {
       actualQuantity: Number(batch.actualQuantity || 0),
       wasteCost: Number(batch.wasteSummary?.totalWasteCost || 0),
       createdAt: batch.createdAt,
-      completedAt: batch.completedAt
+      completedAt: batch.completedAt,
     }));
 
     const salesTimelineMap = new Map();
@@ -147,7 +159,7 @@ const getDashboard = async (req = request, res = response) => {
         date: key,
         revenue: 0,
         margin: 0,
-        units: 0
+        units: 0,
       });
     }
 
@@ -167,7 +179,7 @@ const getDashboard = async (req = request, res = response) => {
       date: item.date,
       revenue: roundMoney(item.revenue),
       margin: roundMoney(item.margin),
-      units: item.units
+      units: item.units,
     }));
 
     const alerts = [
@@ -175,24 +187,24 @@ const getDashboard = async (req = request, res = response) => {
         type: 'Stock de insumo',
         priority: ingredient.currentStock <= ingredient.minimumStock * 0.5 ? 'Alta' : 'Media',
         title: ingredient.name,
-        detail: `Stock ${ingredient.currentStock} ${ingredient.unit}; mínimo ${ingredient.minimumStock} ${ingredient.unit}`
+        detail: `Stock ${ingredient.currentStock} ${ingredient.unit}; mínimo ${ingredient.minimumStock} ${ingredient.unit}`,
       })),
       ...lowMarginRecipes.map((recipe) => ({
         type: 'Margen bajo',
         priority: recipe.margin < 10 ? 'Alta' : 'Media',
         title: recipe.name,
-        detail: `Margen ${recipe.margin}% con costo ${roundMoney(recipe.totalCost)} y precio ${roundMoney(recipe.salePrice)}`
-      }))
+        detail: `Margen ${recipe.margin}% con costo ${roundMoney(recipe.totalCost)} y precio ${roundMoney(recipe.salePrice)}`,
+      })),
     ].slice(0, 8);
 
     const productionStatusSummary = ['PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'].map((status) => ({
       status,
-      count: productionBatches.filter((batch) => batch.status === status).length
+      count: productionBatches.filter((batch) => batch.status === status).length,
     }));
 
     const alertSummary = {
       high: alerts.filter((alert) => alert.priority === 'Alta').length,
-      medium: alerts.filter((alert) => alert.priority === 'Media').length
+      medium: alerts.filter((alert) => alert.priority === 'Media').length,
     };
 
     return res.status(200).json({
@@ -210,7 +222,7 @@ const getDashboard = async (req = request, res = response) => {
         completedProductionUnits,
         sellableProducts: activeRecipes.filter((recipe) => Number(recipe.currentStock) > 0).length,
         lowStockIngredients: lowStockIngredients.length,
-        lowStockProducts: lowStockProducts.length
+        lowStockProducts: lowStockProducts.length,
       },
       lowStockIngredients,
       lowStockProducts,
@@ -222,18 +234,18 @@ const getDashboard = async (req = request, res = response) => {
       productionStatusSummary,
       alertSummary,
       alerts,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   } catch (err) {
     console.log('Error building dashboard analytics:');
     console.log(err);
     return res.status(500).json({
       message: 'Internal Server Error',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 };
 
 module.exports = {
-  getDashboard
+  getDashboard,
 };

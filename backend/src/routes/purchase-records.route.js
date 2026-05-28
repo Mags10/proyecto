@@ -1,8 +1,5 @@
 const { Router } = require('express');
-const {
-  getPurchaseRecords,
-  postPurchaseRecord
-} = require('../controllers/purchase-records.controller');
+const { getPurchaseRecords, postPurchaseRecord } = require('../controllers/purchase-records.controller');
 const { ROLES, requireAuth, requireRoles } = require('../middlewares/auth.middleware');
 
 const routes = Router();

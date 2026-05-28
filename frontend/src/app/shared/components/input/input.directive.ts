@@ -65,8 +65,8 @@ export class ZardInputDirective implements ControlValueAccessor {
         zStatus: this.zStatus(),
         zBorderless: this.zBorderless(),
       }),
-      this.class(),
-    ),
+      this.class()
+    )
   );
 
   constructor() {

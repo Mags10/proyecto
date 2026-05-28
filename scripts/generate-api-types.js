@@ -11,8 +11,6 @@ const tempPath = path.join(os.tmpdir(), 'kitchenflow-openapi.json');
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 fs.writeFileSync(tempPath, JSON.stringify(openapiDocument, null, 2));
 
-execFileSync(
-  path.join(rootDir, 'node_modules/.bin/openapi-typescript'),
-  [tempPath, '-o', outputPath],
-  { stdio: 'inherit' }
-);
+execFileSync(path.join(rootDir, 'node_modules/.bin/openapi-typescript'), [tempPath, '-o', outputPath], {
+  stdio: 'inherit',
+});

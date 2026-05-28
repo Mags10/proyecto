@@ -12,7 +12,7 @@ const getPurchaseRecords = async (req = request, res = response) => {
     if (ingredientId && !mongoose.isValidObjectId(ingredientId)) {
       return res.status(400).json({
         message: `Invalid ingredientId ${ingredientId}`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -28,7 +28,7 @@ const getPurchaseRecords = async (req = request, res = response) => {
     console.log(err);
     return res.status(500).json({
       message: 'Internal Server Error',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 };
@@ -38,15 +38,16 @@ const postPurchaseRecord = async (req = request, res = response) => {
 
   if (!provider || !invoiceDate || !ingredientId || !quantityReceived || !totalPrice) {
     return res.status(400).json({
-      message: 'Bad Request. Missing required fields: provider, invoiceDate, ingredientId, quantityReceived, totalPrice',
-      timestamp: new Date()
+      message:
+        'Bad Request. Missing required fields: provider, invoiceDate, ingredientId, quantityReceived, totalPrice',
+      timestamp: new Date(),
     });
   }
 
   if (!mongoose.isValidObjectId(ingredientId)) {
     return res.status(400).json({
       message: `Invalid ingredientId ${ingredientId}`,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -56,7 +57,7 @@ const postPurchaseRecord = async (req = request, res = response) => {
   if (received <= 0 || price <= 0) {
     return res.status(400).json({
       message: 'Bad Request. quantityReceived and totalPrice must be greater than zero',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -65,7 +66,7 @@ const postPurchaseRecord = async (req = request, res = response) => {
     if (!ingredient) {
       return res.status(404).json({
         message: `Ingredient with id ${ingredientId} not found`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -74,7 +75,7 @@ const postPurchaseRecord = async (req = request, res = response) => {
     const unitPrice = roundMoney(price / received);
     const newStock = previousStock + received;
     const newAverageCost = roundMoney(
-      ((previousStock * previousAverageCost) + (received * unitPrice)) / newStock
+      (previousStock * previousAverageCost + received * unitPrice) / newStock
     );
 
     ingredient.currentStock = newStock;
@@ -91,7 +92,7 @@ const postPurchaseRecord = async (req = request, res = response) => {
       previousStock,
       previousAverageCost,
       newStock,
-      newAverageCost
+      newAverageCost,
     });
 
     const result = await purchaseRecord.save();
@@ -101,19 +102,19 @@ const postPurchaseRecord = async (req = request, res = response) => {
       message: 'Purchase record created successfully',
       purchaseRecord: result,
       ingredient,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   } catch (err) {
     console.log('Error creating purchase record:');
     console.log(err);
     return res.status(500).json({
       message: 'Internal Server Error',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 };
 
 module.exports = {
   getPurchaseRecords,
-  postPurchaseRecord
+  postPurchaseRecord,
 };

@@ -3,7 +3,10 @@
   <section class="hero">
     <div class="hero-copy">
       <h1>Recetas y Costeo</h1>
-      <p class="hero-subtitle">Consulta el catálogo de recetas, analiza márgenes en tiempo real y abre el detalle para ajustar ingredientes y rendimiento.</p>
+      <p class="hero-subtitle">
+        Consulta el catálogo de recetas, analiza márgenes en tiempo real y abre el detalle para ajustar
+        ingredientes y rendimiento.
+      </p>
     </div>
 
     <div class="hero-actions">
@@ -18,7 +21,14 @@
     <div class="search-box">
       <label class="search-label">Buscar receta</label>
       <div class="search-input-wrapper">
-        <input z-input #searchInput [value]="query()" placeholder="Buscar por nombre, categoría, estado..." (input)="updateQuery(searchInput.value)" class="search-input" />
+        <input
+          z-input
+          #searchInput
+          [value]="query()"
+          placeholder="Buscar por nombre, categoría, estado..."
+          (input)="updateQuery(searchInput.value)"
+          class="search-input"
+        />
       </div>
     </div>
 
@@ -30,17 +40,19 @@
           <strong class="stat-value">{{ summary().count }}</strong>
         </div>
       </z-card>
-      
-      <z-card class="stat-card stat-margin" 
-              [class.status-rentable]="summary().averageMargin >= 30" 
-              [class.status-ajustar]="summary().averageMargin >= 15 && summary().averageMargin < 30" 
-              [class.status-critica]="summary().averageMargin < 15">
+
+      <z-card
+        class="stat-card stat-margin"
+        [class.status-rentable]="summary().averageMargin >= 30"
+        [class.status-ajustar]="summary().averageMargin >= 15 && summary().averageMargin < 30"
+        [class.status-critica]="summary().averageMargin < 15"
+      >
         <div class="stat-inner">
           <span class="stat-label">Margen Promedio</span>
           <strong class="stat-value">{{ summary().averageMargin }}%</strong>
         </div>
       </z-card>
-      
+
       <z-card class="stat-card stat-critical" [class.has-critical]="summary().criticalCount > 0">
         <div class="stat-inner">
           <span class="stat-label">Con Margen Bajo</span>
@@ -68,60 +80,71 @@
           </thead>
           <tbody z-table-body>
             @for (recipe of filteredRecipes(); track recipe._id) {
-              <tr z-table-row class="recipe-row">
-                <!-- Nombre y Rendimiento -->
-                <td z-table-cell>
-                  <div class="recipe-cell">
-                    <strong class="recipe-name">{{ recipe.name }}</strong>
-                    <span class="recipe-yield">{{ recipe.yieldText }}</span>
-                  </div>
-                </td>
-                
-                <!-- Categoría -->
-                <td z-table-cell class="cell-category">
-                  <span class="category-pill">{{ recipe.category }}</span>
-                </td>
-                
-                <!-- Precio de Venta -->
-                <td z-table-cell class="cell-price">{{ recipe.salePrice | mxnCurrency }}</td>
-                
-                <!-- Costo Total -->
-                <td z-table-cell class="cell-price">{{ recipe.totalCost | mxnCurrency }}</td>
-                
-                <!-- Margen -->
-                <td z-table-cell class="cell-margin font-georgia">
-                  <strong>{{ recipe.margin.toFixed(1) }}%</strong>
-                </td>
-                
-                <!-- Badge de Estado -->
-                <td z-table-cell>
-                  @if (getRecipeStatus(recipe.margin) === 'Rentable') {
-                    <z-badge zType="secondary" class="badge-rentable">{{ getRecipeStatus(recipe.margin) }}</z-badge>
-                  } @else if (getRecipeStatus(recipe.margin) === 'Ajustar costo') {
-                    <z-badge zType="default" class="badge-ajustar">{{ getRecipeStatus(recipe.margin) }}</z-badge>
-                  } @else {
-                    <z-badge zType="destructive" class="badge-critica">{{ getRecipeStatus(recipe.margin) }}</z-badge>
-                  }
-                </td>
-                
-                <!-- Botón de Acción -->
-                <td z-table-cell class="cell-action">
-                  <div class="row-actions">
-                    <button z-button zType="outline" zSize="sm" type="button" (click)="openRecipe(recipe._id)" class="btn-view-detail">
-                      Ver Detalle
-                    </button>
-                  </div>
-                </td>
-              </tr>
+            <tr z-table-row class="recipe-row">
+              <!-- Nombre y Rendimiento -->
+              <td z-table-cell>
+                <div class="recipe-cell">
+                  <strong class="recipe-name">{{ recipe.name }}</strong>
+                  <span class="recipe-yield">{{ recipe.yieldText }}</span>
+                </div>
+              </td>
+
+              <!-- Categoría -->
+              <td z-table-cell class="cell-category">
+                <span class="category-pill">{{ recipe.category }}</span>
+              </td>
+
+              <!-- Precio de Venta -->
+              <td z-table-cell class="cell-price">{{ recipe.salePrice | mxnCurrency }}</td>
+
+              <!-- Costo Total -->
+              <td z-table-cell class="cell-price">{{ recipe.totalCost | mxnCurrency }}</td>
+
+              <!-- Margen -->
+              <td z-table-cell class="cell-margin font-georgia">
+                <strong>{{ recipe.margin.toFixed(1) }}%</strong>
+              </td>
+
+              <!-- Badge de Estado -->
+              <td z-table-cell>
+                @if (getRecipeStatus(recipe.margin) === 'Rentable') {
+                <z-badge zType="secondary" class="badge-rentable"
+                  >{{ getRecipeStatus(recipe.margin) }}</z-badge
+                >
+                } @else if (getRecipeStatus(recipe.margin) === 'Ajustar costo') {
+                <z-badge zType="default" class="badge-ajustar">{{ getRecipeStatus(recipe.margin) }}</z-badge>
+                } @else {
+                <z-badge zType="destructive" class="badge-critica"
+                  >{{ getRecipeStatus(recipe.margin) }}</z-badge
+                >
+                }
+              </td>
+
+              <!-- Botón de Acción -->
+              <td z-table-cell class="cell-action">
+                <div class="row-actions">
+                  <button
+                    z-button
+                    zType="outline"
+                    zSize="sm"
+                    type="button"
+                    (click)="openRecipe(recipe._id)"
+                    class="btn-view-detail"
+                  >
+                    Ver Detalle
+                  </button>
+                </div>
+              </td>
+            </tr>
             } @empty {
-              <tr z-table-row>
-                <td z-table-cell colspan="7" class="empty-cell">
-                  <div class="empty-state-container">
-                    <span class="empty-icon" aria-hidden="true">?</span>
-                    <p class="empty-text">No hay recetas que coincidan con la búsqueda.</p>
-                  </div>
-                </td>
-              </tr>
+            <tr z-table-row>
+              <td z-table-cell colspan="7" class="empty-cell">
+                <div class="empty-state-container">
+                  <span class="empty-icon" aria-hidden="true">?</span>
+                  <p class="empty-text">No hay recetas que coincidan con la búsqueda.</p>
+                </div>
+              </td>
+            </tr>
             }
           </tbody>
         </table>
@@ -130,9 +153,9 @@
   </section>
 
   @if (recipeModalOpen()) {
-    <app-recipe-detail-dialog
-      [recipeData]="selectedRecipe()"
-      (closed)="recipeModalOpen.set(false)"
-    ></app-recipe-detail-dialog>
+  <app-recipe-detail-dialog
+    [recipeData]="selectedRecipe()"
+    (closed)="recipeModalOpen.set(false)"
+  ></app-recipe-detail-dialog>
   }
 </main>

@@ -1,5 +1,14 @@
-<section class="modal-backdrop" role="presentation" (click)="close()">
-  <z-card class="modal-card sales-modal" zTitle="Registrar venta" (click)="$event.stopPropagation()">
+<section class="modal-backdrop" role="presentation" (click)="close()" (keydown.escape)="close()">
+  <z-card
+    #dialogSurface
+    class="modal-card sales-modal"
+    zTitle="Registrar venta"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Registrar venta"
+    tabindex="-1"
+    (click)="$event.stopPropagation()"
+  >
     @if (salesService.error()) {
       <p class="error-message">{{ salesService.error() }}</p>
     }
@@ -48,7 +57,9 @@
                 <select class="form-select" formControlName="recipeId">
                   <option value="">Selecciona un producto</option>
                   @for (recipe of recipes(); track recipe._id) {
-                    <option [value]="recipe._id">{{ recipe.name }} · stock {{ recipe.currentStock }} uds</option>
+                    <option [value]="recipe._id">
+                      {{ recipe.name }} · stock {{ recipe.currentStock }} uds
+                    </option>
                   }
                 </select>
               </label>
@@ -58,7 +69,9 @@
                 <input z-input type="number" min="0.01" step="any" formControlName="quantity" />
               </label>
 
-              <button z-button zType="ghost" zSize="sm" type="button" (click)="removeLine($index)">Quitar</button>
+              <button z-button zType="ghost" zSize="sm" type="button" (click)="removeLine($index)">
+                Quitar
+              </button>
             </div>
           }
         </div>
@@ -81,7 +94,9 @@
             <tbody>
               @for (line of previewLines(); track line.index) {
                 <tr [class.row-danger]="!line.canSell">
-                  <td><strong>{{ line.recipe?.name || 'Producto pendiente' }}</strong></td>
+                  <td>
+                    <strong>{{ line.recipe?.name || 'Producto pendiente' }}</strong>
+                  </td>
                   <td>{{ line.stock }} uds</td>
                   <td>{{ line.quantity }} uds</td>
                   <td>{{ line.unitPrice | mxnCurrency }}</td>

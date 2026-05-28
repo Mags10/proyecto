@@ -5,11 +5,11 @@ import {
   CreatePurchaseRecordPayload,
   Ingredient,
   PurchaseDraft,
-  PurchaseRecord
+  PurchaseRecord,
 } from '../interfaces/supply';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SupplyService {
   public ingredients = signal<Ingredient[]>([]);
@@ -23,7 +23,7 @@ export class SupplyService {
     invoiceDate: new Date().toISOString().slice(0, 10),
     ingredientId: '',
     quantityReceived: 0,
-    totalPrice: 0
+    totalPrice: 0,
   });
 
   async fetchIngredients(): Promise<void> {
@@ -51,9 +51,9 @@ export class SupplyService {
       params: {
         query: {
           ingredientId,
-          limit
-        }
-      }
+          limit,
+        },
+      },
     });
 
     if (error) {
@@ -70,7 +70,7 @@ export class SupplyService {
 
   async createIngredient(payload: CreateIngredientPayload): Promise<void> {
     const { data, error } = await apiClient.POST('/api/ingredients', {
-      body: payload
+      body: payload,
     });
 
     if (error) {
@@ -93,7 +93,7 @@ export class SupplyService {
     this.loading.set(true);
 
     const { data, error } = await apiClient.POST('/api/purchase-records', {
-      body: payload
+      body: payload,
     });
 
     if (error) {
@@ -106,9 +106,7 @@ export class SupplyService {
     this.lastPurchase.set(data.purchaseRecord);
     this.purchaseRecords.update((current) => [data.purchaseRecord, ...current]);
     this.ingredients.update((current) =>
-      current.map((ingredient) =>
-        ingredient._id === data.ingredient._id ? data.ingredient : ingredient
-      )
+      current.map((ingredient) => (ingredient._id === data.ingredient._id ? data.ingredient : ingredient))
     );
     this.loading.set(false);
     this.error.set('');
@@ -137,6 +135,11 @@ export class SupplyService {
 
     const unitPrice = this.unitPrice();
     const newStock = ingredient.currentStock + draft.quantityReceived;
-    return Math.round((((ingredient.currentStock * ingredient.averageCost) + (draft.quantityReceived * unitPrice)) / newStock) * 100) / 100;
+    return (
+      Math.round(
+        ((ingredient.currentStock * ingredient.averageCost + draft.quantityReceived * unitPrice) / newStock) *
+          100
+      ) / 100
+    );
   });
 }

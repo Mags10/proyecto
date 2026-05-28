@@ -24,11 +24,11 @@ import { VentaTicketModalComponent } from '../../components/ventas/venta-ticket-
     MxnCurrencyPipe,
     DatePipe,
     VentaTicketModalComponent,
-    VentaDetalleModalComponent
+    VentaDetalleModalComponent,
   ],
   templateUrl: './ventas-page.html',
   styleUrl: './ventas-page.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VentasPage implements OnInit {
   readonly recipesService = inject(RecipesService);
@@ -40,7 +40,12 @@ export class VentasPage implements OnInit {
   readonly selectedRecipeId = signal<string | null>(null);
   readonly selectedSaleId = signal<string | null>(null);
 
-  readonly allProducts = computed(() => this.recipesService.recipes().slice().sort((a, b) => b.currentStock - a.currentStock));
+  readonly allProducts = computed(() =>
+    this.recipesService
+      .recipes()
+      .slice()
+      .sort((a, b) => b.currentStock - a.currentStock)
+  );
   readonly products = computed(() => this.allProducts().filter((recipe) => recipe.currentStock > 0));
   readonly sales = this.salesService.sales;
   readonly salesError = this.salesService.error;
@@ -53,7 +58,9 @@ export class VentasPage implements OnInit {
         return true;
       }
 
-      return [recipe.name, recipe.category, recipe.status].some((value) => value.toLowerCase().includes(term));
+      return [recipe.name, recipe.category, recipe.status].some((value) =>
+        value.toLowerCase().includes(term)
+      );
     });
   });
 
@@ -63,15 +70,18 @@ export class VentasPage implements OnInit {
   });
 
   readonly totalSellableProducts = computed(() => this.products().length);
-  readonly lowStockProducts = computed(() => this.products().filter((recipe) => recipe.currentStock <= 5).length);
-  readonly recentRevenue = computed(() => this.sales().reduce((acc, sale) => acc + Number(sale.totalRevenue || 0), 0));
-  readonly recentUnits = computed(() => this.sales().reduce((acc, sale) => acc + Number(sale.totalItems || 0), 0));
+  readonly lowStockProducts = computed(
+    () => this.products().filter((recipe) => recipe.currentStock <= 5).length
+  );
+  readonly recentRevenue = computed(() =>
+    this.sales().reduce((acc, sale) => acc + Number(sale.totalRevenue || 0), 0)
+  );
+  readonly recentUnits = computed(() =>
+    this.sales().reduce((acc, sale) => acc + Number(sale.totalItems || 0), 0)
+  );
 
   async ngOnInit(): Promise<void> {
-    await Promise.all([
-      this.recipesService.fetchRecipes(),
-      this.salesService.fetchSales({ limit: 20 })
-    ]);
+    await Promise.all([this.recipesService.fetchRecipes(), this.salesService.fetchSales({ limit: 20 })]);
   }
 
   updateQuery(value: string): void {

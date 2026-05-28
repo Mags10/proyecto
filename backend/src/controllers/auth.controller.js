@@ -10,7 +10,7 @@ const login = async (req = request, res = response) => {
   if (!email || !password) {
     return res.status(400).json({
       message: 'Bad Request. Missing required fields: email, password',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -21,7 +21,7 @@ const login = async (req = request, res = response) => {
     if (!user) {
       return res.status(401).json({
         message: 'Credenciales inválidas',
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -29,7 +29,7 @@ const login = async (req = request, res = response) => {
     if (!passwordMatches) {
       return res.status(401).json({
         message: 'Credenciales inválidas',
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -37,7 +37,7 @@ const login = async (req = request, res = response) => {
     const accessToken = signToken({
       sub: serializedUser._id,
       email: serializedUser.email,
-      role: serializedUser.role
+      role: serializedUser.role,
     });
 
     return res.status(200).json({
@@ -45,14 +45,14 @@ const login = async (req = request, res = response) => {
       tokenType: 'Bearer',
       expiresIn: getJwtExpirationSeconds(),
       user: serializedUser,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   } catch (error) {
     console.log('Error logging in:');
     console.log(error);
     return res.status(500).json({
       message: 'Internal Server Error',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 };
@@ -60,11 +60,11 @@ const login = async (req = request, res = response) => {
 const me = async (req = request, res = response) => {
   return res.status(200).json({
     user: req.auth.user,
-    timestamp: new Date()
+    timestamp: new Date(),
   });
 };
 
 module.exports = {
   login,
-  me
+  me,
 };

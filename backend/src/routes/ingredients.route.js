@@ -4,7 +4,7 @@ const {
   getIngredientById,
   postIngredient,
   putIngredient,
-  deleteIngredient
+  deleteIngredient,
 } = require('../controllers/ingredients.controller');
 const { ROLES, requireAuth, requireRoles } = require('../middlewares/auth.middleware');
 

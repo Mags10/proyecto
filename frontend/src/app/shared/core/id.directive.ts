@@ -4,8 +4,7 @@ const createId = () => Math.random().toString(36).slice(2, 10);
 
 @Directive({
   selector: '[zardId]',
-  standalone: true,
-  exportAs: 'zardId'
+  exportAs: 'zardId',
 })
 export class ZardIdDirective {
   readonly zardId = input<string>('zard');

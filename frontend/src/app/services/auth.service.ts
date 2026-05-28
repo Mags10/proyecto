@@ -11,7 +11,7 @@ type NavigationItem = {
 };
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   readonly currentUser = signal<AuthUser | null>(null);
@@ -31,14 +31,14 @@ export class AuthService {
         { label: 'Recetas', path: '/recetas' },
         { label: 'Producción', path: '/produccion' },
         { label: 'Abastecimiento', path: '/abastecimiento' },
-        { label: 'Ventas', path: '/ventas' }
+        { label: 'Ventas', path: '/ventas' },
       ];
     }
 
     if (role === 'KITCHEN') {
       return [
         { label: 'Recetas', path: '/recetas' },
-        { label: 'Producción', path: '/produccion' }
+        { label: 'Producción', path: '/produccion' },
       ];
     }
 
@@ -75,7 +75,7 @@ export class AuthService {
     this.error.set('');
 
     const { data, error } = await apiClient.POST('/api/auth/login', {
-      body: payload
+      body: payload,
     });
 
     if (error || !data) {

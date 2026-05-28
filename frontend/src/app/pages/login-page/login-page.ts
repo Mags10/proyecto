@@ -11,7 +11,7 @@ import { AuthService } from '../../services/auth.service';
   imports: [ReactiveFormsModule, ZardCardComponent, ZardButtonComponent, ZardInputDirective],
   templateUrl: './login-page.html',
   styleUrl: './login-page.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPage {
   private readonly formBuilder = inject(NonNullableFormBuilder);
@@ -23,13 +23,13 @@ export class LoginPage {
 
   readonly loginForm = this.formBuilder.group({
     email: ['admin@kitchenflow.local', [Validators.required, Validators.email]],
-    password: ['Admin123!', [Validators.required, Validators.minLength(6)]]
+    password: ['Admin123!', [Validators.required, Validators.minLength(6)]],
   });
 
   readonly demoAccounts = computed(() => [
     { label: 'Admin', email: 'admin@kitchenflow.local', password: 'Admin123!' },
     { label: 'Cocina', email: 'cocina@kitchenflow.local', password: 'Cocina123!' },
-    { label: 'Piso', email: 'piso@kitchenflow.local', password: 'Piso123!' }
+    { label: 'Piso', email: 'piso@kitchenflow.local', password: 'Piso123!' },
   ]);
 
   async submit(): Promise<void> {

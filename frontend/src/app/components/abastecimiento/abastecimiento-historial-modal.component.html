@@ -1,6 +1,15 @@
-<section class="modal-backdrop" role="presentation" (click)="close()">
-  <z-card class="modal-card history-modal" zTitle="Compras recientes" (click)="$event.stopPropagation()">
-    @if (ingredient; as currentIngredient) {
+<section class="modal-backdrop" role="presentation" (click)="close()" (keydown.escape)="close()">
+  <z-card
+    #dialogSurface
+    class="modal-card history-modal"
+    zTitle="Compras recientes"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Compras recientes"
+    tabindex="-1"
+    (click)="$event.stopPropagation()"
+  >
+    @if (ingredient(); as currentIngredient) {
       <section class="history-head">
         <div>
           <strong>{{ currentIngredient.name }}</strong>
@@ -35,7 +44,9 @@
                 <td z-table-cell>{{ purchase.quantityReceived }} {{ purchase.ingredient.unit }}</td>
                 <td z-table-cell>{{ purchase.totalPrice | mxnCurrency }}</td>
                 <td z-table-cell>{{ purchase.unitPrice | mxnCurrency }}</td>
-                <td z-table-cell><z-badge zType="secondary">{{ purchase.newAverageCost | mxnCurrency }}</z-badge></td>
+                <td z-table-cell>
+                  <z-badge zType="secondary">{{ purchase.newAverageCost | mxnCurrency }}</z-badge>
+                </td>
               </tr>
             } @empty {
               <tr z-table-row>

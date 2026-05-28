@@ -13,7 +13,7 @@ const getSales = async (req = request, res = response) => {
     if (recipeId && !mongoose.isValidObjectId(recipeId)) {
       return res.status(400).json({
         message: `Invalid recipeId ${recipeId}`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -28,7 +28,7 @@ const getSales = async (req = request, res = response) => {
     console.log(err);
     return res.status(500).json({
       message: 'Internal Server Error',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 };
@@ -39,7 +39,7 @@ const postSale = async (req = request, res = response) => {
   if (!Array.isArray(items) || items.length === 0) {
     return res.status(400).json({
       message: 'Bad Request. items must include at least one line',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -52,14 +52,14 @@ const postSale = async (req = request, res = response) => {
     if (!recipeId || !mongoose.isValidObjectId(recipeId)) {
       return res.status(400).json({
         message: `Invalid recipeId ${recipeId}`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
     if (!Number.isFinite(quantity) || quantity <= 0) {
       return res.status(400).json({
         message: 'Bad Request. Every sale line quantity must be greater than zero',
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -70,13 +70,13 @@ const postSale = async (req = request, res = response) => {
     const recipeIds = [...aggregated.keys()];
     const recipes = await Recipe.find({
       _id: { $in: recipeIds },
-      active: true
+      active: true,
     });
 
     if (recipes.length !== recipeIds.length) {
       return res.status(404).json({
         message: 'One or more recipes are no longer available',
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -96,7 +96,7 @@ const postSale = async (req = request, res = response) => {
           recipeId,
           recipeName: recipe.name,
           requested: quantity,
-          available: stockBefore
+          available: stockBefore,
         });
         continue;
       }
@@ -118,7 +118,7 @@ const postSale = async (req = request, res = response) => {
         lineCost,
         lineMargin: roundMoney(lineRevenue - lineCost),
         stockBefore,
-        stockAfter
+        stockAfter,
       });
 
       totalItems += quantity;
@@ -130,7 +130,7 @@ const postSale = async (req = request, res = response) => {
       return res.status(409).json({
         message: 'Insufficient finished stock to register this sale',
         insufficientItems,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -147,7 +147,7 @@ const postSale = async (req = request, res = response) => {
       totalRevenue: roundMoney(totalRevenue),
       totalCost: roundMoney(totalCost),
       totalMargin: roundMoney(totalRevenue - totalCost),
-      notes: notes || ''
+      notes: notes || '',
     });
 
     const result = await sale.save();
@@ -156,19 +156,19 @@ const postSale = async (req = request, res = response) => {
       message: 'Sale created successfully',
       sale: result,
       recipes,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   } catch (err) {
     console.log('Error creating sale:');
     console.log(err);
     return res.status(500).json({
       message: 'Internal Server Error',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 };
 
 module.exports = {
   getSales,
-  postSale
+  postSale,
 };

@@ -12,11 +12,18 @@ import { Recipe } from '../../interfaces/recipe';
 
 @Component({
   selector: 'app-recetas-page',
-  standalone: true,
-  imports: [ZardCardComponent, ZardButtonComponent, ZardBadgeComponent, ZardInputDirective, ...ZardTableImports, RecipeDetailDialogComponent, MxnCurrencyPipe],
+  imports: [
+    ZardCardComponent,
+    ZardButtonComponent,
+    ZardBadgeComponent,
+    ZardInputDirective,
+    ...ZardTableImports,
+    RecipeDetailDialogComponent,
+    MxnCurrencyPipe,
+  ],
   templateUrl: './recetas-page.html',
   styleUrl: './recetas-page.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecetasPage implements OnInit {
   private readonly recipesService = inject(RecipesService);
@@ -37,19 +44,20 @@ export class RecetasPage implements OnInit {
     }
 
     return this.recipes().filter((recipe) => {
-      return [recipe.name, recipe.category, recipe._id, recipe.status, this.getRecipeStatus(recipe.margin)].some((value) =>
-        value.toLowerCase().includes(term),
-      );
+      return [
+        recipe.name,
+        recipe.category,
+        recipe._id,
+        recipe.status,
+        this.getRecipeStatus(recipe.margin),
+      ].some((value) => value.toLowerCase().includes(term));
     });
   });
 
   readonly summary = this.recipesService.summary;
 
   async ngOnInit(): Promise<void> {
-    await Promise.all([
-      this.supplyService.fetchIngredients(),
-      this.recipesService.fetchRecipes()
-    ]);
+    await Promise.all([this.supplyService.fetchIngredients(), this.recipesService.fetchRecipes()]);
   }
 
   updateQuery(value: string): void {
@@ -70,7 +78,7 @@ export class RecetasPage implements OnInit {
   }
 
   openRecipe(recipeId?: string): void {
-    const recipe = recipeId ? this.recipes().find((item) => item._id === recipeId) ?? null : null;
+    const recipe = recipeId ? (this.recipes().find((item) => item._id === recipeId) ?? null) : null;
     this.selectedRecipe.set(recipe);
     this.recipeModalOpen.set(true);
   }

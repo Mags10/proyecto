@@ -5,7 +5,7 @@ import {
   CompleteProductionBatchPayload,
   CreateProductionBatchPayload,
   ProductionBatch,
-  ProductionListFilters
+  ProductionListFilters,
 } from '../interfaces/production';
 import { RecipesService } from './recipes.service';
 import { SupplyService } from './supply-service';
@@ -15,7 +15,7 @@ type ApiErrorLike = {
 };
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProductionService {
   private readonly recipesService = inject(RecipesService);
@@ -46,15 +46,15 @@ export class ProductionService {
     const normalizedFilters = {
       limit: filters.limit ?? this.lastFilters.limit ?? 25,
       recipeId: filters.recipeId,
-      status: filters.status
+      status: filters.status,
     };
 
     this.lastFilters = normalizedFilters;
 
     const { data, error } = await apiClient.GET('/api/production-batches', {
       params: {
-        query: normalizedFilters
-      }
+        query: normalizedFilters,
+      },
     });
 
     if (error) {
@@ -76,7 +76,7 @@ export class ProductionService {
     await Promise.all([
       this.recipesService.fetchRecipes(),
       this.supplyService.fetchIngredients(),
-      this.fetchProductionBatches(this.lastFilters)
+      this.fetchProductionBatches(this.lastFilters),
     ]);
   }
 
@@ -85,7 +85,7 @@ export class ProductionService {
     this.error.set('');
 
     const { data, error } = await apiClient.POST('/api/production-batches', {
-      body: payload
+      body: payload,
     });
 
     if (error) {
@@ -107,9 +107,9 @@ export class ProductionService {
     const { data, error } = await apiClient.POST('/api/production-batches/{id}/start', {
       params: {
         path: {
-          id: batchId
-        }
-      }
+          id: batchId,
+        },
+      },
     });
 
     if (error) {
@@ -124,17 +124,20 @@ export class ProductionService {
     return data.productionBatch;
   }
 
-  async completeProductionBatch(batchId: string, payload: CompleteProductionBatchPayload): Promise<ProductionBatch | null> {
+  async completeProductionBatch(
+    batchId: string,
+    payload: CompleteProductionBatchPayload
+  ): Promise<ProductionBatch | null> {
     this.submitting.set(true);
     this.error.set('');
 
     const { data, error } = await apiClient.POST('/api/production-batches/{id}/complete', {
       params: {
         path: {
-          id: batchId
-        }
+          id: batchId,
+        },
       },
-      body: payload
+      body: payload,
     });
 
     if (error) {
@@ -149,17 +152,20 @@ export class ProductionService {
     return data.productionBatch;
   }
 
-  async cancelProductionBatch(batchId: string, payload: CancelProductionBatchPayload = {}): Promise<ProductionBatch | null> {
+  async cancelProductionBatch(
+    batchId: string,
+    payload: CancelProductionBatchPayload = {}
+  ): Promise<ProductionBatch | null> {
     this.submitting.set(true);
     this.error.set('');
 
     const { data, error } = await apiClient.POST('/api/production-batches/{id}/cancel', {
       params: {
         path: {
-          id: batchId
-        }
+          id: batchId,
+        },
       },
-      body: payload
+      body: payload,
     });
 
     if (error) {

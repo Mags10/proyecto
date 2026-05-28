@@ -84,7 +84,7 @@
   box-shadow: 0 1px 2px rgba(38, 26, 16, 0.03) !important;
 }
 
-.stat-card ::ng-deep [data-slot="card-content"] {
+.stat-card ::ng-deep [data-slot='card-content'] {
   padding: 0 1rem !important;
   height: 100% !important;
   display: flex !important;
@@ -156,9 +156,15 @@
 }
 
 @keyframes pulse-border {
-  0% { border-color: #fee2e2; }
-  50% { border-color: #fca5a5; }
-  100% { border-color: #fee2e2; }
+  0% {
+    border-color: #fee2e2;
+  }
+  50% {
+    border-color: #fca5a5;
+  }
+  100% {
+    border-color: #fee2e2;
+  }
 }
 
 /* Tabla Catálogo */
@@ -260,12 +266,24 @@
 }
 
 /* Configuración de anchos de columna */
-.col-name { width: 32%; }
-.col-stock { width: 16%; }
-.col-cost { width: 16%; }
-.col-min { width: 16%; }
-.col-status { width: 15%; }
-.col-actions { width: 5%; }
+.col-name {
+  width: 32%;
+}
+.col-stock {
+  width: 16%;
+}
+.col-cost {
+  width: 16%;
+}
+.col-min {
+  width: 16%;
+}
+.col-status {
+  width: 15%;
+}
+.col-actions {
+  width: 5%;
+}
 
 /* Celda vacía */
 .empty-cell {

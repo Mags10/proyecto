@@ -8,7 +8,9 @@ const roundMoney = (value) => Math.round(value * 100) / 100;
 const roundQuantity = (value) => Math.round(value * 1000) / 1000;
 
 const serializeLegacyPlannedIngredient = (item) => {
-  const quantity = roundQuantity(Number(item.plannedQuantity ?? item.reservedQuantity ?? item.quantityConsumed ?? item.actualQuantity ?? 0));
+  const quantity = roundQuantity(
+    Number(item.plannedQuantity ?? item.reservedQuantity ?? item.quantityConsumed ?? item.actualQuantity ?? 0)
+  );
   const subtotal = roundMoney(Number(item.plannedSubtotal ?? item.actualSubtotal ?? item.subtotal ?? 0));
   const unitCost = Number(item.unitCost ?? 0);
 
@@ -21,12 +23,14 @@ const serializeLegacyPlannedIngredient = (item) => {
     unitCost,
     plannedSubtotal: subtotal,
     stockBefore: Number(item.stockBefore ?? 0),
-    availableBefore: Number(item.availableBefore ?? item.stockBefore ?? 0)
+    availableBefore: Number(item.availableBefore ?? item.stockBefore ?? 0),
   };
 };
 
 const serializeLegacyActualIngredient = (item) => {
-  const plannedQuantity = roundQuantity(Number(item.plannedQuantity ?? item.quantityConsumed ?? item.actualQuantity ?? 0));
+  const plannedQuantity = roundQuantity(
+    Number(item.plannedQuantity ?? item.quantityConsumed ?? item.actualQuantity ?? 0)
+  );
   const actualQuantity = roundQuantity(Number(item.actualQuantity ?? item.quantityConsumed ?? 0));
   const actualSubtotal = roundMoney(Number(item.actualSubtotal ?? item.subtotal ?? 0));
 
@@ -41,7 +45,7 @@ const serializeLegacyActualIngredient = (item) => {
     actualSubtotal,
     wasteCost: roundMoney(Number(item.wasteCost ?? 0)),
     stockBefore: Number(item.stockBefore ?? 0),
-    stockAfter: Number(item.stockAfter ?? Math.max(0, Number(item.stockBefore ?? 0) - actualQuantity))
+    stockAfter: Number(item.stockAfter ?? Math.max(0, Number(item.stockBefore ?? 0) - actualQuantity)),
   };
 };
 
@@ -50,27 +54,41 @@ const serializeProductionBatch = (batchDoc) => {
 
   const plannedIngredientsSource = batch.plannedIngredients?.length
     ? batch.plannedIngredients
-    : (batch.consumedIngredients || []);
+    : batch.consumedIngredients || [];
   const actualIngredientsSource = batch.actualIngredients?.length
     ? batch.actualIngredients
-    : (batch.consumedIngredients || []);
+    : batch.consumedIngredients || [];
 
   const plannedIngredients = plannedIngredientsSource.map(serializeLegacyPlannedIngredient);
   const actualIngredients = actualIngredientsSource.length
     ? actualIngredientsSource.map(serializeLegacyActualIngredient)
     : [];
 
-  const inferredStatus = (!batch.plannedIngredients?.length && (batch.consumedIngredients?.length || batch.quantityProduced || batch.totalCost))
-    ? 'COMPLETED'
-    : (batch.status || (actualIngredients.length || batch.newRecipeStock !== null ? 'COMPLETED' : 'PENDING'));
+  const inferredStatus =
+    !batch.plannedIngredients?.length &&
+    (batch.consumedIngredients?.length || batch.quantityProduced || batch.totalCost)
+      ? 'COMPLETED'
+      : batch.status || (actualIngredients.length || batch.newRecipeStock !== null ? 'COMPLETED' : 'PENDING');
 
-  const plannedQuantity = Number(batch.plannedQuantity ?? batch.quantityProduced ?? batch.actualQuantity ?? 0);
-  const actualQuantity = batch.actualQuantity ?? (inferredStatus === 'COMPLETED' ? Number(batch.quantityProduced ?? plannedQuantity) : null);
+  const plannedQuantity = Number(
+    batch.plannedQuantity ?? batch.quantityProduced ?? batch.actualQuantity ?? 0
+  );
+  const actualQuantity =
+    batch.actualQuantity ??
+    (inferredStatus === 'COMPLETED' ? Number(batch.quantityProduced ?? plannedQuantity) : null);
   const plannedTotalCost = roundMoney(Number(batch.plannedTotalCost ?? batch.totalCost ?? 0));
-  const actualTotalCost = batch.actualTotalCost ?? (inferredStatus === 'COMPLETED' ? roundMoney(Number(batch.totalCost ?? plannedTotalCost)) : null);
+  const actualTotalCost =
+    batch.actualTotalCost ??
+    (inferredStatus === 'COMPLETED' ? roundMoney(Number(batch.totalCost ?? plannedTotalCost)) : null);
   const previousRecipeStock = Number(batch.previousRecipeStock ?? 0);
-  const newRecipeStock = batch.newRecipeStock ?? (inferredStatus === 'COMPLETED' ? roundQuantity(previousRecipeStock + Number(actualQuantity || 0)) : null);
-  const unitCost = Number(batch.unitCost ?? (plannedQuantity > 0 ? roundMoney(plannedTotalCost / plannedQuantity) : 0));
+  const newRecipeStock =
+    batch.newRecipeStock ??
+    (inferredStatus === 'COMPLETED'
+      ? roundQuantity(previousRecipeStock + Number(actualQuantity || 0))
+      : null);
+  const unitCost = Number(
+    batch.unitCost ?? (plannedQuantity > 0 ? roundMoney(plannedTotalCost / plannedQuantity) : 0)
+  );
 
   return {
     ...batch,
@@ -84,14 +102,18 @@ const serializeProductionBatch = (batchDoc) => {
     newRecipeStock,
     plannedIngredients,
     actualIngredients,
-    wasteSummary: batch.wasteSummary ?? (inferredStatus === 'COMPLETED'
-      ? {
-          expectedYield: plannedQuantity,
-          actualYield: Number(actualQuantity ?? 0),
-          yieldVariance: roundQuantity(Number(actualQuantity ?? 0) - plannedQuantity),
-          totalWasteCost: roundMoney(actualIngredients.reduce((acc, item) => acc + Number(item.wasteCost || 0), 0))
-        }
-      : null)
+    wasteSummary:
+      batch.wasteSummary ??
+      (inferredStatus === 'COMPLETED'
+        ? {
+            expectedYield: plannedQuantity,
+            actualYield: Number(actualQuantity ?? 0),
+            yieldVariance: roundQuantity(Number(actualQuantity ?? 0) - plannedQuantity),
+            totalWasteCost: roundMoney(
+              actualIngredients.reduce((acc, item) => acc + Number(item.wasteCost || 0), 0)
+            ),
+          }
+        : null),
   };
 };
 
@@ -106,7 +128,10 @@ const normalizeMongooseBatch = (batch) => {
     batch.previousRecipeStock = Number(batch.previousRecipeStock ?? 0);
   }
   if (batch.unitCost === undefined || batch.unitCost === null) {
-    batch.unitCost = Number(batch.unitCost ?? (batch.plannedQuantity > 0 ? roundMoney(batch.plannedTotalCost / batch.plannedQuantity) : 0));
+    batch.unitCost = Number(
+      batch.unitCost ??
+        (batch.plannedQuantity > 0 ? roundMoney(batch.plannedTotalCost / batch.plannedQuantity) : 0)
+    );
   }
   if (!batch.plannedIngredients || batch.plannedIngredients.length === 0) {
     const legacy = (batch.consumedIngredients || []).map(serializeLegacyPlannedIngredient);
@@ -124,7 +149,7 @@ const parseObjectId = (value, fieldName, res) => {
   if (!mongoose.isValidObjectId(value)) {
     res.status(400).json({
       message: `Invalid ${fieldName} ${value}`,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
     return null;
   }
@@ -149,7 +174,7 @@ const buildPlannedIngredients = (recipe, ingredientDocs, plannedQuantity) => {
         name: recipeIngredient.name,
         required: roundQuantity(Number(recipeIngredient.quantity) * plannedQuantity),
         available: 0,
-        unit: recipeIngredient.unit
+        unit: recipeIngredient.unit,
       });
       continue;
     }
@@ -165,7 +190,7 @@ const buildPlannedIngredients = (recipe, ingredientDocs, plannedQuantity) => {
         name: ingredientDoc.name,
         required: plannedQty,
         available: availableBefore,
-        unit: ingredientDoc.unit
+        unit: ingredientDoc.unit,
       });
       continue;
     }
@@ -179,7 +204,7 @@ const buildPlannedIngredients = (recipe, ingredientDocs, plannedQuantity) => {
       unitCost: recipeIngredient.unitCost,
       plannedSubtotal: roundMoney(plannedQty * recipeIngredient.unitCost),
       stockBefore,
-      availableBefore
+      availableBefore,
     });
   }
 
@@ -191,7 +216,9 @@ const reserveIngredients = async (plannedIngredients, ingredientDocs) => {
 
   for (const planned of plannedIngredients) {
     const ingredientDoc = ingredientMap.get(String(planned.ingredient));
-    ingredientDoc.reservedStock = roundQuantity(Number(ingredientDoc.reservedStock || 0) + planned.reservedQuantity);
+    ingredientDoc.reservedStock = roundQuantity(
+      Number(ingredientDoc.reservedStock || 0) + planned.reservedQuantity
+    );
     await ingredientDoc.save();
   }
 };
@@ -220,7 +247,7 @@ const getProductionBatches = async (req = request, res = response) => {
     if (recipeId && !mongoose.isValidObjectId(recipeId)) {
       return res.status(400).json({
         message: `Invalid recipeId ${recipeId}`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -244,7 +271,7 @@ const getProductionBatches = async (req = request, res = response) => {
     console.log(err);
     return res.status(500).json({
       message: 'Internal Server Error',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 };
@@ -255,7 +282,7 @@ const postProductionBatch = async (req = request, res = response) => {
   if (!recipeId || !plannedQuantity) {
     return res.status(400).json({
       message: 'Bad Request. Missing required fields: recipeId, plannedQuantity',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -268,7 +295,7 @@ const postProductionBatch = async (req = request, res = response) => {
   if (!Number.isFinite(quantity) || quantity <= 0) {
     return res.status(400).json({
       message: 'Bad Request. plannedQuantity must be greater than zero',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -278,43 +305,49 @@ const postProductionBatch = async (req = request, res = response) => {
     if (!recipe) {
       return res.status(404).json({
         message: `Recipe with id ${recipeId} not found`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
     if (!recipe.ingredients.length) {
       return res.status(400).json({
         message: 'Recipe has no ingredients configured',
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
     const ingredientIds = recipe.ingredients.map((item) => item.ingredient);
     const ingredientDocs = await Ingredient.find({
       _id: { $in: ingredientIds },
-      active: true
+      active: true,
     });
 
     if (ingredientDocs.length !== ingredientIds.length) {
       return res.status(404).json({
         message: 'One or more recipe ingredients are no longer available',
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
-    const { plannedIngredients, insufficientIngredients } = buildPlannedIngredients(recipe, ingredientDocs, quantity);
+    const { plannedIngredients, insufficientIngredients } = buildPlannedIngredients(
+      recipe,
+      ingredientDocs,
+      quantity
+    );
 
     if (insufficientIngredients.length) {
       return res.status(409).json({
         message: 'Insufficient available stock to reserve this production order',
         insufficientIngredients,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
     await reserveIngredients(plannedIngredients, ingredientDocs);
 
-    const plannedTotalCost = roundMoney(plannedIngredients.reduce((acc, item) => acc + item.plannedSubtotal, 0));
+    const plannedTotalCost = roundMoney(
+      plannedIngredients.reduce((acc, item) => acc + item.plannedSubtotal, 0)
+    );
     const unitCost = quantity > 0 ? roundMoney(plannedTotalCost / quantity) : 0;
 
     const productionBatch = new ProductionBatch({
@@ -327,7 +360,7 @@ const postProductionBatch = async (req = request, res = response) => {
       plannedTotalCost,
       previousRecipeStock: Number(recipe.currentStock || 0),
       plannedIngredients,
-      notes: notes || ''
+      notes: notes || '',
     });
 
     const result = await productionBatch.save();
@@ -336,14 +369,14 @@ const postProductionBatch = async (req = request, res = response) => {
       message: 'Production order created successfully',
       productionBatch: serializeProductionBatch(result),
       recipe,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   } catch (err) {
     console.log('Error creating production batch:');
     console.log(err);
     return res.status(500).json({
       message: 'Internal Server Error',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 };
@@ -361,7 +394,7 @@ const startProductionBatch = async (req = request, res = response) => {
     if (!batch) {
       return res.status(404).json({
         message: `Production batch with id ${id} not found`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -370,7 +403,7 @@ const startProductionBatch = async (req = request, res = response) => {
     if (batch.status !== 'PENDING') {
       return res.status(409).json({
         message: `Production batch cannot be started from status ${batch.status}`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -381,14 +414,14 @@ const startProductionBatch = async (req = request, res = response) => {
     return res.status(200).json({
       message: 'Production batch started successfully',
       productionBatch: serializeProductionBatch(batch),
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   } catch (err) {
     console.log('Error starting production batch:');
     console.log(err);
     return res.status(500).json({
       message: 'Internal Server Error',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 };
@@ -402,19 +435,20 @@ const completeProductionBatch = async (req = request, res = response) => {
   }
 
   const produced = Number(actualProduced);
-  const providedDuration = durationMinutes !== undefined && durationMinutes !== null ? Number(durationMinutes) : null;
+  const providedDuration =
+    durationMinutes !== undefined && durationMinutes !== null ? Number(durationMinutes) : null;
 
   if (!Number.isFinite(produced) || produced < 0) {
     return res.status(400).json({
       message: 'Bad Request. actualProduced must be zero or greater',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
   if (providedDuration !== null && (!Number.isFinite(providedDuration) || providedDuration < 0)) {
     return res.status(400).json({
       message: 'Bad Request. durationMinutes must be zero or greater',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -424,7 +458,7 @@ const completeProductionBatch = async (req = request, res = response) => {
     if (!batch) {
       return res.status(404).json({
         message: `Production batch with id ${id} not found`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -433,27 +467,30 @@ const completeProductionBatch = async (req = request, res = response) => {
     if (!['PENDING', 'IN_PROGRESS'].includes(batch.status)) {
       return res.status(409).json({
         message: `Production batch cannot be completed from status ${batch.status}`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
     const ingredientIds = batch.plannedIngredients.map((item) => item.ingredient);
     const ingredientDocs = await Ingredient.find({
       _id: { $in: ingredientIds },
-      active: true
+      active: true,
     });
     const ingredientMap = new Map(ingredientDocs.map((ingredient) => [String(ingredient._id), ingredient]));
 
     if (ingredientDocs.length !== ingredientIds.length) {
       return res.status(404).json({
         message: 'One or more reserved ingredients are no longer available',
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
     const actualByIngredient = new Map(
       Array.isArray(actualIngredients)
-        ? actualIngredients.map((item) => [String(item.ingredientId || item.ingredient), Number(item.actualQuantity)])
+        ? actualIngredients.map((item) => [
+            String(item.ingredientId || item.ingredient),
+            Number(item.actualQuantity),
+          ])
         : []
     );
 
@@ -466,12 +503,14 @@ const completeProductionBatch = async (req = request, res = response) => {
       const actualQuantityRaw = actualByIngredient.has(String(planned.ingredient))
         ? actualByIngredient.get(String(planned.ingredient))
         : Number(planned.plannedQuantity);
-      const actualQuantity = roundQuantity(Number.isFinite(actualQuantityRaw) ? actualQuantityRaw : Number(planned.plannedQuantity));
+      const actualQuantity = roundQuantity(
+        Number.isFinite(actualQuantityRaw) ? actualQuantityRaw : Number(planned.plannedQuantity)
+      );
 
       if (actualQuantity < 0) {
         return res.status(400).json({
           message: `Invalid actualQuantity for ingredient ${planned.name}`,
-          timestamp: new Date()
+          timestamp: new Date(),
         });
       }
 
@@ -479,12 +518,15 @@ const completeProductionBatch = async (req = request, res = response) => {
       if (stockBefore < actualQuantity) {
         return res.status(409).json({
           message: `Ingredient ${planned.name} no longer has enough stock to complete this order`,
-          timestamp: new Date()
+          timestamp: new Date(),
         });
       }
 
       const stockAfter = roundQuantity(stockBefore - actualQuantity);
-      const reservedAfter = Math.max(0, roundQuantity(Number(ingredientDoc.reservedStock || 0) - Number(planned.reservedQuantity || 0)));
+      const reservedAfter = Math.max(
+        0,
+        roundQuantity(Number(ingredientDoc.reservedStock || 0) - Number(planned.reservedQuantity || 0))
+      );
       ingredientDoc.currentStock = stockAfter;
       ingredientDoc.reservedStock = reservedAfter;
       await ingredientDoc.save();
@@ -508,7 +550,7 @@ const completeProductionBatch = async (req = request, res = response) => {
         actualSubtotal,
         wasteCost,
         stockBefore,
-        stockAfter
+        stockAfter,
       });
     }
 
@@ -516,7 +558,7 @@ const completeProductionBatch = async (req = request, res = response) => {
     if (!recipe) {
       return res.status(404).json({
         message: `Recipe with id ${batch.recipe} not found`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -542,7 +584,7 @@ const completeProductionBatch = async (req = request, res = response) => {
       expectedYield: batch.plannedQuantity,
       actualYield: produced,
       yieldVariance: roundQuantity(produced - Number(batch.plannedQuantity)),
-      totalWasteCost: roundMoney(totalWasteCost)
+      totalWasteCost: roundMoney(totalWasteCost),
     };
 
     await batch.save();
@@ -551,14 +593,14 @@ const completeProductionBatch = async (req = request, res = response) => {
       message: 'Production batch completed successfully',
       productionBatch: serializeProductionBatch(batch),
       recipe,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   } catch (err) {
     console.log('Error completing production batch:');
     console.log(err);
     return res.status(500).json({
       message: 'Internal Server Error',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 };
@@ -577,7 +619,7 @@ const cancelProductionBatch = async (req = request, res = response) => {
     if (!batch) {
       return res.status(404).json({
         message: `Production batch with id ${id} not found`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -586,14 +628,14 @@ const cancelProductionBatch = async (req = request, res = response) => {
     if (!['PENDING', 'IN_PROGRESS'].includes(batch.status)) {
       return res.status(409).json({
         message: `Production batch cannot be cancelled from status ${batch.status}`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
     const ingredientIds = batch.plannedIngredients.map((item) => item.ingredient);
     const ingredientDocs = await Ingredient.find({
       _id: { $in: ingredientIds },
-      active: true
+      active: true,
     });
 
     await releaseReservation(batch, ingredientDocs);
@@ -606,14 +648,14 @@ const cancelProductionBatch = async (req = request, res = response) => {
     return res.status(200).json({
       message: 'Production batch cancelled successfully',
       productionBatch: serializeProductionBatch(batch),
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   } catch (err) {
     console.log('Error cancelling production batch:');
     console.log(err);
     return res.status(500).json({
       message: 'Internal Server Error',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 };
@@ -623,5 +665,5 @@ module.exports = {
   postProductionBatch,
   startProductionBatch,
   completeProductionBatch,
-  cancelProductionBatch
+  cancelProductionBatch,
 };

@@ -1,5 +1,14 @@
-<section class="modal-backdrop" role="presentation" (click)="close()">
-  <z-card class="modal-card purchase-modal" zTitle="Registrar compra" (click)="$event.stopPropagation()">
+<section class="modal-backdrop" role="presentation" (click)="close()" (keydown.escape)="close()">
+  <z-card
+    #dialogSurface
+    class="modal-card purchase-modal"
+    zTitle="Registrar compra"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Registrar compra"
+    tabindex="-1"
+    (click)="$event.stopPropagation()"
+  >
     <form class="modal-form" [formGroup]="purchaseForm" (ngSubmit)="registerPurchase()">
       <label>
         Proveedor
@@ -29,10 +38,18 @@
 
       <section class="wac-preview">
         @if (supplyService.selectedIngredient(); as ingredient) {
-          <div><span>Stock actual</span><strong>{{ ingredient.currentStock }} {{ ingredient.unit }}</strong></div>
-          <div><span>WAC actual</span><strong>{{ ingredient.averageCost | mxnCurrency }}</strong></div>
-          <div><span>Unitario</span><strong>{{ supplyService.unitPrice() | mxnCurrency }}</strong></div>
-          <div><span>Nuevo WAC</span><strong>{{ supplyService.projectedAverageCost() | mxnCurrency }}</strong></div>
+          <div>
+            <span>Stock actual</span><strong>{{ ingredient.currentStock }} {{ ingredient.unit }}</strong>
+          </div>
+          <div>
+            <span>WAC actual</span><strong>{{ ingredient.averageCost | mxnCurrency }}</strong>
+          </div>
+          <div>
+            <span>Unitario</span><strong>{{ supplyService.unitPrice() | mxnCurrency }}</strong>
+          </div>
+          <div>
+            <span>Nuevo WAC</span><strong>{{ supplyService.projectedAverageCost() | mxnCurrency }}</strong>
+          </div>
         } @else {
           <p>Selecciona un insumo para calcular el nuevo WAC.</p>
         }

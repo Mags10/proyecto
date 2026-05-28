@@ -6,6 +6,9 @@
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
+    "lint": "eslint src scripts --ext .js",
+    "lint:fix": "eslint src scripts --ext .js --fix",
+    "format": "prettier src scripts --write",
     "seed:supply": "node scripts/seed-supply.js"
   },
   "dependencies": {

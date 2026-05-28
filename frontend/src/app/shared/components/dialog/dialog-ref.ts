@@ -5,6 +5,7 @@ import { EventEmitter, Inject, PLATFORM_ID } from '@angular/core';
 import { filter, fromEvent, Subject, takeUntil } from 'rxjs';
 
 import type { ZardDialogComponent, ZardDialogOptions } from './dialog.component';
+import { captureActiveElement, restoreActiveElement } from 'src/app/shared/utils/modal-a11y';
 
 const enum eTriggerAction {
   CANCEL = 'cancel',
@@ -14,6 +15,7 @@ const enum eTriggerAction {
 export class ZardDialogRef<T = any, R = any, U = any> {
   private destroy$ = new Subject<void>();
   private isClosing = false;
+  private previouslyFocusedElement = captureActiveElement();
   protected result?: R;
   componentInstance: T | null = null;
 
@@ -21,7 +23,7 @@ export class ZardDialogRef<T = any, R = any, U = any> {
     private overlayRef: OverlayRef,
     private config: ZardDialogOptions<T, U>,
     private containerInstance: ZardDialogComponent<T, U>,
-    @Inject(PLATFORM_ID) private platformId: object,
+    @Inject(PLATFORM_ID) private platformId: object
   ) {
     this.containerInstance.cancelTriggered.subscribe(() => this.trigger(eTriggerAction.CANCEL));
     this.containerInstance.okTriggered.subscribe(() => this.trigger(eTriggerAction.OK));
@@ -36,8 +38,8 @@ export class ZardDialogRef<T = any, R = any, U = any> {
     if (isPlatformBrowser(this.platformId)) {
       fromEvent<KeyboardEvent>(document, 'keydown')
         .pipe(
-          filter(event => event.key === 'Escape'),
-          takeUntil(this.destroy$),
+          filter((event) => event.key === 'Escape'),
+          takeUntil(this.destroy$)
         )
         .subscribe(() => this.close());
     }
@@ -68,6 +70,8 @@ export class ZardDialogRef<T = any, R = any, U = any> {
         this.destroy$.next();
         this.destroy$.complete();
       }
+
+      restoreActiveElement(this.previouslyFocusedElement);
     }, 150);
   }
 

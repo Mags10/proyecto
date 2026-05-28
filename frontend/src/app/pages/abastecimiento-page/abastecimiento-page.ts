@@ -21,11 +21,11 @@ import { MxnCurrencyPipe } from '../../shared/pipes/mxn-currency.pipe';
     MxnCurrencyPipe,
     AbastecimientoInsumoModalComponent,
     AbastecimientoCompraModalComponent,
-    AbastecimientoHistorialModalComponent
+    AbastecimientoHistorialModalComponent,
   ],
   templateUrl: './abastecimiento-page.html',
   styleUrl: './abastecimiento-page.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AbastecimientoPage implements OnInit {
   public supplyService = inject(SupplyService);
@@ -35,7 +35,9 @@ export class AbastecimientoPage implements OnInit {
   public lastPurchase = this.supplyService.lastPurchase;
 
   public readonly totalIngredients = computed(() => this.ingredients().length);
-  public readonly lowStockCount = computed(() => this.ingredients().filter(i => i.currentStock <= i.minimumStock).length);
+  public readonly lowStockCount = computed(
+    () => this.ingredients().filter((i) => i.currentStock <= i.minimumStock).length
+  );
   public ingredientModalOpen = signal(false);
   public purchaseModalOpen = signal(false);
   public historyModalOpen = signal(false);
