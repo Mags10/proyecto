@@ -1,42 +1,60 @@
 <header class="topbar">
-  <div class="brand-wrap">
+  <div class="brand-wrap" [class.is-scrolled]="isScrolled()">
     <span class="brand-icon">KF</span>
-    <span class="brand-text">KitchenFlow</span>
+    <div class="brand-text-container">
+      <span class="brand-text default-title">KitchenFlow</span>
+      <span class="brand-text active-title">{{ activePageLabel() }}</span>
+    </div>
   </div>
 
-  <!-- Botón Hamburguesa para Dispositivos Móviles -->
-  <button 
-    class="menu-toggle" 
-    type="button"
-    (click)="toggleMenu()" 
-    [attr.aria-expanded]="menuOpen()" 
-    aria-label="Alternar menú de navegación"
-  >
-    @if (menuOpen()) {
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="menu-icon"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-    } @else {
-      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="menu-icon"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-    }
-  </button>
-
-  <!-- Contenedor Responsivo del Menú -->
-  <div class="menu-responsive" [class.is-open]="menuOpen()">
-    <nav class="nav-links">
+  <!-- Contenedor de Navegación Responsivo -->
+  <div class="nav-container">
+    <!-- Vista Desktop: Enlaces tradicionales -->
+    <nav class="nav-links-desktop">
       @for (item of authService.navigation(); track item.path) {
-      <a [routerLink]="item.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()"
+      <a [routerLink]="item.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
         >{{ item.label }}</a
       >
       }
     </nav>
 
-    <div class="session-wrap">
-      <div class="session-copy">
-        <strong>{{ authService.currentUser()?.name }}</strong>
-        <span>{{ authService.currentUser()?.email }}</span>
-      </div>
-      <z-badge zType="secondary">{{ authService.displayRole() }}</z-badge>
-      <button z-button zType="outline" zSize="sm" type="button" (click)="logout()">Salir</button>
+    <!-- Vista Tablet/Móvil: Selector de sección actual tipo Dropdown -->
+    <div class="nav-dropdown-mobile">
+      <button 
+        class="dropdown-trigger" 
+        type="button" 
+        (click)="toggleMenu()" 
+        [attr.aria-expanded]="menuOpen()"
+      >
+        <span class="dropdown-label">{{ activePageLabel() }}</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="chevron-icon" [class.is-open]="menuOpen()"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </button>
+
+      @if (menuOpen()) {
+        <div class="dropdown-options">
+          @for (item of authService.navigation(); track item.path) {
+            <a 
+              [routerLink]="item.path" 
+              routerLinkActive="active" 
+              [routerLinkActiveOptions]="{ exact: true }" 
+              (click)="closeMenu()"
+            >
+              {{ item.label }}
+            </a>
+          }
+        </div>
+      }
     </div>
+  </div>
+
+  <!-- Datos de Sesión (Siempre visibles en una línea a la derecha) -->
+  <div class="session-wrap">
+    <div class="session-copy">
+      <strong>{{ authService.currentUser()?.name }}</strong>
+      <span>{{ authService.currentUser()?.email }}</span>
+    </div>
+    <z-badge zType="secondary" class="role-badge">{{ authService.displayRole() }}</z-badge>
+    <button z-button zType="outline" zSize="sm" type="button" (click)="logout()">Salir</button>
   </div>
 </header>
 
