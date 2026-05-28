@@ -28,6 +28,25 @@ jobs:
             sudo chown -R "$USER:$USER" "$GITHUB_WORKSPACE" || true
           fi
 
+      - name: Prepare runtime env file
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${{ secrets.JWT_SECRET }}" ]]; then
+            echo "Missing repository secret: JWT_SECRET"
+            exit 1
+          fi
+
+          cat > .env <<'EOF'
+          PORT=3000
+          MONGO_URI=mongodb://mongo:27017/monorepo
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          JWT_EXPIRES_IN_SECONDS=43200
+          EOF
+
+          echo ".env generated for deployment"
+
       - name: Deploy with Docker Compose
         shell: bash
         run: |
