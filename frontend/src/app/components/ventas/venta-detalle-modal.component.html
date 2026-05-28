@@ -1,0 +1,57 @@
+<section class="modal-backdrop" role="presentation" (click)="closed.emit()">
+  <z-card class="modal-card detail-modal" zTitle="Detalle de venta" (click)="$event.stopPropagation()">
+    <div class="detail-grid">
+      <div class="detail-card">
+        <span class="detail-label">Fecha</span>
+        <strong>{{ sale().soldAt | date:'medium' }}</strong>
+      </div>
+      <div class="detail-card">
+        <span class="detail-label">Unidades</span>
+        <strong>{{ sale().totalItems }}</strong>
+      </div>
+      <div class="detail-card">
+        <span class="detail-label">Venta (MXN)</span>
+        <strong>{{ sale().totalRevenue | mxnCurrency }}</strong>
+      </div>
+      <div class="detail-card">
+        <span class="detail-label">Margen (MXN)</span>
+        <strong>{{ sale().totalMargin | mxnCurrency }}</strong>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="detail-table">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Importe</th>
+            <th>Stock antes</th>
+            <th>Stock después</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of sale().items; track item.recipe + '-' + item.recipeName) {
+            <tr>
+              <td><strong>{{ item.recipeName }}</strong><div class="muted">{{ item.recipeCategory }}</div></td>
+              <td>{{ item.quantity }} uds</td>
+              <td>{{ item.unitPrice | mxnCurrency }}</td>
+              <td>{{ item.lineRevenue | mxnCurrency }}</td>
+              <td>{{ item.stockBefore }} uds</td>
+              <td>{{ item.stockAfter }} uds</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (sale().notes) {
+      <p class="notes">{{ sale().notes }}</p>
+    }
+
+    <footer class="modal-actions">
+      <button z-button zType="outline" type="button" (click)="closed.emit()">Cerrar</button>
+    </footer>
+  </z-card>
+</section>

@@ -1,0 +1,161 @@
+<section class="modal-backdrop" role="presentation" (click)="close()">
+  <z-card class="modal-card" [zTitle]="'Orden: ' + batch().recipeName" (click)="$event.stopPropagation()">
+    @if (productionService.error()) {
+      <p class="error-message">{{ productionService.error() }}</p>
+    }
+
+    <section class="detail-header">
+      <div>
+        <strong class="recipe-name">{{ batch().recipeName }}</strong>
+        <p class="recipe-meta">{{ batch().recipeCategory }} · {{ batch().createdAt | date: 'yyyy-MM-dd HH:mm' }}</p>
+      </div>
+      <z-badge [zType]="batch().status === 'COMPLETED' ? 'secondary' : batch().status === 'CANCELLED' ? 'destructive' : 'default'">
+        {{ statusLabel() }}
+      </z-badge>
+    </section>
+
+    <section class="summary-grid">
+      <article class="summary-card">
+        <span class="summary-label">Planeado</span>
+        <strong class="summary-value">{{ batch().plannedQuantity }} <span class="unit-sub">uds</span></strong>
+      </article>
+      <article class="summary-card">
+        <span class="summary-label">Costo planeado (MXN)</span>
+        <strong class="summary-value">{{ batch().plannedTotalCost | mxnCurrency }}</strong>
+      </article>
+      <article class="summary-card">
+        <span class="summary-label">Resultado</span>
+        <strong class="summary-value">
+          {{ batch().actualQuantity ?? 0 }} <span class="unit-sub">uds</span>
+        </strong>
+      </article>
+      <article class="summary-card">
+        <span class="summary-label">Merma por insumo (MXN)</span>
+        <strong class="summary-value">{{ ingredientWasteCost() | mxnCurrency }}</strong>
+      </article>
+      <article class="summary-card">
+        <span class="summary-label">Merma por rendimiento (MXN)</span>
+        <strong class="summary-value">{{ yieldShortfallCost() | mxnCurrency }}</strong>
+      </article>
+      <article class="summary-card">
+        <span class="summary-label">Impacto total (MXN)</span>
+        <strong class="summary-value">{{ totalOperationalLoss() | mxnCurrency }}</strong>
+      </article>
+    </section>
+
+    <section class="timeline-grid">
+      <article class="summary-card">
+        <span class="summary-label">Creada</span>
+        <strong class="summary-value summary-value-sm">{{ batch().createdAt | date: 'yyyy-MM-dd HH:mm' }}</strong>
+      </article>
+      <article class="summary-card">
+        <span class="summary-label">Inicio</span>
+        <strong class="summary-value summary-value-sm">
+          @if (batch().startedAt) {
+            {{ batch().startedAt | date: 'yyyy-MM-dd HH:mm' }}
+          } @else {
+            Sin iniciar
+          }
+        </strong>
+      </article>
+      <article class="summary-card">
+        <span class="summary-label">Cierre</span>
+        <strong class="summary-value summary-value-sm">
+          @if (batch().completedAt) {
+            {{ batch().completedAt | date: 'yyyy-MM-dd HH:mm' }}
+          } @else if (batch().cancelledAt) {
+            {{ batch().cancelledAt | date: 'yyyy-MM-dd HH:mm' }}
+          } @else {
+            Pendiente
+          }
+        </strong>
+      </article>
+      <article class="summary-card">
+        <span class="summary-label">Duración</span>
+        <strong class="summary-value summary-value-sm">
+          @if (effectiveDurationMinutes() !== null) {
+            {{ effectiveDurationMinutes() }} min
+          } @else {
+            Pendiente
+          }
+        </strong>
+      </article>
+    </section>
+
+    <div class="table-wrap">
+      <table class="detail-table">
+        <thead>
+          <tr>
+            <th>Insumo</th>
+            <th>Planeado</th>
+            <th>Reservado</th>
+            <th>Costo planeado</th>
+            <th>Real</th>
+            <th>Merma</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of batch().plannedIngredients; track item.ingredient) {
+            <tr>
+              <td><strong>{{ item.name }}</strong></td>
+              <td class="font-georgia">{{ item.plannedQuantity }} <span class="unit">{{ item.unit }}</span></td>
+              <td class="font-georgia">{{ item.reservedQuantity }} <span class="unit">{{ item.unit }}</span></td>
+              <td class="font-georgia">{{ item.plannedSubtotal | mxnCurrency }}</td>
+              <td class="font-georgia">
+                @if (batch().actualIngredients?.length) {
+                  {{ getActualQuantity(item.ingredient) ?? 0 }} <span class="unit">{{ item.unit }}</span>
+                } @else {
+                  <span class="muted">Pendiente</span>
+                }
+              </td>
+              <td class="font-georgia">
+                @if (batch().actualIngredients?.length) {
+                  {{ (getWasteCost(item.ingredient) ?? 0) | mxnCurrency }}
+                } @else {
+                  <span class="muted">Pendiente</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    @if (batch().notes) {
+      <section class="note-panel">
+        <strong>Notas</strong>
+        <p>{{ batch().notes }}</p>
+      </section>
+    }
+
+    @if (batch().status === 'CANCELLED' && batch().cancellationReason) {
+      <section class="note-panel note-cancel">
+        <strong>Motivo de cancelación</strong>
+        <p>{{ batch().cancellationReason }}</p>
+      </section>
+    }
+
+    @if (showCancelForm()) {
+      <section class="cancel-panel">
+        <label class="form-label">
+          Motivo de cancelación
+          <textarea class="form-textarea" rows="3" [value]="cancelReason()" (input)="cancelReason.set($any($event.target).value)"></textarea>
+        </label>
+        <div class="cancel-actions">
+          <button z-button zType="outline" type="button" (click)="showCancelForm.set(false)">Cerrar panel</button>
+          <button z-button zType="destructive" type="button" (click)="confirmCancel()" [zLoading]="productionService.submitting()">Confirmar cancelación</button>
+        </div>
+      </section>
+    }
+
+    <footer class="modal-actions">
+      <button z-button zType="outline" type="button" (click)="close()">Cerrar</button>
+      @if (batch().status === 'PENDING') {
+        <button z-button type="button" (click)="startOrder()" [zLoading]="productionService.submitting()">Iniciar orden</button>
+        <button z-button zType="destructive" type="button" (click)="showCancelForm.set(true)">Cancelar orden</button>
+      } @else if (batch().status === 'IN_PROGRESS') {
+        <button z-button zType="destructive" type="button" (click)="showCancelForm.set(true)">Cancelar orden</button>
+      }
+    </footer>
+  </z-card>
+</section>

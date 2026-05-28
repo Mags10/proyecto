@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ZardButtonComponent } from '../../shared/components/button';
 import { ZardCardComponent } from '../../shared/components/card';
 import { ZardBadgeComponent } from '../../shared/components/badge';
@@ -9,6 +9,7 @@ import { SupplyService } from '../../services/supply-service';
 import { AbastecimientoInsumoModalComponent } from '../../components/abastecimiento/abastecimiento-insumo-modal.component';
 import { AbastecimientoCompraModalComponent } from '../../components/abastecimiento/abastecimiento-compra-modal.component';
 import { AbastecimientoHistorialModalComponent } from '../../components/abastecimiento/abastecimiento-historial-modal.component';
+import { MxnCurrencyPipe } from '../../shared/pipes/mxn-currency.pipe';
 
 @Component({
   selector: 'app-abastecimiento-page',
@@ -17,6 +18,7 @@ import { AbastecimientoHistorialModalComponent } from '../../components/abasteci
     ZardButtonComponent,
     ZardBadgeComponent,
     ...ZardTableImports,
+    MxnCurrencyPipe,
     AbastecimientoInsumoModalComponent,
     AbastecimientoCompraModalComponent,
     AbastecimientoHistorialModalComponent
@@ -31,6 +33,9 @@ export class AbastecimientoPage implements OnInit {
   public ingredients = this.supplyService.ingredients;
   public error = this.supplyService.error;
   public lastPurchase = this.supplyService.lastPurchase;
+
+  public readonly totalIngredients = computed(() => this.ingredients().length);
+  public readonly lowStockCount = computed(() => this.ingredients().filter(i => i.currentStock <= i.minimumStock).length);
   public ingredientModalOpen = signal(false);
   public purchaseModalOpen = signal(false);
   public historyModalOpen = signal(false);

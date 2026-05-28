@@ -12,8 +12,6 @@ import {
   booleanAttribute,
 } from '@angular/core';
 
-import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideLoaderCircle } from '@ng-icons/lucide';
 import type { ClassValue } from 'clsx';
 
 import { mergeClasses } from 'src/app/shared/utils/merge-classes';
@@ -27,16 +25,14 @@ import {
 
 @Component({
   selector: 'z-button, button[z-button], a[z-button]',
-  imports: [NgIcon],
   template: `
     @if (zLoading()) {
-      <ng-icon name="lucideLoaderCircle" class="animate-spin duration-2000" />
+      <span class="z-button-loader" aria-hidden="true"></span>
     }
     <ng-content />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  viewProviders: [provideIcons({ lucideLoaderCircle })],
   host: {
     '[class]': 'classes()',
     '[attr.data-type]': 'zType()',
@@ -74,7 +70,7 @@ export class ZardButtonComponent implements OnDestroy {
 
       const check = () => {
         const el = this.elementRef.nativeElement;
-        const hasIcon = el.querySelector('ng-icon') !== null;
+        const hasIcon = el.querySelector('[data-icon], .z-button-loader, svg') !== null;
         const children = Array.from<Node>(el.childNodes);
         const hasText = children.some(node => {
           if (node.nodeType === 3) {
@@ -82,7 +78,7 @@ export class ZardButtonComponent implements OnDestroy {
           }
           if (node.nodeType === 1) {
             const element = node as HTMLElement;
-            if (element.matches('ng-icon')) {
+            if (element.matches('[data-icon], .z-button-loader, svg')) {
               return false;
             }
             return element.textContent?.trim() !== '';

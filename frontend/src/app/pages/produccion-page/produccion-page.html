@@ -1,68 +1,247 @@
 <main class="page-shell">
   <section class="hero">
-    <h1>Producción y Mermas</h1>
-    <p>Registra lotes de producción y gestiona mermas de inventario</p>
+    <div class="hero-copy">
+      <h1>Producción</h1>
+      <p class="hero-subtitle">Programa órdenes, aparta insumos, arráncalas cuando cocina esté lista y cierra cada lote con consumo real, tiempo y merma por producción.</p>
+    </div>
   </section>
 
-  <section class="layout">
-    <z-card zTitle="Producción de Lotes">
-      <input z-input placeholder="Buscar receta..." />
+  @if (productionService.error()) {
+    <p class="error-message">{{ productionService.error() }}</p>
+  }
 
-      <div class="recipe-list">
-        <article class="recipe-item active">
-          <div>
-            <strong>Croissant</strong>
-            <small>Pastelería</small>
-          </div>
-          <z-badge zType="secondary">Stock: 8</z-badge>
-        </article>
-
-        <article class="recipe-item">
-          <div>
-            <strong>Café Latte Grande</strong>
-            <small>Bebidas</small>
-          </div>
-          <z-badge zType="secondary">Stock: 45</z-badge>
-        </article>
-
-        <article class="recipe-item">
-          <div>
-            <strong>Pan Integral</strong>
-            <small>Panadería</small>
-          </div>
-          <z-badge zType="secondary">Stock: 12</z-badge>
-        </article>
+  <section class="toolbar">
+    <div class="search-box">
+      <label class="search-label">Buscar</label>
+      <div class="search-input-wrapper">
+        <input z-input #searchInput [value]="query()" placeholder="Receta, categoría, estado..." (input)="updateQuery(searchInput.value)" class="search-input" />
       </div>
+    </div>
 
-      <label>Cantidad a producir</label>
-      <input z-input value="10" />
+    <div class="filter-strip">
+      <button z-button [zType]="statusFilter() === 'ALL' ? 'default' : 'outline'" zSize="sm" type="button" (click)="setStatusFilter('ALL')">Todas</button>
+      <button z-button [zType]="statusFilter() === 'PENDING' ? 'default' : 'outline'" zSize="sm" type="button" (click)="setStatusFilter('PENDING')">Apartadas</button>
+      <button z-button [zType]="statusFilter() === 'IN_PROGRESS' ? 'default' : 'outline'" zSize="sm" type="button" (click)="setStatusFilter('IN_PROGRESS')">En progreso</button>
+      <button z-button [zType]="statusFilter() === 'COMPLETED' ? 'default' : 'outline'" zSize="sm" type="button" (click)="setStatusFilter('COMPLETED')">Terminadas</button>
+      <button z-button [zType]="statusFilter() === 'CANCELLED' ? 'default' : 'outline'" zSize="sm" type="button" (click)="setStatusFilter('CANCELLED')">Canceladas</button>
+    </div>
 
-      <div class="stock-box">
-        <span>Stock disponible</span>
-        <strong>8 unidades</strong>
-        <span>Costo estimado</span>
-        <strong>$85.00</strong>
+    <section class="stats-grid">
+      <z-card class="stat-card">
+        <div class="stat-inner">
+          <span class="stat-label">Órdenes activas</span>
+          <strong class="stat-value">{{ activeOrdersCount() }}</strong>
+        </div>
+      </z-card>
+
+      <z-card class="stat-card">
+        <div class="stat-inner">
+          <span class="stat-label">En progreso</span>
+          <strong class="stat-value">{{ inProgressCount() }}</strong>
+        </div>
+      </z-card>
+
+      <z-card class="stat-card">
+        <div class="stat-inner">
+          <span class="stat-label">Terminadas</span>
+          <strong class="stat-value">{{ completedCount() }}</strong>
+        </div>
+      </z-card>
+
+      <z-card class="stat-card stat-reserved">
+        <div class="stat-inner">
+          <span class="stat-label">Reserva estimada</span>
+          <strong class="stat-value-sub">{{ reservedEstimate() | mxnCurrency }}</strong>
+        </div>
+      </z-card>
+    </section>
+  </section>
+
+  <section class="table-panel">
+    <z-card zTitle="Órdenes de producción" class="catalog-card">
+      <div class="table-wrap">
+        <table z-table class="catalog-table">
+          <thead z-table-header>
+            <tr z-table-row>
+              <th z-table-head class="col-order">Orden</th>
+              <th z-table-head class="col-status">Estado</th>
+              <th z-table-head class="col-plan">Planeado</th>
+              <th z-table-head class="col-cost">Reserva / costo</th>
+              <th z-table-head class="col-result">Resultado</th>
+              <th z-table-head class="col-time">Tiempo</th>
+              <th z-table-head class="col-actions"></th>
+            </tr>
+          </thead>
+          <tbody z-table-body>
+            @if (productionService.loading()) {
+              <tr z-table-row>
+                <td z-table-cell colspan="7" class="empty-cell">Cargando órdenes de producción...</td>
+              </tr>
+            } @else {
+              @for (batch of filteredOrders(); track batch._id) {
+                <tr z-table-row class="recipe-row" [class.row-muted]="batch.status === 'CANCELLED'">
+                  <td z-table-cell>
+                    <div class="recipe-cell">
+                      <strong class="recipe-name">{{ batch.recipeName }}</strong>
+                      <span class="recipe-yield">{{ batch.recipeCategory }} · {{ batch.createdAt | date: 'yyyy-MM-dd HH:mm' }}</span>
+                    </div>
+                  </td>
+                  <td z-table-cell>
+                    <z-badge [zType]="batch.status === 'COMPLETED' ? 'secondary' : batch.status === 'CANCELLED' ? 'destructive' : 'default'">
+                      {{ getStatusLabel(getDisplayStatus(batch)) }}
+                    </z-badge>
+                  </td>
+                  <td z-table-cell class="font-georgia">
+                    <strong>{{ getPlannedQuantity(batch) }}</strong>
+                    <span class="unit-text">uds</span>
+                    <p class="row-hint">{{ getPlannedIngredientCount(batch) }} insumos apartados</p>
+                  </td>
+                  <td z-table-cell class="font-georgia">
+                    <strong>{{ getPlannedTotalCost(batch) | mxnCurrency }}</strong>
+                    <p class="row-hint">Estimado unitario: {{ batch.unitCost | mxnCurrency }}</p>
+                  </td>
+                  <td z-table-cell class="font-georgia">
+                    @if (getDisplayStatus(batch) === 'COMPLETED') {
+                      <strong>{{ getActualQuantity(batch) }}</strong>
+                      <span class="unit-text">uds</span>
+                      <p class="row-hint">Merma: {{ getWasteCost(batch) | mxnCurrency }}</p>
+                    } @else if (getDisplayStatus(batch) === 'CANCELLED') {
+                      <span class="status-muted">Sin producción</span>
+                      <p class="row-hint">{{ batch.cancellationReason || 'Cancelada sin observaciones.' }}</p>
+                    } @else {
+                      <span class="status-muted">Pendiente de cierre</span>
+                      <p class="row-hint">Aún no incrementa stock terminado.</p>
+                    }
+                  </td>
+                  <td z-table-cell class="font-georgia">
+                    @if (batch.durationMinutes !== null && batch.durationMinutes !== undefined) {
+                      <strong>{{ batch.durationMinutes }}</strong>
+                      <span class="unit-text">min</span>
+                    } @else if (batch.startedAt) {
+                      <span class="status-muted">Corriendo desde {{ batch.startedAt | date: 'HH:mm' }}</span>
+                    } @else {
+                      <span class="status-muted">Sin iniciar</span>
+                    }
+                  </td>
+                  <td z-table-cell class="cell-action">
+                    <div class="row-actions">
+                      @if (getDisplayStatus(batch) === 'PENDING') {
+                        <button z-button zSize="sm" type="button" (click)="startOrder(batch)" [zLoading]="productionService.submitting()">Iniciar</button>
+                      }
+                      @if (getDisplayStatus(batch) === 'IN_PROGRESS') {
+                        <button z-button zSize="sm" type="button" (click)="openCompleteModal(batch)">Completar</button>
+                      }
+                      <button z-button zType="outline" zSize="sm" type="button" (click)="openDetailModal(batch)">
+                        {{ getDisplayStatus(batch) === 'COMPLETED' || getDisplayStatus(batch) === 'CANCELLED' ? 'Detalle' : 'Gestionar' }}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              } @empty {
+                <tr z-table-row>
+                  <td z-table-cell colspan="7" class="empty-cell">
+                    <div class="empty-state-container">
+                      <span class="empty-icon" aria-hidden="true">?</span>
+                      <p class="empty-text">No hay órdenes de producción que coincidan con los filtros.</p>
+                    </div>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
       </div>
-
-      <button z-button zFull>Producir Lote</button>
-    </z-card>
-
-    <z-card zTitle="Registro de Mermas">
-      <div class="waste-list">
-        <article class="waste-item">
-          <div><strong>Leche entera</strong><small>2 litros</small></div>
-          <div><z-badge zType="destructive">Caducidad</z-badge><small>2026-02-19 14:30</small></div>
-        </article>
-        <article class="waste-item">
-          <div><strong>Pan Integral</strong><small>8 unidades</small></div>
-          <div><z-badge zType="secondary">Quemado</z-badge><small>2026-02-19 12:15</small></div>
-        </article>
-        <article class="waste-item">
-          <div><strong>Croissant</strong><small>5 unidades</small></div>
-          <div><z-badge zType="secondary">Fin del día</z-badge><small>2026-02-18 18:45</small></div>
-        </article>
-      </div>
-      <div class="actions"><button z-button zType="outline">Registrar Merma</button></div>
     </z-card>
   </section>
+
+  <section class="table-panel">
+    <z-card zTitle="Recetas listas para programar" class="catalog-card">
+      <div class="table-wrap">
+        <table z-table class="catalog-table">
+          <thead z-table-header>
+            <tr z-table-row>
+              <th z-table-head class="col-name">Receta</th>
+              <th z-table-head class="col-category">Categoría</th>
+              <th z-table-head class="col-stock">Stock terminado</th>
+              <th z-table-head class="col-stock">Máximo apartable</th>
+              <th z-table-head class="col-result">Disponibilidad</th>
+              <th z-table-head class="col-actions"></th>
+            </tr>
+          </thead>
+          <tbody z-table-body>
+            @for (recipe of filteredRecipes(); track recipe._id) {
+              <tr z-table-row class="recipe-row" [class.row-alert]="getMaxProducible(recipe) === 0">
+                <td z-table-cell>
+                  <div class="recipe-cell">
+                    <strong class="recipe-name">{{ recipe.name }}</strong>
+                    <span class="recipe-yield">{{ recipe.yieldText }}</span>
+                  </div>
+                </td>
+                <td z-table-cell class="cell-category">
+                  <span class="category-pill">{{ recipe.category }}</span>
+                </td>
+                <td z-table-cell class="font-georgia">
+                  <strong>{{ recipe.currentStock }}</strong>
+                  <span class="unit-text">uds</span>
+                </td>
+                <td z-table-cell class="font-georgia">
+                  <strong>{{ getMaxProducible(recipe) }}</strong>
+                  <span class="unit-text">uds</span>
+                </td>
+                <td z-table-cell>
+                  @if (getMaxProducible(recipe) > 0) {
+                    <z-badge zType="secondary">Disponible</z-badge>
+                  } @else {
+                    <z-badge zType="destructive">Bloqueada</z-badge>
+                  }
+                  <p class="row-hint">{{ getRecipeHint(recipe) }}</p>
+                </td>
+                <td z-table-cell class="cell-action">
+                  <div class="row-actions">
+                    <button z-button zType="outline" zSize="sm" type="button" (click)="openCreateModal(recipe)">Nueva orden</button>
+                  </div>
+                </td>
+              </tr>
+            } @empty {
+              <tr z-table-row>
+                <td z-table-cell colspan="6" class="empty-cell">
+                  <div class="empty-state-container">
+                    <span class="empty-icon" aria-hidden="true">?</span>
+                    <p class="empty-text">No hay recetas configuradas o que coincidan con la búsqueda.</p>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </z-card>
+  </section>
+
+  @if (createModalOpen()) {
+    @if (selectedRecipe(); as currentRecipe) {
+      <app-produccion-lote-modal
+        [recipe]="currentRecipe"
+        (closed)="createModalOpen.set(false)"
+      ></app-produccion-lote-modal>
+    }
+  }
+
+  @if (completeModalOpen()) {
+    @if (selectedBatch(); as currentBatch) {
+      <app-produccion-completar-modal
+        [batch]="currentBatch"
+        (closed)="completeModalOpen.set(false)"
+      ></app-produccion-completar-modal>
+    }
+  }
+
+  @if (detailModalOpen()) {
+    @if (selectedBatch(); as currentBatch) {
+      <app-produccion-detalle-modal
+        [batch]="currentBatch"
+        (closed)="detailModalOpen.set(false)"
+      ></app-produccion-detalle-modal>
+    }
+  }
 </main>

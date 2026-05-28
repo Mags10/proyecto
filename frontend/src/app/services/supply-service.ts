@@ -15,6 +15,7 @@ export class SupplyService {
   public ingredients = signal<Ingredient[]>([]);
   public purchaseRecords = signal<PurchaseRecord[]>([]);
   public loading = signal(false);
+  public purchaseRecordsLoading = signal(false);
   public error = signal('');
   public lastPurchase = signal<PurchaseRecord | null>(null);
   public purchaseDraft = signal<PurchaseDraft>({
@@ -43,6 +44,9 @@ export class SupplyService {
   }
 
   async fetchPurchaseRecords(ingredientId?: string, limit = 10): Promise<void> {
+    this.purchaseRecordsLoading.set(true);
+    this.purchaseRecords.set([]);
+
     const { data, error } = await apiClient.GET('/api/purchase-records', {
       params: {
         query: {
@@ -55,11 +59,13 @@ export class SupplyService {
     if (error) {
       console.error('Error fetching purchase records:', error);
       this.error.set('No se pudo cargar el historial de compras.');
+      this.purchaseRecordsLoading.set(false);
       return;
     }
 
     this.purchaseRecords.set(data);
     this.error.set('');
+    this.purchaseRecordsLoading.set(false);
   }
 
   async createIngredient(payload: CreateIngredientPayload): Promise<void> {

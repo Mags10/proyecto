@@ -1,0 +1,159 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgb(26 19 13 / 48%);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 2rem 1rem;
+  z-index: 40;
+}
+
+.sales-modal {
+  width: min(960px, 100%);
+}
+
+.modal-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.input-grid,
+.ticket-line,
+.summary-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.input-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ticket-line {
+  grid-template-columns: minmax(0, 1fr) 140px auto;
+  align-items: end;
+}
+
+.form-label {
+  display: grid;
+  gap: 0.35rem;
+  color: #5f5345;
+  font-size: 0.95rem;
+}
+
+.form-select {
+  border: 1px solid #d5c0aa;
+  border-radius: 8px;
+  min-height: 42px;
+  padding: 0 0.85rem;
+  background: #fffaf5;
+}
+
+.ticket-section,
+.preview-section {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.ticket-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ticket-header h3,
+.preview-section h3 {
+  margin: 0;
+  color: #2a1b12;
+}
+
+.ticket-lines {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.preview-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.preview-table th,
+.preview-table td {
+  padding: 0.7rem 0.75rem;
+  border-bottom: 1px solid #eadfd2;
+  text-align: left;
+}
+
+.row-danger {
+  background: #fff2f0;
+}
+
+.negative-stock {
+  color: #b42318;
+  font-weight: 700;
+}
+
+.summary-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.summary-card {
+  border: 1px solid #eadfd2;
+  border-radius: 8px;
+  padding: 0.85rem 0.95rem;
+  background: #fffaf5;
+}
+
+.summary-label {
+  display: block;
+  color: #6f6154;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.summary-value {
+  color: #2a1b12;
+  font-size: 1.1rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.alert-panel {
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+}
+
+.alert-error {
+  background: #fff1f0;
+  color: #8d1f12;
+  border: 1px solid #f2c4bd;
+}
+
+.alert-list {
+  margin: 0.5rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.error-message {
+  margin: 0;
+  color: #b42318;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .input-grid,
+  .summary-grid,
+  .ticket-line {
+    grid-template-columns: 1fr;
+  }
+}

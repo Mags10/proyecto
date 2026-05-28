@@ -1,0 +1,109 @@
+<section class="modal-backdrop" role="presentation" (click)="close()">
+  <z-card class="modal-card production-modal" [zTitle]="'Nueva orden: ' + recipe().name" (click)="$event.stopPropagation()">
+    @if (productionService.error()) {
+      <p class="error-message">{{ productionService.error() }}</p>
+    }
+
+    <form class="modal-form" [formGroup]="orderForm" (ngSubmit)="createOrder()">
+      <div class="input-grid">
+        <label class="form-label">
+          Cantidad planeada
+          <input z-input type="number" min="0.01" step="any" formControlName="plannedQuantity" />
+        </label>
+
+        <div class="meta-stack">
+          <div class="yield-card">
+            <span class="yield-label">Rendimiento base</span>
+            <strong class="yield-value">{{ recipe().yieldText }}</strong>
+          </div>
+          <button z-button zType="outline" zSize="sm" type="button" [disabled]="maxProducible() <= 0" (click)="useMaxProducible()">
+            Usar máximo: {{ maxProducible() }} uds
+          </button>
+        </div>
+      </div>
+
+      <label class="form-label">
+        Notas de producción
+        <textarea class="form-textarea" rows="3" formControlName="notes" placeholder="Preparación para vitrina matutina, pedido especial, etc."></textarea>
+      </label>
+
+      @if (blockingItems().length > 0) {
+        <section class="alert-panel alert-error">
+          <strong>La orden no se puede apartar todavía.</strong>
+          <ul class="alert-list">
+            @for (item of blockingItems(); track item._id) {
+              <li>{{ item.name }}: disponible {{ item.availableStock }} {{ item.unit }}, requerido {{ item.requiredQuantity }} {{ item.unit }}</li>
+            }
+          </ul>
+        </section>
+      } @else if (lowStockWarnings().length > 0) {
+        <section class="alert-panel alert-warn">
+          <strong>Reserva con impacto en stock mínimo.</strong>
+          <ul class="alert-list">
+            @for (item of lowStockWarnings(); track item._id) {
+              <li>{{ item.name }} quedará con disponible {{ item.availableAfterReserve }} {{ item.unit }} y mínimo {{ item.minimumStock }} {{ item.unit }}</li>
+            }
+          </ul>
+        </section>
+      }
+
+      <div class="preview-section">
+        <h3>Reserva de insumos</h3>
+        <div class="table-wrap">
+          <table class="preview-table">
+            <thead>
+              <tr>
+                <th>Insumo</th>
+                <th>Actual</th>
+                <th>Reservado</th>
+                <th>Disponible</th>
+                <th>Apartar</th>
+                <th>Disponible final</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of previewIngredients(); track item._id) {
+                <tr [class.row-danger]="!item.canReserve">
+                  <td><strong>{{ item.name }}</strong></td>
+                  <td class="font-georgia">{{ item.currentStock }} <span class="unit">{{ item.unit }}</span></td>
+                  <td class="font-georgia">{{ item.reservedStock }} <span class="unit">{{ item.unit }}</span></td>
+                  <td class="font-georgia">{{ item.availableStock }} <span class="unit">{{ item.unit }}</span></td>
+                  <td class="font-georgia">{{ item.requiredQuantity }} <span class="unit">{{ item.unit }}</span></td>
+                  <td class="font-georgia" [class.negative-stock]="item.availableAfterReserve < 0">
+                    {{ item.availableAfterReserve }} <span class="unit">{{ item.unit }}</span>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="6" class="empty-preview">Esta receta no tiene insumos configurados.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <section class="summary-grid">
+        <div class="summary-card">
+          <span class="summary-label">Reserva estimada (MXN)</span>
+          <strong class="summary-value">{{ totalReservedCost() | mxnCurrency }}</strong>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">Costo unitario planeado (MXN)</span>
+          <strong class="summary-value">{{ reservedUnitCost() | mxnCurrency }}</strong>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">Stock terminado actual</span>
+          <strong class="summary-value">{{ recipe().currentStock }} <span class="unit-sub">uds</span></strong>
+        </div>
+      </section>
+
+      <footer class="modal-actions">
+        <button z-button zType="outline" type="button" (click)="close()">Cerrar</button>
+        <button z-button type="submit" [disabled]="orderForm.invalid || !canCreate()" [zLoading]="productionService.submitting()">
+          Crear orden
+        </button>
+      </footer>
+    </form>
+  </z-card>
+</section>

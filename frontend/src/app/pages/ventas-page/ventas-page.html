@@ -1,25 +1,130 @@
-<main class="page-shell">
-  <section class="hero">
-    <h1>Panel de Ventas en Piso</h1>
-    <p>Sistema rápido de ventas con control de inventario en tiempo real</p>
+<main class="sales-shell">
+  <section class="page-header">
+    <div>
+      <h1>Ventas en piso</h1>
+      <p>Registra tickets rápidos sobre stock terminado ya producido y consulta el historial reciente.</p>
+    </div>
+    <button z-button type="button" [disabled]="totalSellableProducts() === 0" (click)="openTicket()">Registrar venta</button>
   </section>
 
-  <section class="section-block">
-    <h2>Bebidas</h2>
-    <div class="cards-grid">
-      <app-product-card name="Café Americano" price="$45" stock="25"></app-product-card>
-      <app-product-card name="Café Latte" price="$65" stock="18"></app-product-card>
-      <app-product-card name="Cappuccino" price="$60" stock="22"></app-product-card>
-      <app-product-card name="Jugo Natural" price="$35" stock="20"></app-product-card>
-    </div>
+  @if (salesError()) {
+    <p class="error-banner">{{ salesError() }}</p>
+  }
+
+  <section class="kpi-grid">
+    <z-card zTitle="Vendibles">
+      <strong class="kpi-value">{{ totalSellableProducts() }}</strong>
+      <span class="kpi-caption">recetas con stock disponible</span>
+    </z-card>
+    <z-card zTitle="Bajo stock">
+      <strong class="kpi-value">{{ lowStockProducts() }}</strong>
+      <span class="kpi-caption">productos para reabastecer</span>
+    </z-card>
+    <z-card zTitle="Venta reciente (MXN)">
+      <strong class="kpi-value">{{ recentRevenue() | mxnCurrency }}</strong>
+      <span class="kpi-caption">últimos {{ sales().length }} tickets cargados</span>
+    </z-card>
+    <z-card zTitle="Unidades recientes">
+      <strong class="kpi-value">{{ recentUnits() }}</strong>
+      <span class="kpi-caption">piezas registradas en historial</span>
+    </z-card>
   </section>
 
-  <section class="section-block">
-    <h2>Pastelería</h2>
-    <div class="cards-grid">
-      <app-product-card name="Croissant" price="$35" stock="3" [lowStock]="true"></app-product-card>
-      <app-product-card name="Pan Chocolate" price="$40" stock="12"></app-product-card>
-      <app-product-card name="Muffin Arándano" price="$45" stock="14"></app-product-card>
-    </div>
+  <section class="panel-grid">
+    <z-card class="panel-card" zTitle="Productos vendibles">
+      <div class="panel-toolbar">
+        <input z-input [value]="query()" placeholder="Buscar por producto o categoría" (input)="updateQuery(($any($event.target)).value)" />
+      </div>
+
+      <div class="table-wrap">
+        <table z-table>
+          <thead z-table-header>
+            <tr z-table-row>
+              <th z-table-head>Producto</th>
+              <th z-table-head>Categoría</th>
+              <th z-table-head>Precio</th>
+              <th z-table-head>Costo</th>
+              <th z-table-head>Margen</th>
+              <th z-table-head>Stock</th>
+              <th z-table-head>Estado</th>
+              <th z-table-head>Acción</th>
+            </tr>
+          </thead>
+          <tbody z-table-body>
+          @for (recipe of filteredProducts(); track recipe._id) {
+              <tr z-table-row>
+                <td z-table-cell>
+                  <strong>{{ recipe.name }}</strong>
+                </td>
+                <td z-table-cell>{{ recipe.category }}</td>
+                <td z-table-cell>{{ recipe.salePrice | mxnCurrency }}</td>
+                <td z-table-cell>{{ recipe.totalCost | mxnCurrency }}</td>
+                <td z-table-cell>{{ recipe.margin }}%</td>
+                <td z-table-cell>{{ recipe.currentStock }} uds</td>
+                <td z-table-cell>
+                  <z-badge [zType]="getStockBadge(recipe)">{{ getStockState(recipe) }}</z-badge>
+                </td>
+                <td z-table-cell>
+                  <button z-button zSize="sm" (click)="openTicket(recipe)">
+                    Vender
+                  </button>
+                </td>
+              </tr>
+            } @empty {
+              <tr z-table-row>
+                <td z-table-cell colspan="8" class="empty-cell">No hay productos con stock disponible para vender.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </z-card>
+
+    <z-card class="panel-card" zTitle="Ventas recientes">
+      <div class="table-wrap">
+        <table z-table>
+          <thead z-table-header>
+            <tr z-table-row>
+              <th z-table-head>Fecha</th>
+              <th z-table-head>Items</th>
+              <th z-table-head>Unidades</th>
+              <th z-table-head>Venta</th>
+              <th z-table-head>Margen</th>
+              <th z-table-head>Acción</th>
+            </tr>
+          </thead>
+          <tbody z-table-body>
+            @for (sale of sales(); track sale._id) {
+              <tr z-table-row>
+                <td z-table-cell>{{ sale.soldAt | date:'short' }}</td>
+                <td z-table-cell>{{ sale.items.length }}</td>
+                <td z-table-cell>{{ sale.totalItems }}</td>
+                <td z-table-cell>{{ sale.totalRevenue | mxnCurrency }}</td>
+                <td z-table-cell>{{ sale.totalMargin | mxnCurrency }}</td>
+                <td z-table-cell>
+                  <button z-button zType="outline" zSize="sm" (click)="openSaleDetail(sale)">Detalle</button>
+                </td>
+              </tr>
+            } @empty {
+              <tr z-table-row>
+                <td z-table-cell colspan="6" class="empty-cell">Aún no hay ventas registradas.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </z-card>
   </section>
+
+  @if (ticketModalOpen()) {
+    <app-venta-ticket-modal
+      [recipes]="products()"
+      [initialRecipeId]="selectedRecipeId()"
+      (closed)="ticketModalOpen.set(false)"
+    />
+  }
+
+  @if (detailModalOpen() && selectedSale(); as sale) {
+    <app-venta-detalle-modal [sale]="sale" (closed)="detailModalOpen.set(false)" />
+  }
 </main>

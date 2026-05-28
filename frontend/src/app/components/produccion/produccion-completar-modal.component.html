@@ -1,0 +1,113 @@
+<section class="modal-backdrop" role="presentation" (click)="close()">
+  <z-card class="modal-card" [zTitle]="'Cerrar orden: ' + batch().recipeName" (click)="$event.stopPropagation()">
+    @if (productionService.error()) {
+      <p class="error-message">{{ productionService.error() }}</p>
+    }
+
+    <form class="modal-form" novalidate [formGroup]="completionForm" (ngSubmit)="completeOrder()">
+      <div class="input-grid">
+        <label class="form-label">
+          Producción real
+          <input z-input type="number" min="0" step="any" formControlName="actualProduced" />
+        </label>
+
+        <article class="read-only-card">
+          <span class="read-only-label">Tiempo transcurrido</span>
+          <strong class="read-only-value">{{ elapsedMinutes() }} min</strong>
+          <span class="read-only-help">Se calcula desde que la orden inició.</span>
+        </article>
+      </div>
+
+      <label class="form-label">
+        Resultado / observaciones
+        <textarea class="form-textarea" rows="3" formControlName="notes" placeholder="Una pieza salió quemada, lote parcial, se ajustó temperatura, etc."></textarea>
+      </label>
+
+      @if (blockingReasons().length > 0) {
+        <section class="alert-panel alert-error">
+          <strong>No se puede cerrar la orden todavía.</strong>
+          <ul class="alert-list">
+            @for (reason of blockingReasons(); track reason) {
+              <li>{{ reason }}</li>
+            }
+          </ul>
+        </section>
+      }
+
+      <div class="preview-section">
+        <h3>Consumo real por insumo</h3>
+        <div class="table-wrap">
+          <table class="preview-table">
+            <thead>
+              <tr>
+                <th>Insumo</th>
+                <th>Planeado</th>
+                <th>Real</th>
+                <th>Varianza</th>
+                <th>Stock actual</th>
+                <th>Stock final</th>
+                <th>Merma (MXN)</th>
+              </tr>
+            </thead>
+            <tbody formArrayName="actualIngredients">
+              @for (item of ingredientRows(); track item.ingredient; let index = $index) {
+                <tr [class.row-danger]="!item.valid">
+                  <td><strong>{{ item.name }}</strong></td>
+                  <td class="font-georgia">{{ item.plannedQuantity }} <span class="unit">{{ item.unit }}</span></td>
+                  <td class="font-georgia" [formGroupName]="index">
+                    <input z-input type="number" min="0" step="any" formControlName="actualQuantity" class="qty-input" />
+                  </td>
+                  <td class="font-georgia">{{ item.varianceQuantity }} <span class="unit">{{ item.unit }}</span></td>
+                  <td class="font-georgia">{{ item.currentStock }} <span class="unit">{{ item.unit }}</span></td>
+                  <td class="font-georgia" [class.negative-stock]="item.stockAfter < 0">
+                    {{ item.stockAfter }} <span class="unit">{{ item.unit }}</span>
+                  </td>
+                  <td class="font-georgia">{{ item.wasteCost | mxnCurrency }}</td>
+                </tr>
+                @if (!item.valid) {
+                  <tr class="detail-alert-row">
+                    <td colspan="7" class="detail-alert-cell">
+                      {{ item.name }} no puede cerrarse con este consumo: el stock final quedaría en {{ item.stockAfter }} {{ item.unit }}.
+                    </td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <section class="summary-grid">
+        <div class="summary-card">
+          <span class="summary-label">Costo real (MXN)</span>
+          <strong class="summary-value">{{ actualTotalCost() | mxnCurrency }}</strong>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">Merma por insumo (MXN)</span>
+          <strong class="summary-value">{{ ingredientWasteCost() | mxnCurrency }}</strong>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">Merma por rendimiento (MXN)</span>
+          <strong class="summary-value">{{ yieldShortfallCost() | mxnCurrency }}</strong>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">Merma total estimada (MXN)</span>
+          <strong class="summary-value">{{ totalWasteCost() | mxnCurrency }}</strong>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">Variación de rendimiento</span>
+          <strong class="summary-value">{{ yieldVariance() }} <span class="unit-sub">uds</span></strong>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">Stock terminado proyectado</span>
+          <strong class="summary-value">{{ projectedRecipeStock() }} <span class="unit-sub">uds</span></strong>
+        </div>
+      </section>
+
+      <footer class="modal-actions">
+        <button z-button zType="outline" type="button" (click)="close()">Cerrar</button>
+        <button z-button type="submit" [zLoading]="productionService.submitting()">Completar orden</button>
+      </footer>
+    </form>
+  </z-card>
+</section>

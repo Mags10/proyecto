@@ -18,6 +18,12 @@ const ingredientSchema = new mongoose.Schema(
       default: 0,
       min: 0
     },
+    reservedStock: {
+      type: Number,
+      required: true,
+      default: 0,
+      min: 0
+    },
     averageCost: {
       type: Number,
       required: true,

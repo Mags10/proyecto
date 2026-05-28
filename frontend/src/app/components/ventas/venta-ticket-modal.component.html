@@ -1,0 +1,122 @@
+<section class="modal-backdrop" role="presentation" (click)="close()">
+  <z-card class="modal-card sales-modal" zTitle="Registrar venta" (click)="$event.stopPropagation()">
+    @if (salesService.error()) {
+      <p class="error-message">{{ salesService.error() }}</p>
+    }
+
+    <form class="modal-form" [formGroup]="ticketForm" (ngSubmit)="submitSale()">
+      <div class="input-grid">
+        <label class="form-label">
+          Fecha y hora
+          <input z-input type="datetime-local" formControlName="soldAt" />
+        </label>
+
+        <label class="form-label">
+          Notas
+          <input z-input formControlName="notes" placeholder="Mesa 4, pedido rápido, apps, etc." />
+        </label>
+      </div>
+
+      @if (blockingLines().length > 0) {
+        <section class="alert-panel alert-error">
+          <strong>No se puede cobrar todavía.</strong>
+          <ul class="alert-list">
+            @for (line of blockingLines(); track line.index) {
+              <li>
+                @if (!line.recipe) {
+                  Selecciona un producto en la línea {{ line.index + 1 }}.
+                } @else {
+                  {{ line.recipe.name }}: stock {{ line.stock }} uds, solicitado {{ line.quantity }} uds.
+                }
+              </li>
+            }
+          </ul>
+        </section>
+      }
+
+      <div class="ticket-section">
+        <div class="ticket-header">
+          <h3>Ticket</h3>
+          <button z-button zType="outline" zSize="sm" type="button" (click)="addLine()">Agregar línea</button>
+        </div>
+
+        <div class="ticket-lines" formArrayName="items">
+          @for (lineControl of itemsArray.controls; track $index) {
+            <div class="ticket-line" [formGroupName]="$index">
+              <label class="form-label">
+                Producto
+                <select class="form-select" formControlName="recipeId">
+                  <option value="">Selecciona un producto</option>
+                  @for (recipe of recipes(); track recipe._id) {
+                    <option [value]="recipe._id">{{ recipe.name }} · stock {{ recipe.currentStock }} uds</option>
+                  }
+                </select>
+              </label>
+
+              <label class="form-label quantity-label">
+                Cantidad
+                <input z-input type="number" min="0.01" step="any" formControlName="quantity" />
+              </label>
+
+              <button z-button zType="ghost" zSize="sm" type="button" (click)="removeLine($index)">Quitar</button>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="preview-section">
+        <h3>Resumen del ticket</h3>
+        <div class="table-wrap">
+          <table class="preview-table">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Stock</th>
+                <th>Solicitado</th>
+                <th>Precio</th>
+                <th>Importe</th>
+                <th>Stock final</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (line of previewLines(); track line.index) {
+                <tr [class.row-danger]="!line.canSell">
+                  <td><strong>{{ line.recipe?.name || 'Producto pendiente' }}</strong></td>
+                  <td>{{ line.stock }} uds</td>
+                  <td>{{ line.quantity }} uds</td>
+                  <td>{{ line.unitPrice | mxnCurrency }}</td>
+                  <td>{{ line.subtotal | mxnCurrency }}</td>
+                  <td [class.negative-stock]="line.remaining < 0">{{ line.remaining }} uds</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <section class="summary-grid">
+        <div class="summary-card">
+          <span class="summary-label">Unidades</span>
+          <strong class="summary-value">{{ totalUnits() }}</strong>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">Total venta (MXN)</span>
+          <strong class="summary-value">{{ totalRevenue() | mxnCurrency }}</strong>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">Costo estimado (MXN)</span>
+          <strong class="summary-value">{{ totalCost() | mxnCurrency }}</strong>
+        </div>
+        <div class="summary-card">
+          <span class="summary-label">Margen estimado (MXN)</span>
+          <strong class="summary-value">{{ totalMargin() | mxnCurrency }}</strong>
+        </div>
+      </section>
+
+      <footer class="modal-actions">
+        <button z-button zType="outline" type="button" (click)="close()">Cancelar</button>
+        <button z-button type="submit" [zLoading]="salesService.submitting()">Registrar venta</button>
+      </footer>
+    </form>
+  </z-card>
+</section>

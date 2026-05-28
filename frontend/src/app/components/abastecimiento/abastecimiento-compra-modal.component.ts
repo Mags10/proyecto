@@ -4,11 +4,12 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { ZardButtonComponent } from '../../shared/components/button';
 import { ZardCardComponent } from '../../shared/components/card';
 import { ZardInputDirective } from '../../shared/components/input';
+import { MxnCurrencyPipe } from '../../shared/pipes/mxn-currency.pipe';
 import { SupplyService } from '../../services/supply-service';
 
 @Component({
   selector: 'app-abastecimiento-compra-modal',
-  imports: [ReactiveFormsModule, ZardButtonComponent, ZardCardComponent, ZardInputDirective],
+  imports: [ReactiveFormsModule, ZardButtonComponent, ZardCardComponent, ZardInputDirective, MxnCurrencyPipe],
   templateUrl: './abastecimiento-compra-modal.component.html',
   styleUrl: './abastecimiento-compra-modal.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -22,9 +22,6 @@ import {
   type ViewContainerRef,
 } from '@angular/core';
 
-import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideX } from '@ng-icons/lucide';
-
 import { mergeClasses, noopFn } from 'src/app/shared/utils/merge-classes';
 
 import type { ZardDialogRef } from './dialog-ref';
@@ -55,7 +52,7 @@ export class ZardDialogOptions<T, U> {
 
 @Component({
   selector: 'z-dialog',
-  imports: [OverlayModule, PortalModule, ZardButtonComponent, NgIcon],
+  imports: [OverlayModule, PortalModule, ZardButtonComponent],
   template: `
     @if (config.zClosable || config.zClosable === undefined) {
       <button
@@ -65,9 +62,10 @@ export class ZardDialogOptions<T, U> {
         zType="ghost"
         zSize="sm"
         class="absolute top-1 right-1"
+        aria-label="Cerrar dialogo"
         (click)="onCloseClick()"
       >
-        <ng-icon name="lucideX" class="size-4!" />
+        <span aria-hidden="true">&times;</span>
       </button>
     }
 
@@ -95,10 +93,6 @@ export class ZardDialogOptions<T, U> {
       <footer class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-0 sm:space-x-2">
         @if (config.zCancelText !== null) {
           <button type="button" data-testid="z-cancel-button" z-button zType="outline" (click)="onCloseClick()">
-            @if (config.zCancelIcon) {
-              <ng-icon [svg]="config.zCancelIcon" class="size-4!" />
-            }
-
             {{ config.zCancelText ?? 'Cancel' }}
           </button>
         }
@@ -112,10 +106,6 @@ export class ZardDialogOptions<T, U> {
             [zDisabled]="config.zOkDisabled"
             (click)="onOkClick()"
           >
-            @if (config.zOkIcon) {
-              <ng-icon [svg]="config.zOkIcon" class="size-4!" />
-            }
-
             {{ config.zOkText ?? 'OK' }}
           </button>
         }
@@ -124,30 +114,51 @@ export class ZardDialogOptions<T, U> {
   `,
   styles: `
     :host {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: min(100vw - 2rem, 48rem);
+      max-width: calc(100vw - 2rem);
+      max-height: calc(100vh - 2rem);
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 0.875rem;
+      background: var(--surface);
+      box-shadow: 0 24px 70px rgba(37, 24, 15, 0.22);
+      overflow: hidden;
       opacity: 1;
-      transform: scale(1);
+      transform: translate(-50%, -50%) scale(1);
       transition:
         opacity 150ms ease-out,
         transform 150ms ease-out;
     }
 
+    main {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+    }
+
     @starting-style {
       :host {
         opacity: 0;
-        transform: scale(0.9);
+        transform: translate(-50%, -50%) scale(0.92);
       }
     }
 
     :host.dialog-leave {
       opacity: 0;
-      transform: scale(0.9);
+      transform: translate(-50%, -50%) scale(0.92);
       transition:
         opacity 150ms ease-in,
         transform 150ms ease-in;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  viewProviders: [provideIcons({ lucideX })],
   host: {
     '[class]': 'classes()',
     '[style.width]': 'config.zWidth ? config.zWidth : null',

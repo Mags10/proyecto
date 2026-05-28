@@ -1,0 +1,104 @@
+.login-shell {
+  min-height: calc(100vh - 2rem);
+  display: grid;
+  place-items: center;
+  padding: 2rem 1rem;
+  background:
+    radial-gradient(circle at top right, rgba(203, 213, 225, 0.45), transparent 28%),
+    linear-gradient(180deg, #f7f4ee 0%, #efe8df 100%);
+}
+
+.login-card {
+  width: min(100%, 30rem);
+  padding: 1.5rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.login-copy h1 {
+  margin: 0.35rem 0 0.25rem;
+  font-size: 1.85rem;
+  color: #221f1c;
+}
+
+.login-copy p {
+  margin: 0;
+  color: #6b5b4d;
+}
+
+.login-eyebrow {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #9a8069;
+  text-transform: uppercase;
+}
+
+.login-form {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+  color: #3b3128;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.field-error,
+.login-error {
+  margin: -0.35rem 0 0;
+  font-size: 0.82rem;
+  color: #b42318;
+}
+
+.login-error {
+  margin-top: 0.15rem;
+}
+
+.submit-button {
+  width: 100%;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.demo-panel {
+  display: grid;
+  gap: 0.85rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eadfce;
+}
+
+.demo-head {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.demo-head h2 {
+  margin: 0;
+  font-size: 1rem;
+  color: #2f2822;
+}
+
+.demo-head span {
+  color: #7b6858;
+  font-size: 0.84rem;
+}
+
+.demo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.demo-button {
+  justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .demo-grid {
+    grid-template-columns: 1fr;
+  }
+}

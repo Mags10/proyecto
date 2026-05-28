@@ -1,9 +1,9 @@
 .topbar {
-  height: 70px;
+  min-height: 70px;
   border-bottom: 1px solid #e4ded3;
   background: #f7f4ee;
   display: grid;
-  grid-template-columns: 220px 1fr 120px;
+  grid-template-columns: 220px 1fr auto;
   align-items: center;
   gap: 1rem;
   padding: 0 1rem;
@@ -60,7 +60,39 @@
   color: #fffaf4;
 }
 
-.role-chip {
+.session-wrap {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.session-copy {
+  display: grid;
+  gap: 0.12rem;
+  text-align: right;
+}
+
+.session-copy strong {
+  color: #2f241c;
+  font-size: 0.88rem;
+}
+
+.session-copy span {
+  color: #7b6858;
+  font-size: 0.78rem;
+}
+
+.session-wrap z-badge {
+  white-space: nowrap;
+}
+
+.session-wrap button {
+  white-space: nowrap;
+}
+
+.role-chip,
+.session-wrap {
   justify-self: end;
 }
 
@@ -75,7 +107,13 @@
     justify-content: center;
   }
 
-  .role-chip {
+  .session-wrap {
     justify-self: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .session-copy {
+    display: none;
   }
 }

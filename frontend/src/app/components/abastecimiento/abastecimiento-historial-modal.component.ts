@@ -3,12 +3,13 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, inject
 import { ZardBadgeComponent } from '../../shared/components/badge';
 import { ZardButtonComponent } from '../../shared/components/button';
 import { ZardCardComponent } from '../../shared/components/card';
+import { MxnCurrencyPipe } from '../../shared/pipes/mxn-currency.pipe';
 import { Ingredient } from '../../interfaces/supply';
 import { SupplyService } from '../../services/supply-service';
 
 @Component({
   selector: 'app-abastecimiento-historial-modal',
-  imports: [DatePipe, ZardBadgeComponent, ZardButtonComponent, ZardCardComponent],
+  imports: [DatePipe, ZardBadgeComponent, ZardButtonComponent, ZardCardComponent, MxnCurrencyPipe],
   templateUrl: './abastecimiento-historial-modal.component.html',
   styleUrl: './abastecimiento-historial-modal.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -40,6 +40,87 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Inicia sesión y devuelve token de acceso */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["LoginInput"];
+                };
+            };
+            responses: {
+                /** @description Sesión iniciada */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["LoginResponse"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                401: components["responses"]["Unauthorized"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Obtiene el usuario autenticado */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Sesión vigente */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["MeResponse"];
+                    };
+                };
+                401: components["responses"]["Unauthorized"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/ingredients": {
         parameters: {
             query?: never;
@@ -275,6 +356,492 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/recipes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lista recetas activas */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Filtro por nombre, categoría o estado */
+                    q?: string;
+                    /** @description Cantidad maxima de resultados */
+                    limit?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Lista de recetas */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Recipe"][];
+                    };
+                };
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        /** Crea una receta con costeo calculado */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateRecipeInput"];
+                };
+            };
+            responses: {
+                /** @description Receta creada */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["RecipeMutationResponse"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                404: components["responses"]["NotFound"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recipes/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Obtiene una receta por id */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description ObjectId de MongoDB */
+                    id: components["parameters"]["ObjectId"];
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Receta encontrada */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Recipe"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                404: components["responses"]["NotFound"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        /** Actualiza una receta */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description ObjectId de MongoDB */
+                    id: components["parameters"]["ObjectId"];
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateRecipeInput"];
+                };
+            };
+            responses: {
+                /** @description Receta actualizada */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["RecipeMutationResponse"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                404: components["responses"]["NotFound"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        post?: never;
+        /** Desactiva una receta */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description ObjectId de MongoDB */
+                    id: components["parameters"]["ObjectId"];
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Receta desactivada */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["MessageResponse"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                404: components["responses"]["NotFound"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/production-batches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lista ordenes de produccion registradas */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Filtra lotes por receta */
+                    recipeId?: string;
+                    /** @description Filtra ordenes por estado */
+                    status?: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
+                    /** @description Cantidad maxima de resultados */
+                    limit?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Lista de lotes */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProductionBatch"][];
+                    };
+                };
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        /** Crea una orden de produccion y aparta insumos */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateProductionBatchInput"];
+                };
+            };
+            responses: {
+                /** @description Lote de produccion creado */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProductionBatchMutationResponse"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                404: components["responses"]["NotFound"];
+                409: components["responses"]["BadRequest"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/production-batches/{id}/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Inicia una orden de produccion apartada */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description ObjectId de MongoDB */
+                    id: components["parameters"]["ObjectId"];
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Orden iniciada */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProductionBatchMutationResponse"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                404: components["responses"]["NotFound"];
+                409: components["responses"]["BadRequest"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/production-batches/{id}/complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Completa una orden con resultados reales y mermas */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description ObjectId de MongoDB */
+                    id: components["parameters"]["ObjectId"];
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CompleteProductionBatchInput"];
+                };
+            };
+            responses: {
+                /** @description Orden completada */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProductionBatchMutationResponse"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                404: components["responses"]["NotFound"];
+                409: components["responses"]["BadRequest"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/production-batches/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancela una orden y libera insumos apartados */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description ObjectId de MongoDB */
+                    id: components["parameters"]["ObjectId"];
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CancelProductionBatchInput"];
+                };
+            };
+            responses: {
+                /** @description Orden cancelada */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ProductionBatchMutationResponse"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                404: components["responses"]["NotFound"];
+                409: components["responses"]["BadRequest"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/sales": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lista ventas registradas */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Filtra ventas por receta */
+                    recipeId?: string;
+                    /** @description Cantidad maxima de resultados */
+                    limit?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Lista de ventas */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Sale"][];
+                    };
+                };
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        /** Registra una venta y descuenta stock terminado */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["CreateSaleInput"];
+                };
+            };
+            responses: {
+                /** @description Venta registrada */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["SaleMutationResponse"];
+                    };
+                };
+                400: components["responses"]["BadRequest"];
+                404: components["responses"]["NotFound"];
+                409: components["responses"]["BadRequest"];
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/analytics/dashboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Obtiene indicadores operativos y financieros del dashboard */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Ventana en días para calcular métricas recientes */
+                    days?: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Resumen del dashboard */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["DashboardAnalytics"];
+                    };
+                };
+                500: components["responses"]["InternalServerError"];
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -292,6 +859,43 @@ export interface components {
             /** Format: date-time */
             timestamp: string;
         };
+        AuthUser: {
+            /** @example 665900000000000000000001 */
+            _id: string;
+            /** @example Administrador KitchenFlow */
+            name: string;
+            /**
+             * Format: email
+             * @example admin@kitchenflow.local
+             */
+            email: string;
+            /** @enum {string} */
+            role: "ADMIN" | "KITCHEN" | "FLOOR";
+        };
+        LoginInput: {
+            /**
+             * Format: email
+             * @example admin@kitchenflow.local
+             */
+            email: string;
+            /** @example Admin123! */
+            password: string;
+        };
+        LoginResponse: {
+            accessToken: string;
+            /** @example Bearer */
+            tokenType: string;
+            /** @example 43200 */
+            expiresIn: number;
+            user: components["schemas"]["AuthUser"];
+            /** Format: date-time */
+            timestamp: string;
+        };
+        MeResponse: {
+            user: components["schemas"]["AuthUser"];
+            /** Format: date-time */
+            timestamp: string;
+        };
         Ingredient: {
             /** @example 665100000000000000000001 */
             _id: string;
@@ -301,6 +905,8 @@ export interface components {
             unit: string;
             /** @example 120 */
             currentStock: number;
+            /** @example 8 */
+            reservedStock: number;
             /** @example 11.58 */
             averageCost: number;
             /** @example 20 */
@@ -379,6 +985,385 @@ export interface components {
             /** Format: date-time */
             timestamp: string;
         };
+        RecipeIngredient: {
+            /** @example 665100000000000000000001 */
+            ingredient: string;
+            /** @example Leche entera */
+            name: string;
+            /** @example litro */
+            unit: string;
+            /** @example 240 */
+            quantity: number;
+            /** @example 11.58 */
+            unitCost: number;
+            /** @example 27.79 */
+            subtotal: number;
+        };
+        Recipe: {
+            /** @example 665300000000000000000001 */
+            _id: string;
+            /** @example Café Latte Grande */
+            name: string;
+            /** @example Bebidas */
+            category: string;
+            /** @example 85 */
+            salePrice: number;
+            /** @example Receta base para bebidas calientes */
+            notes: string;
+            /** @example 1 porción */
+            yieldText: string;
+            ingredients: components["schemas"]["RecipeIngredient"][];
+            /** @example 12 */
+            currentStock: number;
+            /** @example 43.25 */
+            totalCost: number;
+            /** @example 49.12 */
+            margin: number;
+            /**
+             * @example Rentable
+             * @enum {string}
+             */
+            status: "Rentable" | "Ajustar costo" | "Crítica";
+            /** @example true */
+            active: boolean;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        CreateRecipeInput: {
+            /** @example Café Latte Grande */
+            name: string;
+            /** @example Bebidas */
+            category: string;
+            /** @example 85 */
+            salePrice: number;
+            /** @example Receta base para bebidas calientes */
+            notes?: string;
+            /** @example 1 porción */
+            yieldText?: string;
+            ingredients: {
+                /** @example 665100000000000000000001 */
+                ingredientId: string;
+                /** @example 240 */
+                quantity: number;
+                /** @example 11.58 */
+                unitCost?: number;
+            }[];
+        };
+        RecipeMutationResponse: {
+            message: string;
+            recipe: components["schemas"]["Recipe"];
+            /** Format: date-time */
+            timestamp: string;
+        };
+        ProductionBatchPlannedIngredient: {
+            /** @example 665100000000000000000001 */
+            ingredient: string;
+            /** @example Leche entera */
+            name: string;
+            /** @example litro */
+            unit: string;
+            /** @example 2.4 */
+            plannedQuantity: number;
+            /** @example 2.4 */
+            reservedQuantity: number;
+            /** @example 11.58 */
+            unitCost: number;
+            /** @example 27.79 */
+            plannedSubtotal: number;
+            /** @example 20 */
+            stockBefore: number;
+            /** @example 20 */
+            availableBefore: number;
+        };
+        ProductionBatchActualIngredient: {
+            /** @example 665100000000000000000001 */
+            ingredient: string;
+            /** @example Leche entera */
+            name: string;
+            /** @example litro */
+            unit: string;
+            /** @example 2.4 */
+            plannedQuantity: number;
+            /** @example 2.6 */
+            actualQuantity: number;
+            /** @example 0.2 */
+            varianceQuantity: number;
+            /** @example 11.58 */
+            unitCost: number;
+            /** @example 30.11 */
+            actualSubtotal: number;
+            /** @example 2.32 */
+            wasteCost: number;
+            /** @example 20 */
+            stockBefore: number;
+            /** @example 17.6 */
+            stockAfter: number;
+        };
+        ProductionWasteSummary: {
+            /** @example 10 */
+            expectedYield: number;
+            /** @example 9 */
+            actualYield: number;
+            /** @example -1 */
+            yieldVariance: number;
+            /** @example 12.45 */
+            totalWasteCost: number;
+        };
+        ProductionBatch: {
+            /** @example 665400000000000000000001 */
+            _id: string;
+            /** @example 665300000000000000000001 */
+            recipe: string;
+            /** @example Café Latte Grande */
+            recipeName: string;
+            /** @example Bebidas */
+            recipeCategory: string;
+            /**
+             * @example IN_PROGRESS
+             * @enum {string}
+             */
+            status: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
+            /** @example 10 */
+            plannedQuantity: number;
+            /** @example 9 */
+            actualQuantity?: number | null;
+            /** @example 43.25 */
+            unitCost: number;
+            /** @example 432.5 */
+            plannedTotalCost: number;
+            /** @example 438.6 */
+            actualTotalCost?: number | null;
+            /** @example 8 */
+            previousRecipeStock: number;
+            /** @example 17 */
+            newRecipeStock?: number | null;
+            plannedIngredients: components["schemas"]["ProductionBatchPlannedIngredient"][];
+            actualIngredients?: components["schemas"]["ProductionBatchActualIngredient"][];
+            wasteSummary?: components["schemas"]["ProductionWasteSummary"] | null;
+            /** @example Horneado con lote parcial */
+            notes?: string;
+            /** @example Falla de equipo */
+            cancellationReason?: string;
+            /** Format: date-time */
+            startedAt?: string | null;
+            /** Format: date-time */
+            completedAt?: string | null;
+            /** Format: date-time */
+            cancelledAt?: string | null;
+            /** @example 48 */
+            durationMinutes?: number | null;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        CreateProductionBatchInput: {
+            /** @example 665300000000000000000001 */
+            recipeId: string;
+            /** @example 10 */
+            plannedQuantity: number;
+            /** @example Preparacion para vitrina matutina */
+            notes?: string;
+        };
+        CompleteProductionBatchInput: {
+            /** @example 9 */
+            actualProduced: number;
+            /** @example 48 */
+            durationMinutes?: number;
+            /** @example Una pieza salio quemada */
+            notes?: string;
+            actualIngredients?: {
+                /** @example 665100000000000000000001 */
+                ingredientId: string;
+                /** @example 2.6 */
+                actualQuantity: number;
+            }[];
+        };
+        CancelProductionBatchInput: {
+            /** @example Se cancelo por falta de personal */
+            reason?: string;
+        };
+        ProductionBatchMutationResponse: {
+            message: string;
+            productionBatch: components["schemas"]["ProductionBatch"];
+            recipe: components["schemas"]["Recipe"];
+            /** Format: date-time */
+            timestamp: string;
+        };
+        SaleItem: {
+            /** @example 665300000000000000000001 */
+            recipe: string;
+            /** @example Café Latte Grande */
+            recipeName: string;
+            /** @example Bebidas */
+            recipeCategory: string;
+            /** @example 2 */
+            quantity: number;
+            /** @example 85 */
+            unitPrice: number;
+            /** @example 43.25 */
+            unitCost: number;
+            /** @example 170 */
+            lineRevenue: number;
+            /** @example 86.5 */
+            lineCost: number;
+            /** @example 83.5 */
+            lineMargin: number;
+            /** @example 12 */
+            stockBefore: number;
+            /** @example 10 */
+            stockAfter: number;
+        };
+        Sale: {
+            /** @example 665500000000000000000001 */
+            _id: string;
+            /** Format: date-time */
+            soldAt: string;
+            items: components["schemas"]["SaleItem"][];
+            /** @example 3 */
+            totalItems: number;
+            /** @example 255 */
+            totalRevenue: number;
+            /** @example 129.75 */
+            totalCost: number;
+            /** @example 125.25 */
+            totalMargin: number;
+            /** @example Venta en turno matutino */
+            notes: string;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        CreateSaleInput: {
+            /** Format: date-time */
+            soldAt?: string;
+            /** @example Pedido para mesa 4 */
+            notes?: string;
+            items: {
+                /** @example 665300000000000000000001 */
+                recipeId: string;
+                /** @example 2 */
+                quantity: number;
+            }[];
+        };
+        SaleMutationResponse: {
+            message: string;
+            sale: components["schemas"]["Sale"];
+            recipes: components["schemas"]["Recipe"][];
+            /** Format: date-time */
+            timestamp: string;
+        };
+        DashboardAlert: {
+            /** @example Margen bajo */
+            type: string;
+            /**
+             * @example Alta
+             * @enum {string}
+             */
+            priority: "Alta" | "Media";
+            /** @example Café Latte Grande */
+            title: string;
+            /** @example Margen 12% con costo 43.25 y precio 49.00 */
+            detail: string;
+        };
+        DashboardLowStockIngredient: {
+            _id: string;
+            name: string;
+            currentStock: number;
+            minimumStock: number;
+            reservedStock: number;
+            unit: string;
+        };
+        DashboardProductSummary: {
+            _id: string;
+            name: string;
+            category: string;
+            currentStock: number;
+            salePrice: number;
+            totalCost: number;
+            margin: number;
+        };
+        DashboardTopSellingRecipe: {
+            recipeId: string;
+            recipeName: string;
+            recipeCategory: string;
+            unitsSold: number;
+            revenue: number;
+            cost: number;
+            margin: number;
+        };
+        DashboardRecentSale: {
+            _id: string;
+            /** Format: date-time */
+            soldAt: string;
+            totalItems: number;
+            totalRevenue: number;
+            totalMargin: number;
+            itemCount: number;
+        };
+        DashboardRecentProduction: {
+            _id: string;
+            recipeName: string;
+            /** @enum {string} */
+            status: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
+            plannedQuantity: number;
+            actualQuantity: number;
+            wasteCost: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            completedAt?: string | null;
+        };
+        DashboardSalesTimelinePoint: {
+            /** @example 2026-05-28 */
+            date: string;
+            revenue: number;
+            margin: number;
+            units: number;
+        };
+        DashboardProductionStatusSummaryItem: {
+            /** @enum {string} */
+            status: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
+            count: number;
+        };
+        DashboardAlertSummary: {
+            high: number;
+            medium: number;
+        };
+        DashboardSummary: {
+            totalSalesRevenue: number;
+            totalSalesCost: number;
+            grossMarginValue: number;
+            grossMarginPercent: number;
+            totalUnitsSold: number;
+            totalPurchaseSpend: number;
+            totalProductionCost: number;
+            totalWasteCost: number;
+            activeProductionOrders: number;
+            completedProductionUnits: number;
+            sellableProducts: number;
+            lowStockIngredients: number;
+            lowStockProducts: number;
+        };
+        DashboardAnalytics: {
+            periodDays: number;
+            summary: components["schemas"]["DashboardSummary"];
+            lowStockIngredients: components["schemas"]["DashboardLowStockIngredient"][];
+            lowStockProducts: components["schemas"]["DashboardProductSummary"][];
+            lowMarginRecipes: components["schemas"]["DashboardProductSummary"][];
+            topSellingRecipes: components["schemas"]["DashboardTopSellingRecipe"][];
+            recentSales: components["schemas"]["DashboardRecentSale"][];
+            recentProduction: components["schemas"]["DashboardRecentProduction"][];
+            salesTimeline?: components["schemas"]["DashboardSalesTimelinePoint"][];
+            productionStatusSummary?: components["schemas"]["DashboardProductionStatusSummaryItem"][];
+            alertSummary?: components["schemas"]["DashboardAlertSummary"];
+            alerts: components["schemas"]["DashboardAlert"][];
+            /** Format: date-time */
+            timestamp: string;
+        };
     };
     responses: {
         /** @description Solicitud invalida */
@@ -392,6 +1377,15 @@ export interface components {
         };
         /** @description Recurso no encontrado */
         NotFound: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["MessageResponse"];
+            };
+        };
+        /** @description No autenticado o token inválido */
+        Unauthorized: {
             headers: {
                 [name: string]: unknown;
             };

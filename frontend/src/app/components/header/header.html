@@ -5,12 +5,17 @@
   </div>
 
   <nav class="nav-links">
-    <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
-    <a routerLink="/recetas" routerLinkActive="active">Recetas</a>
-    <a routerLink="/produccion" routerLinkActive="active">Producción</a>
-    <a routerLink="/abastecimiento" routerLinkActive="active">Abastecimiento</a>
-    <a routerLink="/ventas" routerLinkActive="active">Ventas</a>
+    @for (item of authService.navigation(); track item.path) {
+      <a [routerLink]="item.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">{{ item.label }}</a>
+    }
   </nav>
 
-  <button z-button zType="outline" zSize="sm" class="role-chip">ADMIN</button>
+  <div class="session-wrap">
+    <div class="session-copy">
+      <strong>{{ authService.currentUser()?.name }}</strong>
+      <span>{{ authService.currentUser()?.email }}</span>
+    </div>
+    <z-badge zType="secondary">{{ authService.displayRole() }}</z-badge>
+    <button z-button zType="outline" zSize="sm" type="button" (click)="logout()">Salir</button>
+  </div>
 </header>

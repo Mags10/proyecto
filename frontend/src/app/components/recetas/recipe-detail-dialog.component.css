@@ -1,0 +1,636 @@
+:host {
+  display: contents;
+}
+
+/* Overlay del modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(34, 24, 18, 0.42);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 60;
+  overflow: hidden;
+}
+
+.modal-card {
+  width: min(1240px, 100%);
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 18px 48px rgba(21, 16, 12, 0.2);
+  padding: 0;
+  margin: 0 auto;
+}
+
+/* Estructura del modal */
+.detail-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
+  padding: 1.25rem 1.5rem;
+}
+
+/* Cabecera premium */
+.detail-header {
+  position: sticky;
+  top: 0;
+  background: #ffffff;
+  z-index: 25;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  padding: 1.5rem 1.5rem 1rem;
+}
+
+.heading-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.title-with-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 0.15rem;
+}
+
+.title-with-badge h2 {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.85rem;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.badge-group {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  font-weight: 600;
+  margin: 0 0 0.15rem;
+  display: block;
+}
+
+.meta {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.meta strong {
+  color: var(--ink);
+}
+
+/* Botón de cerrar elegante */
+.close-icon-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.85rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 150ms ease;
+  padding: 0.1rem 0.5rem 0.25rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-icon-btn:hover {
+  color: var(--ink);
+  background: var(--surface-alt);
+  transform: scale(1.05);
+}
+
+/* Cuadrícula de información general e indicadores */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 1.25rem;
+}
+
+.panel {
+  height: 100%;
+}
+
+/* Formulario */
+.info-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.field-wide {
+  grid-column: 1 / -1;
+}
+
+.field-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #5a4b3d;
+}
+
+.info-form textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+/* Tarjeta analítica de Costeo */
+.margin-display {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 1rem;
+  border-radius: 10px;
+  border: 1px dashed var(--border);
+  background: var(--surface-soft);
+  margin-bottom: 0.75rem;
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.margin-display.status-rentable {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  border-style: solid;
+  box-shadow: 0 4px 12px rgba(22, 101, 52, 0.03);
+}
+
+.margin-display.status-rentable .margin-value {
+  color: #15803d;
+}
+
+.margin-display.status-ajustar {
+  background: #fffbeb;
+  border-color: #fef3c7;
+  border-style: solid;
+  box-shadow: 0 4px 12px rgba(180, 83, 9, 0.03);
+}
+
+.margin-display.status-ajustar .margin-value {
+  color: #b45309;
+}
+
+.margin-display.status-critica {
+  background: #fef2f2;
+  border-color: #fee2e2;
+  border-style: solid;
+  box-shadow: 0 4px 12px rgba(185, 28, 28, 0.03);
+}
+
+.margin-display.status-critica .margin-value {
+  color: #b91c1c;
+}
+
+.margin-value {
+  font-size: 1.85rem;
+  font-weight: 800;
+  font-family: Georgia, serif;
+  line-height: 1;
+  transition: color 250ms ease;
+}
+
+.margin-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+/* Grilla de Métricas */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.metric-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.45rem 0.3rem;
+  text-align: center;
+  transition: all 180ms ease;
+}
+
+.metric-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+
+.metric-val {
+  font-size: 1.1rem;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* Métrica editable para precio de venta */
+.editable-metric {
+  background: #ffffff;
+  border-color: var(--border);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
+}
+
+.editable-metric:focus-within {
+  border-color: #be9c86;
+  box-shadow: 0 0 0 3px rgba(124, 74, 45, 0.1);
+  transform: translateY(-1px);
+}
+
+.metric-input-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+}
+
+.currency-symbol {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.sale-price-input {
+  border: none;
+  background: transparent;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink);
+  width: 58px;
+  padding: 0;
+  text-align: left;
+  outline: none;
+}
+
+.sale-price-input::-webkit-outer-spin-button,
+.sale-price-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.sale-price-input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Resaltado de Utilidad */
+.metric-card.highlighted {
+  border-style: solid;
+}
+
+.metric-card.highlighted.status-rentable {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.metric-card.highlighted.status-rentable .metric-val {
+  color: #15803d;
+}
+
+.metric-card.highlighted.status-ajustar {
+  background: #fffbeb;
+  border-color: #fef3c7;
+}
+
+.metric-card.highlighted.status-ajustar .metric-val {
+  color: #b45309;
+}
+
+.metric-card.highlighted.status-critica {
+  background: #fef2f2;
+  border-color: #fee2e2;
+}
+
+.metric-card.highlighted.status-critica .metric-val {
+  color: #b91c1c;
+}
+
+/* Explicación del estado */
+.status-explanation {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  border-radius: 8px;
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  transition: all 250ms ease;
+}
+
+.status-explanation strong {
+  color: var(--ink);
+}
+
+.status-explanation.expl-rentable {
+  background: #f0fdf4;
+  border-color: #dcfce7;
+  color: #14532d;
+}
+
+.status-explanation.expl-ajustar {
+  background: #fffbeb;
+  border-color: #fef3c7;
+  color: #78350f;
+}
+
+.status-explanation.expl-critica {
+  background: #fef2f2;
+  border-color: #fee2e2;
+  color: #7f1d1d;
+}
+
+/* Panel de Tabla */
+.panel-table {
+  margin-top: 0.25rem;
+}
+
+.table-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.15rem;
+  border-bottom: 1px solid var(--surface-alt);
+  padding-bottom: 0.75rem;
+}
+
+.table-subtitle {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.btn-add-ingredient {
+  flex-shrink: 0;
+}
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Columnas de tabla */
+.col-insumo { width: 34%; }
+.col-unidad { width: 10%; text-align: center; }
+.col-cantidad { width: 14%; }
+.col-costo { width: 17%; }
+.col-subtotal { width: 12%; }
+.col-estado { width: 10%; }
+.col-quitar { width: 3%; text-align: right; }
+
+/* Selección de insumos en tabla */
+.table-select {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.45rem 0.65rem;
+  background: #ffffff;
+  color: var(--ink);
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 120ms ease;
+}
+
+.table-select:focus {
+  border-color: #be9c86;
+  box-shadow: 0 0 0 2px rgba(124, 74, 45, 0.08);
+}
+
+/* Inputs compactos */
+.compact-input {
+  min-height: 34px !important;
+  padding: 0.35rem 0.6rem !important;
+  font-size: 0.9rem !important;
+  border-radius: 8px !important;
+}
+
+.unit-cost-container {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.cost-prefix {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.compact-input.with-prefix {
+  padding-left: 0.45rem !important;
+}
+
+.cell-unit {
+  text-align: center;
+}
+
+.cell-unit-cost {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.cost-value {
+  font-weight: 600;
+  color: #4b3e32;
+}
+
+.unit-badge {
+  display: inline-block;
+  padding: 0.2rem 0.45rem;
+  border-radius: 6px;
+  background: var(--surface-alt);
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.cell-subtotal {
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+/* Indicadores de estado de fila */
+.status-indicator {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.status-indicator.success {
+  background: #eef7f2;
+  color: #1e7e43;
+}
+
+.status-indicator.error {
+  background: #fdf2f2;
+  color: #9b1c1c;
+}
+
+.row-invalid {
+  background: rgba(160, 72, 72, 0.02);
+}
+
+/* Botón de quitar insumo */
+.remove-row-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #b91c1c;
+  opacity: 0.35;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: 6px;
+  transition: all 120ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+}
+
+.remove-row-btn:hover {
+  opacity: 1;
+  background: #fdf2f2;
+}
+
+/* Top badges (Margen de la cabecera) */
+.category-badge {
+  background: var(--surface-alt) !important;
+  color: var(--muted) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.badge-rentable {
+  background: #dcfce7 !important;
+  color: #14532d !important;
+}
+
+.badge-ajustar {
+  background: #fef3c7 !important;
+  color: #78350f !important;
+}
+
+.badge-critica {
+  background: #fee2e2 !important;
+  color: #7f1d1d !important;
+}
+
+/* Sticky Footer */
+.detail-footer {
+  position: sticky;
+  bottom: 0;
+  background: #ffffff;
+  z-index: 20;
+  border-top: 1px solid var(--border);
+  padding: 1rem 1.5rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+/* Estilos responsivos */
+@media (max-width: 960px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 680px) {
+  .detail-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  
+  .title-with-badge {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+  
+  .header-actions {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  .table-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  
+  .btn-add-ingredient {
+    width: 100%;
+  }
+  
+  .detail-footer {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  
+  .footer-right {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  
+  .footer-right button,
+  .btn-delete-recipe {
+    width: 100% !important;
+  }
+}

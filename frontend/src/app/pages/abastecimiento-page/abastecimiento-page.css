@@ -1,39 +1,173 @@
+/* Contenedor general */
 .page-shell {
-  min-height: calc(100vh - 120px);
-  padding: 1.2rem;
+  padding: 1.5rem;
   background: var(--page-bg);
+  min-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-.page-head {
+/* Cabecera Hero */
+.hero {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1.25rem;
 }
 
-.page-head h1 {
+.hero-copy {
+  max-width: 700px;
+}
+
+.hero h1 {
   margin: 0;
-  color: #25180f;
+  font-size: 2.85rem;
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: 3.2rem;
+  color: var(--ink);
+  line-height: 1.15;
 }
 
-.page-head p {
-  margin: 0.35rem 0 0;
-  color: #6f6154;
+.hero-subtitle {
+  margin: 0.5rem 0 0;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.5;
 }
 
-.head-actions,
-.modal-actions {
+.hero-actions {
   display: flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
+  align-items: center;
+  flex-shrink: 0;
+  margin-top: 0.5rem;
 }
 
-.content-stack {
+.btn-new-ingredient {
+  box-shadow: 0 4px 12px rgba(124, 74, 45, 0.15) !important;
+  transition: all 150ms ease !important;
+}
+
+.btn-new-ingredient:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 18px rgba(124, 74, 45, 0.22) !important;
+}
+
+/* Errores */
+.error-message {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: #fdf2f2;
+  border: 1px solid #fee2e2;
+  color: #a64141;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* Barra de herramientas / KPIs */
+.toolbar {
+  width: 100%;
+}
+
+.stats-grid {
   display: grid;
-  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.stat-card {
+  height: 42px !important;
+  border-radius: 8px !important;
+  transition: all 180ms ease !important;
+  box-shadow: 0 1px 2px rgba(38, 26, 16, 0.03) !important;
+}
+
+.stat-card ::ng-deep [data-slot="card-content"] {
+  padding: 0 1rem !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.stat-inner {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  height: 100% !important;
+  gap: 0.5rem !important;
+}
+
+.stat-card:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(38, 26, 16, 0.06) !important;
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+.stat-value {
+  color: var(--ink);
+  font-size: 1.25rem;
+  font-family: Georgia, serif;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* Tarjeta Alerta Stock Crítico */
+.stat-card.stat-critical.has-critical {
+  border-color: #fee2e2;
+  background: #fff5f5;
+  animation: pulse-border 2s infinite ease-in-out;
+}
+
+.stat-card.stat-critical.has-critical .stat-value {
+  color: #c53030;
+}
+
+/* Tarjeta Última Compra */
+.stat-value-sub {
+  color: var(--ink);
+  font-size: 1.1rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
+}
+
+.stat-value-none {
+  color: var(--muted);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+@keyframes pulse-border {
+  0% { border-color: #fee2e2; }
+  50% { border-color: #fca5a5; }
+  100% { border-color: #fee2e2; }
+}
+
+/* Tabla Catálogo */
+.table-panel {
+  margin-top: 0.25rem;
+}
+
+.catalog-card {
+  box-shadow: 0 4px 18px rgba(38, 26, 16, 0.03) !important;
 }
 
 .table-wrap {
@@ -41,34 +175,137 @@
   overflow-x: auto;
 }
 
-.status-strip {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-  border: 1px solid #c9d8c4;
-  border-radius: 8px;
-  padding: 0.7rem 0.8rem;
-  background: var(--surface-highlight);
-  color: #24351f;
+.catalog-table {
+  border-collapse: collapse;
 }
 
-.error-message {
-  margin: 0 0 1rem;
-  color: #a64141;
+.recipe-row {
+  transition: background-color 150ms ease;
+}
+
+.recipe-row:hover {
+  background-color: var(--surface-soft);
+}
+
+/* Alerta de fila con bajo stock */
+.recipe-row.row-alert {
+  background-color: #fff6f6;
+}
+
+.recipe-row.row-alert:hover {
+  background-color: #ffebeb;
+}
+
+.ingredient-name {
+  font-size: 1rem;
+  color: var(--ink);
   font-weight: 700;
 }
 
-@media (max-width: 720px) {
-  .page-head,
-  .status-strip {
-    align-items: flex-start;
-    flex-direction: column;
-  }
+.font-georgia {
+  font-family: Georgia, serif;
 }
 
-@media (max-width: 520px) {
-  .page-head h1 {
+.cell-stock {
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+.unit-text {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-weight: 600;
+  margin-left: 0.25rem;
+}
+
+.muted-unit {
+  font-weight: 500;
+}
+
+.cell-cost {
+  font-size: 0.95rem;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.cell-action {
+  text-align: right;
+}
+
+.row-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-view-detail {
+  font-size: 0.85rem !important;
+  min-height: 32px !important;
+  padding: 0.25rem 0.75rem !important;
+}
+
+/* Badges Premium */
+.badge-rentable {
+  background: #dcfce7 !important;
+  color: #14532d !important;
+}
+
+.badge-ajustar {
+  background: #fef3c7 !important;
+  color: #78350f !important;
+}
+
+.badge-critica {
+  background: #fee2e2 !important;
+  color: #7f1d1d !important;
+}
+
+/* Configuración de anchos de columna */
+.col-name { width: 32%; }
+.col-stock { width: 16%; }
+.col-cost { width: 16%; }
+.col-min { width: 16%; }
+.col-status { width: 15%; }
+.col-actions { width: 5%; }
+
+/* Celda vacía */
+.empty-cell {
+  padding: 3rem 1rem !important;
+  text-align: center;
+}
+
+.empty-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.empty-icon {
+  font-size: 2.25rem;
+}
+
+.empty-text {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* Media Queries */
+@media (max-width: 980px) {
+  .hero {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .hero h1 {
     font-size: 2.3rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
   }
 }

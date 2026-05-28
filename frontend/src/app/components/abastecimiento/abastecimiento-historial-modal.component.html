@@ -6,7 +6,7 @@
           <strong>{{ currentIngredient.name }}</strong>
           <span>{{ currentIngredient.currentStock }} {{ currentIngredient.unit }} disponibles</span>
         </div>
-        <z-badge zType="secondary">WAC ${{ currentIngredient.averageCost.toFixed(2) }}</z-badge>
+        <z-badge zType="secondary">WAC {{ currentIngredient.averageCost | mxnCurrency }}</z-badge>
       </section>
     }
 
@@ -17,25 +17,31 @@
             <th z-table-head>Fecha</th>
             <th z-table-head>Proveedor</th>
             <th z-table-head>Cantidad</th>
-            <th z-table-head>Total</th>
-            <th z-table-head>Unitario</th>
-            <th z-table-head>Nuevo WAC</th>
+            <th z-table-head>Total (MXN)</th>
+            <th z-table-head>Unitario (MXN)</th>
+            <th z-table-head>Nuevo WAC (MXN)</th>
           </tr>
         </thead>
         <tbody z-table-body>
-          @for (purchase of supplyService.purchaseRecords(); track purchase._id) {
+          @if (supplyService.purchaseRecordsLoading()) {
             <tr z-table-row>
-              <td z-table-cell>{{ purchase.invoiceDate | date: 'yyyy-MM-dd' }}</td>
-              <td z-table-cell>{{ purchase.provider }}</td>
-              <td z-table-cell>{{ purchase.quantityReceived }} {{ purchase.ingredient.unit }}</td>
-              <td z-table-cell>${{ purchase.totalPrice.toFixed(2) }}</td>
-              <td z-table-cell>${{ purchase.unitPrice.toFixed(2) }}</td>
-              <td z-table-cell><z-badge zType="secondary">${{ purchase.newAverageCost.toFixed(2) }}</z-badge></td>
+              <td z-table-cell colspan="6">Cargando historial de compras...</td>
             </tr>
-          } @empty {
-            <tr z-table-row>
-              <td z-table-cell colspan="6">Este insumo todavía no tiene compras registradas.</td>
-            </tr>
+          } @else {
+            @for (purchase of supplyService.purchaseRecords(); track purchase._id) {
+              <tr z-table-row>
+                <td z-table-cell>{{ purchase.invoiceDate | date: 'yyyy-MM-dd' }}</td>
+                <td z-table-cell>{{ purchase.provider }}</td>
+                <td z-table-cell>{{ purchase.quantityReceived }} {{ purchase.ingredient.unit }}</td>
+                <td z-table-cell>{{ purchase.totalPrice | mxnCurrency }}</td>
+                <td z-table-cell>{{ purchase.unitPrice | mxnCurrency }}</td>
+                <td z-table-cell><z-badge zType="secondary">{{ purchase.newAverageCost | mxnCurrency }}</z-badge></td>
+              </tr>
+            } @empty {
+              <tr z-table-row>
+                <td z-table-cell colspan="6">Este insumo todavía no tiene compras registradas.</td>
+              </tr>
+            }
           }
         </tbody>
       </table>

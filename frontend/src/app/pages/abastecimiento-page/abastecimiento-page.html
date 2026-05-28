@@ -1,12 +1,15 @@
 <main class="page-shell">
-  <section class="page-head">
-    <div>
+  <!-- Cabecera Hero de la Página -->
+  <section class="hero">
+    <div class="hero-copy">
       <h1>Abastecimiento</h1>
-      <p>Inventario de insumos y costo promedio ponderado.</p>
+      <p class="hero-subtitle">Gestiona el inventario de insumos, vigila alertas de bajo stock y consulta costos promedio ponderados (WAC) actualizados automáticamente.</p>
     </div>
 
-    <div class="head-actions">
-      <button z-button zType="outline" type="button" (click)="ingredientModalOpen.set(true)">Registrar insumo</button>
+    <div class="hero-actions">
+      <button z-button zType="default" type="button" (click)="ingredientModalOpen.set(true)" class="btn-new-ingredient">
+        + Registrar Insumo
+      </button>
     </div>
   </section>
 
@@ -14,52 +17,106 @@
     <p class="error-message">{{ error() }}</p>
   }
 
-  @if (lastPurchase(); as purchase) {
-    <section class="status-strip">
-      <span>Compra registrada</span>
-      <strong>{{ purchase.ingredient.name }}</strong>
-      <span>Stock: {{ purchase.newStock }} {{ unitLabel(purchase.ingredient.unit) }}</span>
-      <z-badge zType="secondary">WAC ${{ purchase.newAverageCost.toFixed(2) }}</z-badge>
-    </section>
-  }
+  <!-- Barra de Herramientas y KPIs de Inventario -->
+  <section class="toolbar">
+    <section class="stats-grid">
+      <!-- KPI Total Insumos -->
+      <z-card class="stat-card">
+        <div class="stat-inner">
+          <span class="stat-label">Total Insumos</span>
+          <strong class="stat-value">{{ totalIngredients() }}</strong>
+        </div>
+      </z-card>
 
-  <section class="content-stack">
-    <z-card zTitle="Insumos">
+      <!-- KPI Bajo Stock Alerta -->
+      <z-card class="stat-card stat-critical" [class.has-critical]="lowStockCount() > 0">
+        <div class="stat-inner">
+          <span class="stat-label">Insumos Críticos</span>
+          <strong class="stat-value">{{ lowStockCount() }}</strong>
+        </div>
+      </z-card>
+
+      <!-- KPI Último Ingreso Compra -->
+      <z-card class="stat-card stat-purchase" [class.has-purchase]="lastPurchase()">
+        <div class="stat-inner">
+          @if (lastPurchase(); as purchase) {
+            <span class="stat-label">Último: {{ purchase.ingredient.name }}</span>
+            <strong class="stat-value-sub">{{ purchase.newAverageCost | mxnCurrency }}</strong>
+          } @else {
+            <span class="stat-label">Último Ingreso</span>
+            <strong class="stat-value-none">Ninguno</strong>
+          }
+        </div>
+      </z-card>
+    </section>
+  </section>
+
+  <!-- Tabla de Insumos -->
+  <section class="table-panel">
+    <z-card zTitle="Inventario de Insumos" class="catalog-card">
       <div class="table-wrap">
-        <table z-table>
+        <table z-table class="catalog-table">
           <thead z-table-header>
             <tr z-table-row>
-              <th z-table-head>Insumo</th>
-              <th z-table-head>Stock</th>
-              <th z-table-head>Costo promedio</th>
-              <th z-table-head>Stock mínimo</th>
-              <th z-table-head>Estado</th>
-              <th z-table-head>Compras</th>
+              <th z-table-head class="col-name">Insumo</th>
+              <th z-table-head class="col-stock">Stock actual</th>
+              <th z-table-head class="col-cost">Costo Promedio (WAC, MXN)</th>
+              <th z-table-head class="col-min">Stock mínimo</th>
+              <th z-table-head class="col-status">Estado</th>
+              <th z-table-head class="col-actions"></th>
             </tr>
           </thead>
           <tbody z-table-body>
             @for (ingredient of ingredients(); track ingredient._id) {
-              <tr z-table-row>
-                <td z-table-cell>{{ ingredient.name }}</td>
-                <td z-table-cell>{{ ingredient.currentStock }} {{ unitLabel(ingredient.unit) }}</td>
-                <td z-table-cell>${{ ingredient.averageCost.toFixed(2) }}</td>
-                <td z-table-cell>{{ ingredient.minimumStock }} {{ unitLabel(ingredient.unit) }}</td>
+              <tr z-table-row class="recipe-row" [class.row-alert]="ingredient.currentStock <= ingredient.minimumStock">
+                <!-- Nombre del Insumo -->
+                <td z-table-cell>
+                  <strong class="ingredient-name">{{ ingredient.name }}</strong>
+                </td>
+                
+                <!-- Stock Actual con Unidad -->
+                <td z-table-cell class="cell-stock font-georgia">
+                  <strong>{{ ingredient.currentStock }}</strong>
+                  <span class="unit-text">{{ unitLabel(ingredient.unit) }}</span>
+                </td>
+                
+                <!-- Costo Promedio -->
+                <td z-table-cell class="cell-cost">
+                  {{ ingredient.averageCost | mxnCurrency }}
+                </td>
+                
+                <!-- Stock Mínimo con Unidad -->
+                <td z-table-cell class="cell-stock font-georgia">
+                  {{ ingredient.minimumStock }}
+                  <span class="unit-text muted-unit">{{ unitLabel(ingredient.unit) }}</span>
+                </td>
+                
+                <!-- Badge de Estado -->
                 <td z-table-cell>
                   @if (ingredient.currentStock <= ingredient.minimumStock) {
-                    <z-badge zType="destructive">Bajo stock</z-badge>
+                    <z-badge zType="destructive" class="badge-critica">Bajo stock</z-badge>
                   } @else {
-                    <z-badge zType="secondary">Disponible</z-badge>
+                    <z-badge zType="secondary" class="badge-rentable">Disponible</z-badge>
                   }
                 </td>
-                <td z-table-cell>
-                  <button z-button zType="outline" zSize="sm" type="button" (click)="openPurchaseHistory(ingredient)">
-                    Ver compras
-                  </button>
+                
+                <!-- Botón de Historial de Compras -->
+                <td z-table-cell class="cell-action">
+                  <div class="row-actions">
+                    <button z-button zType="outline" zSize="sm" type="button" (click)="openPurchaseHistory(ingredient)" class="btn-view-detail">
+                      Historial
+                    </button>
+                  </div>
                 </td>
               </tr>
             } @empty {
               <tr z-table-row>
-                <td z-table-cell colspan="6">No hay insumos registrados.</td>
+                <td z-table-cell colspan="6" class="empty-cell">
+                  <div class="empty-state-container">
+                    <span class="empty-icon" aria-hidden="true">?</span>
+                    <p class="empty-text">No hay insumos registrados en el catálogo.</p>
+                  </div>
+                </td>
               </tr>
             }
           </tbody>
@@ -68,6 +125,7 @@
     </z-card>
   </section>
 
+  <!-- Modales del Componente -->
   @if (ingredientModalOpen()) {
     <app-abastecimiento-insumo-modal (closed)="ingredientModalOpen.set(false)"></app-abastecimiento-insumo-modal>
   }

@@ -23,16 +23,16 @@
         <input z-input type="number" formControlName="quantityReceived" />
       </label>
       <label>
-        Precio total
+        Precio total (MXN)
         <input z-input type="number" formControlName="totalPrice" />
       </label>
 
       <section class="wac-preview">
         @if (supplyService.selectedIngredient(); as ingredient) {
           <div><span>Stock actual</span><strong>{{ ingredient.currentStock }} {{ ingredient.unit }}</strong></div>
-          <div><span>WAC actual</span><strong>${{ ingredient.averageCost.toFixed(2) }}</strong></div>
-          <div><span>Unitario</span><strong>${{ supplyService.unitPrice().toFixed(2) }}</strong></div>
-          <div><span>Nuevo WAC</span><strong>${{ supplyService.projectedAverageCost().toFixed(2) }}</strong></div>
+          <div><span>WAC actual</span><strong>{{ ingredient.averageCost | mxnCurrency }}</strong></div>
+          <div><span>Unitario</span><strong>{{ supplyService.unitPrice() | mxnCurrency }}</strong></div>
+          <div><span>Nuevo WAC</span><strong>{{ supplyService.projectedAverageCost() | mxnCurrency }}</strong></div>
         } @else {
           <p>Selecciona un insumo para calcular el nuevo WAC.</p>
         }
