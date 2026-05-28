@@ -3,6 +3,19 @@ import type { paths } from './schema';
 
 const getAccessToken = () => localStorage.getItem('kitchenflow_access_token');
 
+const getApiBaseUrl = () => {
+  if (typeof window === 'undefined') {
+    return '/api';
+  }
+
+  const { hostname } = window.location;
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return '/api';
+  }
+
+  return '/awe/api';
+};
+
 const authFetch = ((input: RequestInfo | URL, init?: RequestInit) => {
   const token = getAccessToken();
   const headers = new Headers(init?.headers);
@@ -26,6 +39,7 @@ const authFetch = ((input: RequestInfo | URL, init?: RequestInit) => {
 }) as typeof fetch;
 
 export const apiClient = createClient<paths>({
-  baseUrl: '/awe',
+  baseUrl: getApiBaseUrl(),
   fetch: authFetch,
+  pathSerializer: (path) => path.replace(/^(\/(?:awe\/)?api)\/api\//, '$1/'),
 });

@@ -66,7 +66,7 @@ jobs:
             if curl -fsS "http://127.0.0.1:4200/awe/" >/dev/null; then
               frontend_ready=true
             fi
-            if curl -fsS "http://127.0.0.1:4200/awe/api/status" >/dev/null; then
+            if curl -fsS "http://127.0.0.1:3010/api/status" >/dev/null; then
               api_ready=true
             fi
 
